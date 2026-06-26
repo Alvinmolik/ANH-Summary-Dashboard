@@ -3,114 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANH Master Dashboard</title>
+<title>Dashboard Usaha Aqiqah — ANH</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#2C2C2A;font-size:14px}
-.app{max-width:1280px;margin:0 auto;background:#fff;min-height:100vh}
-
-/* TOPBAR */
+.app{max-width:1400px;margin:0 auto;background:#fff;min-height:100vh}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:#3B2A13;color:#fff;flex-wrap:wrap;gap:8px}
-.topbar h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
-.topbar p{font-size:11px;opacity:.7;margin-top:1px}
-.lv{background:#5C9E2A;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600}
-
-/* FILTER BAR */
+.topbar h1{font-size:16px;font-weight:700}
+.topbar p{font-size:10px;opacity:.7;margin-top:1px}
+.live-badge{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;background:#6B5E45;color:#fff}
+.live-badge.on{background:#3B6D11}
+.live-badge.err{background:#A32D2D}
+.last-update{font-size:10px;color:rgba(255,255,255,.5);margin-left:6px}
 .fbar{display:flex;align-items:center;gap:10px;padding:.5rem 1.5rem;background:#F9F7F2;border-bottom:1px solid #E8E4DA;flex-wrap:wrap}
 .fbar-lbl{font-size:11px;font-weight:700;color:#6B5E45;text-transform:uppercase;letter-spacing:.04em}
 .fsel{font-size:12px;padding:6px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#fff;color:#2C2C2A;cursor:pointer;font-weight:600;outline:none}
-.fsel:focus{border-color:#3B2A13}
-.fbar-note{font-size:11px;color:#9B8E78}
-
-/* NAVIGATION */
-.nav-wrap{background:#fff;border-bottom:1px solid #E8E4DA;padding:0 1.5rem}
-.nav-g{display:flex;gap:0;overflow-x:auto}
-.nb{padding:10px 16px;font-size:12px;font-weight:500;border:none;border-bottom:3px solid transparent;background:transparent;color:#6B5E45;cursor:pointer;white-space:nowrap;transition:all .15s}
+.nav-wrap{background:#fff;border-bottom:1px solid #E8E4DA;padding:0 1.5rem;overflow-x:auto}
+.nav-g{display:flex;gap:0;white-space:nowrap}
+.nb{padding:10px 14px;font-size:12px;font-weight:500;border:none;border-bottom:3px solid transparent;background:transparent;color:#6B5E45;cursor:pointer}
 .nb:hover{color:#3B2A13;background:#F9F7F2}
 .nb.on{color:#3B2A13;border-bottom-color:#BA7517;font-weight:700}
-
-/* SECTIONS */
 .sec{display:none;padding:1.25rem 1.5rem}
 .sec.on{display:block}
-
-/* METRIC CARDS */
 .mr{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
 .mc{background:#F9F7F2;border-radius:12px;padding:.875rem 1rem;border:1px solid #E8E4DA}
+.mc.live-card{border-color:#3B6D11;background:#EAF3DE}
 .ml{font-size:10px;color:#6B5E45;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
-.mv{font-size:26px;font-weight:800;color:#2C2C2A;line-height:1}
+.mv{font-size:24px;font-weight:800;color:#2C2C2A;line-height:1}
 .ms{font-size:11px;margin-top:4px}
 .up{color:#3B6D11}.dn{color:#A32D2D}.neu{color:#6B5E45}
-
-/* CARDS */
-.card{background:#fff;border:1px solid #E8E4DA;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem}
+.card{background:#fff;border:1px solid #E8E4DA;border-radius:14px;padding:1rem 1.25rem;margin-bottom:.875rem}
 .ct{font-size:13px;font-weight:700;color:#2C2C2A;margin-bottom:.625rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .cs{font-size:11px;color:#6B5E45;margin-bottom:8px}
-
-/* GRIDS */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
-@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}}
-
-/* TABLES */
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{font-weight:700;font-size:10px;color:#6B5E45;text-align:left;padding:6px 8px;border-bottom:1.5px solid #E8E4DA;background:#F9F7F2;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
 .tbl td{padding:6px 8px;border-bottom:1px solid #F0EDE5;color:#2C2C2A}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:#F9F7F2}
 .nr{text-align:right;font-variant-numeric:tabular-nums}
-.r26{background:#EAF3DE!important}.r26 td{font-weight:700}
-.up{color:#3B6D11}.dn{color:#A32D2D}.neu{color:#6B5E45}
-
-/* BADGES */
+.r-hi{background:#EAF3DE!important;font-weight:700}
+.r-lo{background:#FCEBEB!important}
 .bdg{display:inline-block;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
-.bb{background:#E6F1FB;color:#185FA5}
-.bg{background:#EAF3DE;color:#3B6D11}
-.br{background:#FCEBEB;color:#A32D2D}
-.ba{background:#FAEEDA;color:#854F0B}
-.bgr{background:#F1EFE8;color:#6B5E45}
-
-/* SPARK */
+.bg{background:#EAF3DE;color:#3B6D11}.br{background:#FCEBEB;color:#A32D2D}
+.ba{background:#FAEEDA;color:#854F0B}.bb{background:#E6F1FB;color:#185FA5}.bgr{background:#F1EFE8;color:#6B5E45}
 .spk{display:flex;align-items:flex-end;gap:1px;height:26px}
 .sb{width:5px;border-radius:1px 1px 0 0;flex-shrink:0;background:#D4C9B0}
 .sb.pk{background:#BA7517}.sb.lo{background:#F09595}
-
-/* LEGEND */
 .lgd{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#6B5E45;margin-bottom:8px}
 .lsq{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px}
-
-/* RISK GRID */
-.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
-.ri{background:#fff;border:1px solid #E8E4DA;border-radius:10px;padding:.75rem}
-.rin{font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:5px}
-.rbar{height:6px;border-radius:3px;background:#F0EDE5;margin-bottom:5px;overflow:hidden}
-.rf{height:100%;border-radius:3px}
-.rmeta{font-size:10px;color:#6B5E45;display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-
-/* HEATMAP */
+.how-to{background:#F9F7F2;border-radius:10px;padding:.875rem 1rem;margin-top:.875rem;border-left:4px solid #D4C9B0}
+.how-to h4{font-size:11px;font-weight:700;color:#6B5E45;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.how-to p,.how-to li{font-size:11px;color:#6B5E45;line-height:1.7}
+.how-to ul{padding-left:16px}
+.pip-table{width:100%;border-collapse:collapse}
+.pip-table tr{border-bottom:1px solid #E8E4DA}
+.pip-table tr:last-child{border-bottom:none}
+.pip-table td{padding:10px 16px;font-size:14px}
+.pip-table td:first-child{font-weight:700;color:#2C2C2A;width:160px}
+.pip-table td:last-child{color:#3B2A13}
+.pip-table tr.cur-month td{background:#EAF3DE;font-weight:700}
+.pip-table tr.next-month td{background:#E6F1FB}
+.pip-table .gap-warn{color:#A32D2D;font-weight:700}
+.pip-table .gap-ok{color:#3B6D11;font-weight:700}
 .heat-wrap{overflow-x:auto}
-
-/* SCROLLBAR */
-.fcbtn{padding:5px 12px;font-size:11px;font-weight:600;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer}
-.fcbtn:hover{background:#EDE3D4}
-.active-fc{background:#3B2A13!important;color:#fff!important;border-color:#3B2A13!important}
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:8px}
+.ri{background:#fff;border:1px solid #E8E4DA;border-radius:10px;padding:.75rem}
+.skel{background:linear-gradient(90deg,#F0EDE5 25%,#E8E4DA 50%,#F0EDE5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:24px;margin-bottom:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+::-webkit-scrollbar{height:4px;width:4px}::-webkit-scrollbar-track{background:#F0EDE5}::-webkit-scrollbar-thumb{background:#D4C9B0;border-radius:2px}
 @media print{.fbar,.nav-wrap{display:none}.sec{display:block!important}.card{break-inside:avoid}}
-::-webkit-scrollbar{height:4px;width:4px}
-::-webkit-scrollbar-track{background:#F0EDE5}
-::-webkit-scrollbar-thumb{background:#D4C9B0;border-radius:2px}
 </style>
 </head>
 <body>
 <div class="app">
 
 <div class="topbar">
-  <div>
-    <h1>Dashboard Usaha Aqiqah — ANH</h1>
-    <p>45 cabang aktif · Historis 2020–2025 + Live 2026 · Tanggal Pesan</p>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <span id="liveStatus" style="font-size:10px;padding:2px 8px;border-radius:20px;background:#EF9F27;color:#fff;font-weight:700">⏳ Memuat data live...</span>
-    <span style="font-size:10px;color:#D4C9B0" id="lastUpdate"></span>
+  <div><h1>Dashboard Usaha Aqiqah — ANH</h1><p>45 cabang aktif · Historis 2020–2025 + Live 2026 · Tanggal Pesan</p></div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span id="liveStatus" class="live-badge">⏳ Memuat...</span>
+    <span id="lastUpdate" class="last-update"></span>
   </div>
 </div>
 
@@ -119,235 +94,241 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <select class="fsel" id="selBulan" onchange="onFil()">
     <option value="1">Januari 2026</option><option value="2">Februari 2026</option>
     <option value="3">Maret 2026</option><option value="4">April 2026</option>
-    <option value="5" selected>Mei 2026</option><option value="6">Juni 2026</option>
+    <option value="5">Mei 2026</option><option value="6">Juni 2026</option>
   </select>
-  <span class="fbar-note">Filter berlaku untuk tab Utama &amp; Sumber Pesanan</span>
+  <span style="font-size:11px;color:#9B8E78">Filter berlaku untuk tab Utama & Sumber Pesanan</span>
 </div>
 
-<div class="nav-wrap">
-  <div class="nav-g">
-    <button class="nb on" onclick="SS('utama',this)">📊 Utama</button>
-    <button class="nb" onclick="SS('historis',this)">📅 Historis</button>
-    <button class="nb" onclick="SS('sumber',this)">📣 Sumber Pesanan</button>
-    <button class="nb" onclick="SS('ranking',this)">🏆 Ranking Cabang</button>
-    <button class="nb" onclick="SS('kritis',this)">⚠️ Zona Kritis</button>
-    <button class="nb" onclick="SS('recovery',this)">📈 Recovery</button>
-    <button class="nb" onclick="SS('risk',this)">🛡️ Risk Monitor</button>
-    <button class="nb" onclick="SS('insight',this)">🤖 AI Insight</button>
-    <button class="nb" onclick="SS('forecast',this)">🔮 Forecast & Prediksi</button>
-  </div>
-</div>
+<div class="nav-wrap"><div class="nav-g">
+  <button class="nb on" onclick="SS('utama',this)">📊 Utama</button>
+  <button class="nb" onclick="SS('pipeline',this)">🔄 Pipeline</button>
+  <button class="nb" onclick="SS('historis',this)">📅 Historis</button>
+  <button class="nb" onclick="SS('sumber',this)">📣 Sumber</button>
+  <button class="nb" onclick="SS('ranking',this)">🏆 Ranking</button>
+  <button class="nb" onclick="SS('kritis',this)">⚠️ Zona Kritis</button>
+  <button class="nb" onclick="SS('recovery',this)">📈 Recovery</button>
+  <button class="nb" onclick="SS('risk',this)">🛡️ Risk Monitor</button>
+  <button class="nb" onclick="SS('forecast',this)">🔮 Forecast</button>
+</div></div>
 
 <!-- ===== UTAMA ===== -->
 <div class="sec on" id="s-utama">
-  <div class="mr" id="mMet"></div>
+  <div class="mr" id="mMet"><div class="skel" style="grid-column:span 6"></div></div>
   <div class="g2">
-    <div class="card"><div class="ct">Customer Bulanan 2026 — By Bulan Order</div>
-      <div style="position:relative;height:190px"><canvas id="cB26"></canvas></div></div>
-    <div class="card"><div class="ct">Customer 5 Tahun Terakhir</div>
-      <div style="position:relative;height:190px"><canvas id="c5y"></canvas></div></div>
+    <div class="card"><div class="ct">Customer Bulanan 2026 — By Bulan Order</div><div style="position:relative;height:190px"><canvas id="cB26"></canvas></div></div>
+    <div class="card"><div class="ct">Customer 5 Tahun Terakhir</div><div style="position:relative;height:190px"><canvas id="c5y"></canvas></div></div>
   </div>
   <div class="card">
     <div class="ct">Tren Bulanan — 2024 vs 2025 vs 2026</div>
-    <div class="lgd">
-      <span><span class="lsq" style="background:#B5D4F4"></span>2024</span>
-      <span><span class="lsq" style="background:#EF9F27"></span>2025</span>
-      <span><span class="lsq" style="background:#BA7517"></span>2026</span>
-    </div>
+    <div class="lgd"><span><span class="lsq" style="background:#B5D4F4"></span>2024</span><span><span class="lsq" style="background:#EF9F27"></span>2025</span><span><span class="lsq" style="background:#BA7517"></span>2026</span></div>
     <div style="position:relative;height:195px"><canvas id="c3y"></canvas></div>
   </div>
   <div class="g3">
-    <div class="card"><div class="ct">Pilihan Customer — Sumber</div>
-      <div style="position:relative;height:170px"><canvas id="cPS"></canvas></div>
-      <div style="font-size:11px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPS"></div></div>
-    <div class="card"><div class="ct">Tipe Kambing</div>
-      <div style="position:relative;height:170px"><canvas id="cPK"></canvas></div>
-      <div style="font-size:11px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPK"></div></div>
-    <div class="card"><div class="ct">2025 × 2026</div>
-      <div id="cmpBox"></div></div>
+    <div class="card"><div class="ct">Sumber Pesanan</div><div style="position:relative;height:170px"><canvas id="cPS"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPS"></div></div>
+    <div class="card"><div class="ct">Tipe Kambing</div><div style="position:relative;height:170px"><canvas id="cPK"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPK"></div></div>
+    <div class="card"><div class="ct">2025 × 2026</div><div id="cmpBox"></div></div>
   </div>
   <div class="card">
-    <div class="ct">Customer 6 Tahun — Tren Mingguan (Jan 2020 – Jun 2026)</div>
+    <div class="ct">Tren Mingguan 6 Tahun (Jan 2020 – Jun 2026)</div>
     <div class="cs">339 minggu data aktual berdasarkan Tanggal Pesan · puncak Jul 2022 terlihat jelas</div>
-    <div class="cs">Tanggal Pesan per minggu ISO · puncak 2022 terlihat jelas di minggu 26</div>
-    <div style="position:relative;height:200px"><canvas id="c8y"></canvas></div>
+    <div style="position:relative;height:195px"><canvas id="c6y"></canvas></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Tab Utama</h4>
+    <ul>
+      <li><strong>Filter Periode</strong> di atas berlaku untuk semua grafik dan metrik di tab ini — ganti bulan untuk melihat performa bulan berbeda.</li>
+      <li><strong>Card hijau (🟢 Live)</strong> = data hari ini dan bulan berjalan yang diambil langsung dari Google Sheets secara real-time.</li>
+      <li><strong>Customer Juni 2026 vs 2025</strong> = perbandingan langsung bulan yang sama tahun sebelumnya. Negatif bukan selalu buruk — cek konteks seperti hari besar atau musim.</li>
+      <li><strong>MoM vs Mei</strong> = perbandingan hari yang sama bulan ini vs bulan lalu (apple-to-apple), bukan bulan penuh.</li>
+      <li><strong>Tren 6 tahun</strong> = pola musiman terlihat jelas — Juni dan September selalu tinggi, Februari dan April selalu rendah.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== PIPELINE ===== -->
+<div class="sec" id="s-pipeline">
+  <div class="mr" id="pipMet"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Pipeline Customer Lintas Bulan — 2026</div>
+      <div class="cs">Customer yang sudah memesan untuk bulan pengiriman mendatang (Tgl Pesan ≠ Tgl Kirim)</div>
+      <table class="pip-table" id="tPipeline">
+        <tr><td colspan="3" style="text-align:center;padding:20px;color:#9B8E78">Memuat data pipeline...</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="ct">Tren Pipeline Bulanan</div>
+      <div class="cs">Jumlah customer lintas bulan per bulan pengiriman</div>
+      <div style="position:relative;height:280px"><canvas id="cPip"></canvas></div>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Pipeline</h4>
+    <ul>
+      <li><strong>Pipeline</strong> = customer yang sudah memesan (Tanggal Pesan) tetapi jadwal kirimnya di bulan berbeda (Tanggal Kirim lebih jauh).</li>
+      <li><strong>Contoh:</strong> Customer pesan di bulan Mei untuk dikirim bulan Juli = masuk pipeline Juli.</li>
+      <li><strong>Card biru (bulan depan)</strong> = pipeline bulan depan yang sudah masuk. Bandingkan dengan rata-rata historis — kalau kurang, tim perlu push closing lebih agresif bulan ini.</li>
+      <li><strong>Target pipeline</strong> = rata-rata pipeline bulan yang sama dari bulan-bulan sebelumnya di tahun ini.</li>
+      <li><strong>Insight utama:</strong> Kalau hari ini tanggal 26 Juni dan pipeline Juli baru 197, padahal rata-rata historis 450+, artinya ada gap ~250 customer HPL Juli yang belum closing — ini prioritas tim sekarang.</li>
+    </ul>
   </div>
 </div>
 
 <!-- ===== HISTORIS ===== -->
 <div class="sec" id="s-historis">
-  <div class="card"><div class="ct">Tren Tahunan 2020–2026</div>
-    <div style="position:relative;height:200px"><canvas id="cHY"></canvas></div></div>
+  <div class="card"><div class="ct">Tren Tahunan 2020–2026</div><div style="position:relative;height:200px"><canvas id="cHY"></canvas></div></div>
   <div class="card">
-    <div class="ct">Pola Bulanan Semua Tahun (Jan–Des)</div>
+    <div class="ct">Pola Bulanan Semua Tahun</div>
     <div class="lgd" id="lgdH"></div>
-    <div style="position:relative;height:230px"><canvas id="cHM"></canvas></div></div>
+    <div style="position:relative;height:230px"><canvas id="cHM"></canvas></div>
+  </div>
   <div class="card"><div class="ct">Tabel Bulanan Historis</div>
-    <div style="overflow-x:auto">
-    <table class="tbl"><thead><tr><th>Tahun</th><th class="nr">Jan</th><th class="nr">Feb</th><th class="nr">Mar</th><th class="nr">Apr</th><th class="nr">Mei</th><th class="nr">Jun</th><th class="nr">Jul</th><th class="nr">Agu</th><th class="nr">Sep</th><th class="nr">Okt</th><th class="nr">Nov</th><th class="nr">Des</th><th class="nr">Total</th><th class="nr">YoY</th></tr></thead>
-    <tbody id="tHist"></tbody></table></div></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Tahun</th><th class="nr">Jan</th><th class="nr">Feb</th><th class="nr">Mar</th><th class="nr">Apr</th><th class="nr">Mei</th><th class="nr">Jun</th><th class="nr">Jul</th><th class="nr">Agu</th><th class="nr">Sep</th><th class="nr">Okt</th><th class="nr">Nov</th><th class="nr">Des</th><th class="nr">Total</th><th class="nr">YoY</th></tr></thead><tbody id="tHist"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Historis</h4>
+    <ul>
+      <li><strong>2026 ★ (baris hijau)</strong> = data tahun berjalan, otomatis update setiap bulan baru selesai.</li>
+      <li><strong>YoY %</strong> = perubahan total tahunan dibanding tahun sebelumnya. Merah bukan berarti gagal jika ada faktor eksternal (pandemi 2020, dsb).</li>
+      <li><strong>Pola musiman</strong> = Juni dan September hampir selalu puncak — ini karena musim pernikahan dan tahun ajaran baru (bayi lahir ~9 bulan sebelumnya). Jadikan acuan planning promosi.</li>
+      <li><strong>2022 anomali</strong> = lonjakan Juli 2022 (4.303) adalah tertinggi sepanjang sejarah — kemungkinan efek penumpukan pasca-pandemi + momen Idul Adha bersamaan.</li>
+    </ul>
+  </div>
 </div>
 
 <!-- ===== SUMBER ===== -->
 <div class="sec" id="s-sumber">
   <div class="g2">
-    <div class="card"><div class="ct">Sumber — <span id="srcLbl" class="bdg bb">Mei 2026</span></div>
+    <div class="card"><div class="ct">Sumber — <span id="srcBulLbl" class="bdg bb">bulan ini</span></div>
       <div style="position:relative;height:200px"><canvas id="cSB"></canvas></div>
-      <div style="font-size:11px;margin-top:7px;display:flex;flex-direction:column;gap:3px" id="lgSB"></div></div>
+      <div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgSB"></div>
+    </div>
     <div class="card"><div class="ct">Tren Sumber 2020–2026</div>
       <div class="lgd" id="lgST"></div>
-      <div style="position:relative;height:200px"><canvas id="cST"></canvas></div></div>
-  </div>
-  <div class="card"><div class="ct">Sumber Pesanan Jan–Jun 2026 per Bulan</div>
-    <div style="overflow-x:auto">
-    <table class="tbl"><thead><tr><th>Sumber</th><th class="nr">Jan</th><th class="nr">Feb</th><th class="nr">Mar</th><th class="nr">Apr</th><th class="nr">Mei</th><th class="nr">Jun</th><th class="nr">Total</th></tr></thead>
-    <tbody id="tS26"></tbody></table></div></div>
-  <div class="card"><div class="ct">
-    Sumber Pesanan per Tahun — <span style="font-size:11px;color:#6B5E45;font-weight:400">% dari total customer tahun tersebut</span>
-    <button onclick="toggleSrcMode()" id="btnSrcMode" style="font-size:11px;padding:4px 10px;border:1.5px solid #D4C9B0;border-radius:6px;background:#F9F7F2;cursor:pointer;color:#3B2A13;font-weight:600">Tampilkan angka</button>
+      <div style="position:relative;height:200px"><canvas id="cST"></canvas></div>
     </div>
-    <div style="overflow-x:auto">
-    <table class="tbl"><thead><tr><th>Sumber</th><th class="nr">2020</th><th class="nr">2021</th><th class="nr">2022</th><th class="nr">2023</th><th class="nr">2024</th><th class="nr">2025</th><th class="nr">2026*</th></tr></thead>
-    <tbody id="tSY"></tbody></table></div></div>
+  </div>
+  <div class="card"><div class="ct">Sumber Jan–Jun 2026 per Bulan</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Sumber</th><th class="nr">Jan</th><th class="nr">Feb</th><th class="nr">Mar</th><th class="nr">Apr</th><th class="nr">Mei</th><th class="nr">Jun</th><th class="nr">Total</th></tr></thead><tbody id="tS26"></tbody></table></div>
+  </div>
+  <div class="card"><div class="ct">Sumber per Tahun — <span style="font-size:11px;color:#6B5E45;font-weight:400">% dari total customer</span>
+    <button onclick="toggleSrcMode()" id="btnSrcMode" style="font-size:11px;padding:4px 10px;border:1.5px solid #D4C9B0;border-radius:6px;background:#F9F7F2;cursor:pointer;color:#3B2A13;font-weight:600">Tampilkan angka</button></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Sumber</th><th class="nr">2020</th><th class="nr">2021</th><th class="nr">2022</th><th class="nr">2023</th><th class="nr">2024</th><th class="nr">2025</th><th class="nr">2026*</th></tr></thead><tbody id="tSY"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Sumber Pesanan</h4>
+    <ul>
+      <li><strong>Referensi (40%+)</strong> = customer datang dari rekomendasi orang lain. Ini channel terkuat — artinya kepuasan customer yang sudah ada sangat menentukan pertumbuhan baru.</li>
+      <li><strong>Instagram naik konsisten</strong> = dari 10.7% (2020) ke 24%+ (2026). Investasi konten Instagram terbukti efektif.</li>
+      <li><strong>Website terus turun</strong> = dari 11.4% (2020) ke 6%+ (2026). Perlu audit SEO dan UX website.</li>
+      <li><strong>Repeat Order</strong> = customer yang pernah aqiqah dengan ANH dan pesan lagi (biasanya anak ke-2/ke-3). Ini proxy loyalitas pelanggan.</li>
+      <li><strong>Tampilkan %</strong> = menghilangkan bias penurunan volume. Meskipun angka absolut Instagram turun karena total customer turun, persentasenya justru naik — artinya Instagram makin efektif relatif terhadap channel lain.</li>
+    </ul>
+  </div>
 </div>
 
 <!-- ===== RANKING ===== -->
 <div class="sec" id="s-ranking">
   <div class="card">
-    <div class="ct">
-      Ranking Nasional — Mingguan (Tanggal Pesan 2026)
+    <div class="ct">Ranking Nasional — Mingguan (Tanggal Pesan 2026)
       <select onchange="bRank(this.value)" style="font-size:11px;padding:5px 10px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600">
         <option value="all">Semua cabang</option><option value="top10">Top 10</option>
         <option value="bot10">Bottom 10</option><option value="naik">Tumbuh ≥2 mgg</option><option value="turun">Turun ≥3 mgg</option>
       </select>
     </div>
-    <div class="cs">Score: 40% Performa W26 + 35% WoW Growth (W25→W26) + 25% Stabilitas 26 minggu · Berdasarkan Tanggal Pesan</div>
-    <div style="overflow-x:auto">
-    <table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W25 (lalu)</th><th class="nr">W26 (terkini)</th><th class="nr">WoW %</th><th class="nr">Score</th><th>EWS</th><th>Tren 6W</th></tr></thead>
-    <tbody id="tRank"></tbody></table></div>
+    <div class="cs">Score: 40% Performa W terkini + 35% WoW Growth + 25% Stabilitas · <span id="rankDataNote" style="color:#BA7517">Memuat data live...</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W sebelumnya</th><th class="nr">W terkini</th><th class="nr">WoW %</th><th class="nr">Score</th><th>EWS</th><th>Tren 6W</th></tr></thead><tbody id="tRank"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Ranking Cabang</h4>
+    <ul>
+      <li><strong>Score (0–100)</strong> = nilai komposit dari 3 komponen: Performa minggu ini (40%), pertumbuhan WoW/minggu ke minggu (35%), dan konsistensi 26 minggu (25%). Score 70+ = cabang sehat.</li>
+      <li><strong>WoW %</strong> = perubahan minggu ini vs minggu lalu. Negatif satu minggu wajar — yang perlu diwaspadai adalah negatif 3+ minggu berturut-turut.</li>
+      <li><strong>EWS (Early Warning System)</strong>: 🟢 Aman = performa stabil · 🟡 Waspada = mulai menurun · 🟠 Perhatian = turun signifikan · 🔴 Kritis = darurat intervensi.</li>
+      <li><strong>Tren 6W</strong> = sparkline 6 minggu terakhir. Bar tinggi = minggu baik, bar merah = minggu kritis (≤2 customer).</li>
+      <li><strong>Filter</strong> gunakan "Turun ≥3 mgg" untuk langsung lihat cabang yang butuh perhatian segera.</li>
+    </ul>
   </div>
 </div>
 
-<!-- ===== KRITIS ===== -->
+<!-- ===== ZONA KRITIS ===== -->
 <div class="sec" id="s-kritis">
   <div class="card">
-    <div class="ct">Zona Kritis Mingguan — Tanggal Pesan 2026 (W01–W26)</div>
-    <div class="cs">Kritis = ≤2 customer/minggu · Berdasarkan Tanggal Pesan · Diurutkan frekuensi kritis terbanyak</div>
-    <div style="overflow-x:auto">
-    <table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W23</th><th class="nr">W24</th><th class="nr">W25</th><th class="nr">W26</th><th class="nr">Frek Kritis</th><th>Status</th></tr></thead>
-    <tbody id="tKritis"></tbody></table></div>
+    <div class="ct">Zona Kritis Mingguan (Tanggal Pesan)</div>
+    <div class="cs">Kritis = ≤2 customer/minggu · Diurutkan frekuensi kritis terbanyak · <span id="kritisNote" style="color:#BA7517">Memuat...</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W-3</th><th class="nr">W-2</th><th class="nr">W-1</th><th class="nr">W terkini</th><th class="nr">Frek Kritis</th><th>Status</th></tr></thead><tbody id="tKritis"></tbody></table></div>
   </div>
   <div class="card">
-    <div class="ct">Heatmap Mingguan — W17–W26 · Top 20 Cabang</div>
+    <div class="ct">Heatmap Mingguan — 10 Minggu Terakhir · Top 20 Cabang</div>
     <div class="heat-wrap"><div id="hmWrap"></div></div>
     <div class="lgd" style="margin-top:8px">
-      <span><span style="display:inline-block;width:12px;height:12px;background:#FCEBEB;border-radius:3px;vertical-align:middle;margin-right:3px"></span>0</span>
-      <span><span style="display:inline-block;width:12px;height:12px;background:#FAEEDA;border-radius:3px;vertical-align:middle;margin-right:3px"></span>1–5</span>
-      <span><span style="display:inline-block;width:12px;height:12px;background:#C0DD97;border-radius:3px;vertical-align:middle;margin-right:3px"></span>6–15</span>
-      <span><span style="display:inline-block;width:12px;height:12px;background:#378ADD;border-radius:3px;vertical-align:middle;margin-right:3px"></span>16–30</span>
-      <span><span style="display:inline-block;width:12px;height:12px;background:#0C447C;border-radius:3px;vertical-align:middle;margin-right:3px"></span>30+</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#FCEBEB;border-radius:2px;vertical-align:middle;margin-right:3px"></span>0</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#FAEEDA;border-radius:2px;vertical-align:middle;margin-right:3px"></span>1–5</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#C0DD97;border-radius:2px;vertical-align:middle;margin-right:3px"></span>6–15</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#378ADD;border-radius:2px;vertical-align:middle;margin-right:3px"></span>16–30</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#0C447C;border-radius:2px;vertical-align:middle;margin-right:3px"></span>30+</span>
     </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Zona Kritis</h4>
+    <ul>
+      <li><strong>Kritis (≤2 customer/minggu)</strong> = cabang di level ini hampir tidak operasional. Butuh intervensi langsung dari area supervisor dalam 7 hari.</li>
+      <li><strong>Frekuensi kritis</strong> = berapa kali cabang masuk zona kritis dari total 26 minggu. Cabang dengan 15+ kali kritis = struktural bermasalah, bukan musiman.</li>
+      <li><strong>Heatmap</strong> = baca per baris (satu cabang) untuk lihat pola mingguan. Merah beruntun = tren turun, Biru tua beruntun = cabang top performer.</li>
+      <li><strong>Tindakan</strong>: Kritis 1–2 kali = wajar (hari raya, dll). Kritis 5+ kali = evaluasi strategi lokal. Kritis 10+ kali = pertimbangkan restrukturisasi cabang.</li>
+    </ul>
   </div>
 </div>
 
 <!-- ===== RECOVERY ===== -->
 <div class="sec" id="s-recovery">
-  <div class="card"><div class="ct">Recovery Terbaik — Mingguan</div>
-    <div style="overflow-x:auto">
-    <table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren 6 minggu</th><th class="nr">Growth</th><th>Status</th></tr></thead>
-    <tbody id="tRec"></tbody></table></div></div>
+  <div class="card"><div class="ct">Recovery Terbaik Minggu Ini (WoW naik)</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren 6W</th><th class="nr">Growth WoW</th><th>Status</th></tr></thead><tbody id="tRec"></tbody></table></div>
+  </div>
   <div class="g2">
     <div class="card"><div class="ct">Tumbuh Konsisten (≥2 minggu naik)</div>
-      <div style="overflow-x:auto">
-      <table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren</th><th class="nr">Streak</th></tr></thead><tbody id="tGrow"></tbody></table></div></div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren</th><th class="nr">Streak</th></tr></thead><tbody id="tGrow"></tbody></table></div>
+    </div>
     <div class="card"><div class="ct">Turun Konsisten (≥3 minggu turun)</div>
-      <div style="overflow-x:auto">
-      <table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren</th><th class="nr">Streak</th></tr></thead><tbody id="tDecl"></tbody></table></div></div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren</th><th class="nr">Streak</th></tr></thead><tbody id="tDecl"></tbody></table></div>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Recovery & Growth</h4>
+    <ul>
+      <li><strong>Recovery terbaik</strong> = cabang yang minggu ini naik signifikan dari minggu lalu. Perlu dianalisis: apakah ada aktivitas marketing spesifik yang bisa direplikasi ke cabang lain?</li>
+      <li><strong>Streak naik</strong> = cabang yang naik 2+ minggu berturut-turut. Ini sinyal positif yang perlu dijaga momentumnya.</li>
+      <li><strong>Streak turun</strong> = cabang yang turun 3+ minggu berturut-turut. Ini sinyal merah — semakin panjang streak, semakin butuh intervensi cepat.</li>
+      <li><strong>Prioritas tindakan</strong>: Hubungi cabang dengan streak turun terpanjang terlebih dahulu, minta laporan aktivitas harian, dan cek pipeline mereka.</li>
+    </ul>
   </div>
 </div>
 
-<!-- ===== RISK ===== -->
+<!-- ===== RISK MONITOR ===== -->
 <div class="sec" id="s-risk">
   <div class="card">
     <div class="ct">Risk Score Matrix — Mingguan</div>
-    <div class="cs">40% Frekuensi Kritis + 30% Trend Turun + 20% Growth Negatif + 10% Tidak Stabil</div>
+    <div class="cs">Formula: 40% Frekuensi Kritis + 30% Trend Turun + 20% Growth Negatif + 10% Tidak Stabil · Semakin tinggi = semakin berisiko</div>
     <div class="risk-grid" id="riskWrap"></div>
   </div>
-</div>
-
-<!-- ===== AI INSIGHT ===== -->
-<div class="sec" id="s-insight">
-  <!-- National insight -->
-  <div class="card">
-    <div class="ct">🌐 Kondisi Nasional — Juni 2026</div>
-    <div style="background:#F9F7F2;border-radius:10px;padding:1rem;margin-bottom:.75rem;border-left:4px solid #BA7517">
-      <div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:4px">Ringkasan Semester 1 2026</div>
-      <div style="font-size:12px;color:#3B2A13;line-height:1.7">
-        Total YTD 2026 (Jan–Jun) mencapai <strong>9.822 pesanan</strong> berdasarkan Tanggal Pesan, melampaui YTD 2025 yang sama sebesar <strong>+13,4%</strong> (8.665). Mei adalah peak semester dengan 1.848, diikuti Juni yang stabil di 1.617. Tren tahunan menunjukkan pemulihan setelah 3 tahun penurunan berturut-turut (2022→2025).
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
-      <div style="background:#EAF3DE;border-radius:10px;padding:.875rem;border-left:4px solid #5C9E2A">
-        <div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:6px">✅ Highlight Positif</div>
-        <ul style="font-size:12px;color:#27500A;line-height:1.8;padding-left:16px">
-          <li>YTD 2026 lebih tinggi +13,4% dari YTD 2025</li>
-          <li>Instagram tumbuh konsisten jadi channel terkuat ke-2</li>
-          <li>Referensi tetap dominan 40%+ tiap bulan</li>
-          <li>Cabang Malang, Sidoarjo, Bekasi tumbuh signifikan</li>
-          <li>TikTok mulai memberikan kontribusi nyata (131 pesanan Jan–Jun)</li>
-        </ul>
-      </div>
-      <div style="background:#FCEBEB;border-radius:10px;padding:.875rem;border-left:4px solid #A32D2D">
-        <div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:6px">⚠️ Highlight Negatif</div>
-        <ul style="font-size:12px;color:#A32D2D;line-height:1.8;padding-left:16px">
-          <li>Tren tahunan masih turun 2022→2025 (–37%)</li>
-          <li>Website terus menurun dari 2.940 (2020) ke 602 (2026)</li>
-          <li>Ungaran, Sukabumi, Sragen masuk zona kritis mingguan</li>
-          <li>Tasikmalaya drop signifikan di W22–W26</li>
-          <li>Banyak cabang kecil volatil minggu ke minggu</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Branch insights -->
-  <div id="insightCabang"></div>
-
-  <!-- AI Chat -->
-  <div class="card">
-    <div class="ct">🤖 Tanya AI — Analisis Mendalam</div>
-    <div style="font-size:12px;color:#6B5E45;margin-bottom:10px">Tanya langsung tentang data ANH. AI memiliki akses ke seluruh data historis 2020–2026.</div>
-    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px" id="qButtons">
-      <button onclick="askAI('Cabang mana yang paling berisiko bulan ini berdasarkan tren mingguan?')" style="text-align:left;padding:8px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer;font-size:12px;font-weight:500">📊 Cabang mana yang paling berisiko minggu ini? ↗</button>
-      <button onclick="askAI('Apa yang menyebabkan penurunan customer nasional dari 2022 ke 2025 dan apa rekomendasi untuk recovery?')" style="text-align:left;padding:8px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer;font-size:12px;font-weight:500">📉 Mengapa customer turun 2022–2025 dan bagaimana recovery? ↗</button>
-      <button onclick="askAI('Cabang mana yang paling konsisten tumbuh dan apa yang bisa direplikasi ke cabang lain?')" style="text-align:left;padding:8px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer;font-size:12px;font-weight:500">🚀 Cabang mana paling konsisten tumbuh & apa yang bisa direplikasi? ↗</button>
-      <button onclick="askAI('Analisis pergeseran sumber pesanan dari 2020 ke 2026 dan implikasinya untuk strategi marketing')" style="text-align:left;padding:8px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer;font-size:12px;font-weight:500">📣 Analisis pergeseran sumber pesanan 2020→2026 ↗</button>
-      <button onclick="askAI('Prediksi: cabang mana yang berpotensi masuk zona kritis bulan Juli berdasarkan tren mingguan saat ini?')" style="text-align:left;padding:8px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer;font-size:12px;font-weight:500">🔮 Prediksi cabang zona kritis Juli 2026? ↗</button>
-    </div>
-    <div id="aiChat" style="display:none">
-      <div id="aiMessages"></div>
-    </div>
-  </div>
-
-  <!-- Export -->
-  <div class="card">
-    <div class="ct">📤 Export Data</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button onclick="exportCSV()" style="padding:8px 16px;background:#3B2A13;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600">⬇ Export Data Historis (CSV)</button>
-      <button onclick="exportWeeklyCSV()" style="padding:8px 16px;background:#3B2A13;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600">⬇ Export Data Mingguan Cabang (CSV)</button>
-      <button onclick="window.print()" style="padding:8px 16px;background:#6B5E45;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600">🖨 Print / Save PDF</button>
-    </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Risk Monitor</h4>
+    <ul>
+      <li><strong>Risk Score 70–100 (merah)</strong> = cabang dalam kondisi darurat. Intervensi dalam 48 jam.</li>
+      <li><strong>Risk Score 50–69 (oranye)</strong> = cabang bermasalah serius. Jadwalkan review mingguan.</li>
+      <li><strong>Risk Score 30–49 (kuning)</strong> = perlu perhatian. Monitor lebih ketat.</li>
+      <li><strong>Risk Score 0–29 (biru)</strong> = kondisi normal/baik.</li>
+      <li><strong>Formula risk score</strong>: Memperhitungkan seberapa sering masuk zona kritis (40%), seberapa panjang tren turun saat ini (30%), apakah pertumbuhan tahunan negatif (20%), dan seberapa tidak stabil performanya (10%).</li>
+    </ul>
   </div>
 </div>
 
 <!-- ===== FORECAST ===== -->
 <div class="sec" id="s-forecast">
   <div style="background:#F9F7F2;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:#6B5E45;line-height:1.7;border:1px solid #E8E4DA">
-    <strong style="color:#3B2A13">Pipeline 3 Model:</strong> Forecast dihasilkan dari 78 bulan data aktual (Jan 2020 – Jun 2026) menggunakan 3 model statistik berbeda:
-    <strong>Holt-Winters ETS</strong> (eksponensial smoothing dengan tren + seasonal), <strong>SARIMA(1,1,1)(1,1,1,12)</strong> (autoregressive seasonal), dan <strong>Prophet</strong> (Facebook/Meta). Model terbaik berdasarkan RMSE: Prophet (360), HW (381), SARIMA (579).
+    <strong style="color:#3B2A13">Model Forecasting:</strong> Dibangun dari 78 bulan data aktual (Jan 2020 – Jun 2026) menggunakan 3 model statistik.
+    Model terbaik berdasarkan RMSE: <strong>Prophet</strong> (360), Holt-Winters (381), SARIMA (579).
   </div>
-
-  <!-- Model selector -->
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem">
     <span style="font-size:11px;font-weight:700;color:#6B5E45">Model:</span>
     <button onclick="setFcModel('ensemble')" id="btn-ensemble" class="fcbtn active-fc">Ensemble (avg)</button>
@@ -355,166 +336,57 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button onclick="setFcModel('sarima')" id="btn-sarima" class="fcbtn">SARIMA</button>
     <button onclick="setFcModel('prophet')" id="btn-prophet" class="fcbtn">Prophet</button>
   </div>
-
-  <!-- Metric cards -->
   <div class="mr" id="fcMetrik"></div>
-
-  <!-- Main forecast chart -->
   <div class="card">
     <div class="ct">
-      <span>Time series aktual + forecast Jul 2026 – Des 2027</span>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#6B5E45">
-        <span><span style="display:inline-block;width:24px;height:2px;background:#185FA5;vertical-align:middle;margin-right:4px"></span>Aktual</span>
-        <span><span style="display:inline-block;width:24px;height:2px;background:#5DCAA5;vertical-align:middle;margin-right:4px"></span>Aktual 2026</span>
-        <span><span style="display:inline-block;width:16px;height:2px;background:#BA7517;border-top:2px dashed #BA7517;vertical-align:middle;margin-right:4px"></span>Forecast</span>
-        <span><span style="display:inline-block;width:12px;height:12px;background:rgba(186,117,23,0.15);border-radius:2px;vertical-align:middle;margin-right:4px"></span>CI 95%</span>
+      Time series aktual + forecast Jul 2026 – Des 2027
+      <div class="lgd" style="margin:0">
+        <span><span class="lsq" style="background:#185FA5"></span>Aktual</span>
+        <span><span class="lsq" style="background:#5DCAA5"></span>2026</span>
+        <span><span class="lsq" style="background:#BA7517"></span>Forecast</span>
       </div>
     </div>
-    <div class="cs" id="fcModelDesc">Ensemble = rata-rata dari 3 model. Confidence interval dari spread antar model.</div>
-    <div style="position:relative;height:280px"><canvas id="cFcMain" role="img" aria-label="Time series dan forecast pesanan ANH. Aktual 2020-2026 menunjukkan tren turun dari peak 2022. Forecast 2026-2027 mengikuti pola musiman dengan tren menurun.">Time series dan forecast pesanan ANH 2020-2027.</canvas></div>
+    <div class="cs" id="fcDesc">Ensemble = rata-rata 3 model.</div>
+    <div style="position:relative;height:270px"><canvas id="cFcMain"></canvas></div>
   </div>
-
   <div class="g2">
-    <!-- Model comparison chart -->
-    <div class="card">
-      <div class="ct">Perbandingan 3 model — forecast 2026–2027</div>
-      <div style="position:relative;height:210px"><canvas id="cFcModels" role="img" aria-label="Perbandingan forecast 3 model: HW, SARIMA, Prophet untuk 2026-2027.">Perbandingan forecast tiga model statistik.</canvas></div>
-    </div>
-    <!-- Annual projection -->
-    <div class="card">
-      <div class="ct">Proyeksi tahunan per model</div>
-      <div style="overflow-x:auto">
-      <table class="tbl">
-        <thead><tr><th>Model</th><th class="nr">RMSE</th><th class="nr">2026 proj.</th><th class="nr">2027 proj.</th><th class="nr">vs 2025</th></tr></thead>
-        <tbody id="tFcModels"></tbody>
-      </table>
-      </div>
-      <div style="margin-top:1rem;font-size:11px;color:#6B5E45;line-height:1.7">
-        <strong style="color:#3B2A13">Interpretasi:</strong> Ketiga model sepakat pada tren turun berlanjut. Gap terbesar antara model terjadi di bulan Agustus dan Desember — menandakan ketidakpastian seasonal yang lebih tinggi di bulan tersebut.
-      </div>
+    <div class="card"><div class="ct">Perbandingan 3 model</div><div style="position:relative;height:210px"><canvas id="cFcModels"></canvas></div></div>
+    <div class="card"><div class="ct">Proyeksi tahunan per model</div>
+      <table class="tbl"><thead><tr><th>Model</th><th class="nr">RMSE</th><th class="nr">2026</th><th class="nr">2027</th><th class="nr">vs 2025</th></tr></thead><tbody id="tFcMod"></tbody></table>
     </div>
   </div>
-
-  <!-- Residual / model fit -->
-  <div class="card">
-    <div class="ct">Residual plot — model fit vs aktual</div>
-    <div class="cs">Semakin dekat garis ke nol, semakin baik model fit. Outlier besar = kejadian luar biasa (e.g. lonjakan 2022).</div>
-    <div style="position:relative;height:180px"><canvas id="cFcResid" role="img" aria-label="Residual plot model Holt-Winters vs aktual.">Residual plot menunjukkan pola error dari model Holt-Winters.</canvas></div>
+  <div class="card"><div class="ct">Tabel forecast detail — bulan per bulan</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Bulan</th><th class="nr">HW</th><th class="nr">SARIMA</th><th class="nr">Prophet</th><th class="nr">Ensemble</th><th class="nr">CI Bawah</th><th class="nr">CI Atas</th></tr></thead><tbody id="tFcDetail"></tbody></table></div>
   </div>
-
-  <!-- Scenario table -->
-  <div class="card">
-    <div class="ct">Tabel forecast detail — bulan per bulan</div>
-    <div style="overflow-x:auto">
-    <table class="tbl">
-      <thead><tr><th>Bulan</th><th class="nr">HW</th><th class="nr">SARIMA</th><th class="nr">Prophet</th><th class="nr">Ensemble</th><th class="nr">CI Bawah</th><th class="nr">CI Atas</th></tr></thead>
-      <tbody id="tFcDetail"></tbody>
-    </table>
-    </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Forecast & Prediksi</h4>
+    <ul>
+      <li><strong>Ensemble (rekomendasi)</strong> = rata-rata dari 3 model. Lebih stabil dan akurat dibanding satu model saja karena mengurangi bias masing-masing model.</li>
+      <li><strong>RMSE</strong> = Root Mean Square Error, ukuran akurasi model. Semakin kecil semakin akurat. Prophet (360) paling akurat dalam data ANH.</li>
+      <li><strong>Confidence Interval (CI)</strong> = rentang prediksi 95%. Artinya ada 95% kemungkinan angka aktual jatuh di antara CI Bawah dan CI Atas.</li>
+      <li><strong>Keterbatasan</strong>: Forecast mengasumsikan tren berlanjut tanpa intervensi. Jika ada program marketing besar atau event khusus, angka aktual bisa jauh di atas forecast.</li>
+      <li><strong>Penggunaan terbaik</strong>: Gunakan forecast sebagai baseline/target minimum. Jika aktual terus di bawah forecast, perlu evaluasi strategi.</li>
+    </ul>
   </div>
 </div>
 
 </div><!-- /app -->
 
+<style>
+.fcbtn{padding:5px 12px;font-size:11px;font-weight:600;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer}
+.fcbtn:hover{background:#EDE3D4}
+.active-fc{background:#3B2A13!important;color:#fff!important;border-color:#3B2A13!important}
+</style>
+
 <script>
 // ============================================================
-// DATA DARI SPREADSHEET
+// KONFIGURASI
 // ============================================================
-// ============================================================
-// KONFIGURASI LIVE DATA
-// Ganti APPS_SCRIPT_URL dengan URL Web App setelah deploy di Apps Script
-// ============================================================
-const APPS_SCRIPT_URL = '/api/data'; // proxy via Vercel serverless function
-// Contoh: 'https://script.google.com/macros/s/AKfycb.../exec'
-
-let LIVE = {
-  loaded: false,
-  summary: null,
-  daily: null,
-  cabang: null,
-  sumber: null,
-  lastFetch: null,
-};
-
-async function fetchLiveData() {
-  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PASTE_YOUR')) {
-    setStatus('demo', '⚠ Demo mode — pasang Apps Script URL untuk data live');
-    return;
-  }
-  setStatus('loading', '⏳ Memuat...');
-  try {
-    const [sum, daily, cab, src] = await Promise.all([
-      fetchAPI('summary'),
-      fetchAPI('daily&days=60'),
-      fetchAPI('cabang'),
-      fetchAPI('sumber'),
-    ]);
-    LIVE = { loaded: true, summary: sum, daily: daily, cabang: cab, sumber: src, lastFetch: new Date() };
-    setStatus('ok', '● Live');
-    document.getElementById('lastUpdate').textContent = 'Update: ' + new Date().toLocaleTimeString('id-ID');
-    // Refresh tab yang sedang aktif
-    const activeTab = document.querySelector('.nb.on');
-    if (activeTab) activeTab.click();
-  } catch(e) {
-    setStatus('error', '✕ ' + e.message);
-    console.error('Live fetch error:', e);
-  }
-}
-
-async function fetchAPI(type) {
-  const url = `${APPS_SCRIPT_URL}?type=${type}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json = await res.json();
-  if (!json.ok) throw new Error(json.error || 'API error');
-  return json.data;
-}
-
-function setStatus(state, label) {
-  const el = document.getElementById('liveStatus');
-  if (!el) return;
-  const styles = {
-    ok:      'background:#3B6D11;color:#fff',
-    loading: 'background:#EF9F27;color:#fff',
-    error:   'background:#A32D2D;color:#fff',
-    demo:    'background:#6B5E45;color:#fff',
-  };
-  el.style.cssText = `font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;${styles[state]||styles.demo}`;
-  el.textContent = label;
-}
-
-// Auto-refresh setiap 5 menit
-setInterval(fetchLiveData, 5 * 60 * 1000);
+const API = '/api/data';
 
 // ============================================================
-// FUNGSI LIVE OVERRIDE — menggantikan data statis jika live loaded
+// STATIC DATA (historis 2020-2025 + template 2026)
 // ============================================================
-function getLiveMonthly() {
-  // Kembalikan monthly 2026 dari live data jika tersedia, fallback ke statis
-  if (!LIVE.loaded || !LIVE.daily) return null;
-  const monthly = {};
-  LIVE.daily.daily.forEach(d => {
-    const ym = d.date.slice(0,7);
-    if (ym.startsWith('2026')) monthly[ym] = (monthly[ym]||0) + d.count;
-  });
-  return monthly;
-}
-
-function getLiveHM2026() {
-  const liveM = getLiveMonthly();
-  if (!liveM) return HM[2026]; // fallback ke statis
-  return Array.from({length:12}, (_,i) => {
-    const key = `2026-${String(i+1).padStart(2,'0')}`;
-    return liveM[key] || 0;
-  });
-}
-
-function getLiveSummaryText() {
-  if (!LIVE.loaded || !LIVE.summary) return null;
-  return LIVE.summary;
-}
-
-const HM_ORIG_2026 = [1635,1331,1466,1925,1848,1617,0,0,0,0,0,0];
 const HM={
   2020:[1856,1603,1745,1312,2420,2070,2129,2188,2936,2326,2253,2855],
   2021:[1958,1895,2284,1668,2032,2670,2333,1961,2813,2680,2486,3147],
@@ -536,542 +408,438 @@ const SRC_YR={'Referensi':[10546,10867,13055,10310,7882,7746,3934],'Instagram':[
 const SC=['#185FA5','#E24B4A','#639922','#BA7517','#534AB7','#D85A30','#D4537E','#0F6E56','#888780'];
 const KB26={1:{Puas:38.5,Super:23.2,Hemat:7.6,Istimewa:9.8,Tasyakuran:0.6,Lainnya:14.7,Platinum:5.5},2:{Puas:37.0,Super:21.3,Hemat:8.2,Istimewa:8.3,Tasyakuran:0.3,Lainnya:20.6,Platinum:4.4},3:{Puas:37.4,Super:20.2,Hemat:8.0,Istimewa:7.2,Tasyakuran:0.3,Lainnya:23.4,Platinum:3.5},4:{Puas:39.5,Super:22.4,Hemat:7.1,Istimewa:8.6,Tasyakuran:0.1,Lainnya:17.8,Platinum:4.6},5:{Puas:36.9,Super:20.7,Hemat:8.8,Istimewa:8.2,Tasyakuran:0.2,Lainnya:20.3,Platinum:5.0},6:{Puas:37.2,Super:23.2,Hemat:8.3,Istimewa:7.2,Tasyakuran:0.4,Lainnya:18.6,Platinum:5.1}};
 const KB_C=['#BA7517','#185FA5','#E24B4A','#639922','#888780','#D85A30','#534AB7'];
-
-// Weekly per tahun (Tanggal Pesan, dari CSV master)
 const WK20=[405,485,389,407,367,399,370,369,353,415,436,369,314,274,226,331,278,539,531,590,404,685,505,468,428,488,570,535,470,457,287,357,509,557,633,1038,800,480,517,499,494,535,533,576,578,497,504,492,585,578,597,673,517];
 const WK21=[568,410,386,396,455,512,442,486,544,496,465,498,561,457,300,341,390,249,111,782,677,671,584,569,551,815,647,382,424,482,339,515,515,508,765,620,554,611,586,612,660,541,619,592,542,574,554,625,690,655,740,661,198];
 const WK22=[591,555,547,514,512,449,425,562,602,569,623,574,347,370,340,381,175,188,986,625,617,649,718,666,843,1193,1136,1180,945,625,287,545,541,492,844,793,568,520,591,575,559,483,415,477,426,404,492,475,523,506,496,472];
 const WK23=[819,513,423,432,450,430,438,395,501,523,499,278,297,339,329,128,488,354,550,584,452,768,783,668,652,811,639,578,390,453,236,351,434,451,556,603,543,446,539,495,479,432,465,437,418,391,410,470,438,415,463,562];
 const WK24=[462,203,354,323,377,358,359,394,428,325,268,258,300,300,121,560,495,278,411,362,464,523,651,528,467,628,578,472,396,370,482,420,350,347,440,442,425,397,358,476,430,412,380,427,422,401,359,417,440,395,345,272];
 const WK25=[607,480,446,347,312,346,364,331,289,363,372,409,234,156,614,480,381,233,315,355,329,324,606,592,443,454,445,339,324,299,245,248,277,289,332,625,428,407,335,198,289,337,337,362,549,379,354,398,126,276,362,477];
-const WK26=[34,292,373,318,330,402,493,250,254,315,385,152,149,553,448,437,399,464,388,400,389,481,424,527,472,401];
-
-// Branch Monitor weekly W01-W26 (TANGGAL PESAN dari spreadsheet 2026)
-const WKC={
-  'SURABAYA':[44,76,65,60,81,82,85,79,89,110,92,40,77,118,99,95,97,97,110,84,90,111,91,90,84,36],
-  'SEMARANG':[14,21,25,22,27,19,16,9,13,14,18,12,12,29,30,26,30,22,28,18,37,29,36,32,25,8],
-  'MALANG':[11,20,15,21,22,19,13,8,13,29,13,7,16,22,30,22,22,22,17,16,20,24,37,32,26,9],
-  'SIDOARJO':[15,16,20,17,25,25,19,8,16,16,14,4,7,36,24,23,19,19,26,20,25,18,28,29,28,10],
-  'BALIKPAPAN':[9,20,13,10,13,18,12,10,10,13,17,5,18,28,22,13,12,29,14,12,11,30,17,25,24,9],
-  'BEKASI':[11,24,14,13,14,17,15,6,10,8,3,4,10,29,19,17,20,17,15,18,10,19,26,24,19,9],
-  'MADIUN':[6,11,14,11,6,14,8,9,10,22,33,1,1,26,21,14,18,18,8,16,10,15,12,11,18,3],
-  'TAN.SELATAN':[8,10,7,4,11,21,8,4,5,10,14,1,10,20,17,9,22,15,13,14,10,11,16,10,18,5],
-  'GRESIK':[6,9,9,10,16,11,7,6,9,9,2,0,8,20,15,20,13,13,9,17,11,19,15,13,11,7],
-  'DEPOK':[6,8,11,9,9,11,7,4,6,7,4,2,10,12,8,10,6,10,7,19,9,11,14,13,16,4],
-  'CIKARANG':[6,12,9,12,11,9,5,4,4,6,3,1,1,22,12,15,9,15,13,8,9,4,17,5,10,7],
-  'PASURUAN':[5,11,10,6,7,7,3,6,6,7,8,0,12,12,17,7,7,12,12,12,4,11,12,12,14,10],
-  'TUBAN':[4,17,9,5,6,12,6,4,9,11,15,2,5,9,12,8,8,4,7,10,9,11,17,13,4,5],
-  'JAKARTA TIMUR':[6,8,4,5,8,8,8,6,3,8,5,0,1,17,3,5,12,5,10,6,13,3,16,14,13,5],
-  'TASIKMALAYA':[3,12,11,4,7,8,7,5,10,4,7,1,5,10,8,9,10,11,11,8,10,8,5,5,4,4],
-  'KARAWANG':[6,10,10,9,10,9,6,4,3,8,4,2,6,13,6,5,7,13,8,3,2,5,10,10,6,2],
-  'BOGOR':[3,12,5,11,8,7,4,3,9,9,3,2,4,9,5,14,5,10,8,5,6,9,9,6,6,3],
-  'YOGYAKARTA':[2,8,9,7,8,6,7,6,4,6,6,2,6,7,5,4,5,14,5,5,6,5,8,9,7,2],
-  'BOJONEGORO':[1,9,5,6,5,5,6,0,4,1,7,5,7,11,7,11,9,5,14,3,3,3,13,8,5,1],
-  'BANDUNG':[3,9,2,5,5,4,13,5,5,6,4,1,0,10,5,5,7,6,12,8,9,6,7,4,5,1],
-  'KEDIRI':[5,7,4,7,2,2,6,5,7,10,3,5,10,12,8,6,4,7,4,5,5,7,6,4,7,3],
-  'TAN.PUSAT':[1,3,6,6,3,4,5,1,5,4,1,0,1,3,10,2,6,8,5,9,2,1,6,8,6,2],
-  'BANYUWANGI':[0,3,7,4,1,11,3,0,2,5,6,5,7,6,3,3,6,6,7,3,3,5,6,1,3,3],
-  'LAMONGAN':[0,2,4,3,5,6,4,7,3,4,0,4,5,5,3,2,7,7,1,0,2,9,2,9,3,0],
-  'CIMAHI':[2,2,3,5,5,1,5,2,2,2,4,0,3,4,1,1,1,3,9,9,4,6,6,5,6,3],
-  'PROBOLINGGO':[3,5,3,1,5,2,2,4,2,2,6,0,5,9,5,6,3,1,3,4,4,1,5,3,6,3],
-  'SUBANG':[2,3,5,2,1,7,5,1,4,1,3,1,4,5,5,4,0,5,5,7,2,2,4,4,4,2],
-  'CILEGON':[1,0,2,2,5,8,2,3,4,7,2,3,4,4,4,3,2,3,3,4,2,3,4,6,4,3],
-  'UNGARAN':[1,8,3,4,1,6,4,4,5,0,3,3,2,7,7,9,1,5,0,3,4,0,0,1,0,1],
-  'INDRAMAYU':[3,4,4,4,1,4,1,1,3,6,3,1,0,4,1,2,6,2,4,2,3,3,7,5,7,3],
-  'SOLO':[2,3,4,2,6,2,2,1,2,6,5,3,4,2,4,1,4,1,3,3,1,3,5,3,4,0],
-  'SAMARINDA':[2,3,2,5,4,1,3,1,3,1,1,0,3,2,2,3,4,8,4,4,3,3,5,4,4,2],
-  'SALATIGA':[1,5,6,1,2,4,4,2,2,1,2,1,2,3,2,4,3,2,0,5,7,1,6,0,5,0],
-  'PURWOKERTO':[2,2,3,4,1,2,1,2,2,0,2,1,3,5,2,5,3,1,6,2,1,3,3,6,4,3],
-  'GARUT':[1,2,3,3,2,5,1,1,3,1,2,0,3,4,2,0,5,5,3,5,1,1,4,2,4,3],
-  'MAGELANG':[1,4,4,0,1,3,4,2,0,3,4,2,1,2,2,3,3,4,0,3,5,1,3,4,3,2],
-  'PURWAKARTA':[3,1,1,4,0,4,2,0,2,3,1,0,3,6,7,2,1,5,3,2,3,1,5,1,2,0],
-  'CIREBON':[2,4,4,2,2,3,2,3,0,3,2,1,0,4,3,2,1,3,4,2,0,3,3,4,2,1],
-  'JOMBANG':[0,1,1,3,2,4,1,1,0,2,2,0,1,6,3,6,4,6,2,0,1,5,4,5,3,1],
-  'KENDAL':[0,3,3,3,1,1,2,0,5,1,4,2,1,3,2,2,3,4,2,4,2,4,1,0,4,1],
-  'JEPARA':[2,5,1,0,2,3,2,2,3,1,3,1,0,6,3,1,2,2,0,2,4,2,2,4,4,2],
-  'MOJOKERTO':[2,2,1,2,3,2,2,3,2,1,2,3,3,4,3,4,1,4,2,0,3,1,1,2,2,2],
-  'KUDUS':[0,0,2,5,3,1,4,0,2,1,5,1,2,3,2,2,0,2,4,2,3,3,4,1,5,2],
-  'JEMBER':[2,3,1,3,0,1,2,4,3,3,2,0,0,4,2,0,1,1,1,2,2,2,6,4,3,2],
-  'TULUNGAGUNG':[2,1,4,1,2,3,3,4,2,2,2,0,3,5,4,2,0,2,3,2,0,0,1,1,0,2],
-  'SUMEDANG':[0,4,3,3,0,1,2,1,3,2,2,0,2,2,2,2,3,4,1,2,4,0,0,3,3,0],
-  'SRAGEN':[2,3,4,4,1,2,4,0,5,0,1,0,0,2,1,4,2,1,1,1,0,2,0,2,0,1],
-  'CIANJUR':[0,1,4,2,1,1,2,0,1,1,2,2,2,1,2,2,1,5,3,2,4,0,1,1,1,0],
-  'SUKABUMI':[2,2,2,2,3,2,1,2,2,2,1,2,1,1,0,6,3,2,1,1,1,1,0,1,0,0],
-  'BLITAR':[0,1,1,2,1,3,2,1,2,1,0,0,0,3,2,3,1,1,2,2,1,1,1,7,3,0],
-  'SERANG':[0,3,2,1,2,4,1,1,0,0,2,0,2,2,1,0,0,0,2,0,1,4,4,1,2,0],
-  'BANJARMASIN':[1,2,1,1,1,2,1,0,1,1,3,0,0,2,4,1,1,1,5,0,2,0,0,1,2,0]
-};
-// Note: data di atas berdasarkan TANGGAL PESAN (bukan Tanggal Kirim)
-
-const CABS=Object.keys(WKC),NW=26;
+const FC_DATES=['2026-07','2026-08','2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08','2027-09','2027-10','2027-11','2027-12'];
+const FC_M={hw:{name:'Holt-Winters',rmse:381,color:'#185FA5',fc:[1983,1306,2033,1604,1546,1693,1516,1158,1347,1122,1508,2106,1912,1235,1962,1533,1475,1623],lo:[1236,559,1286,858,799,947,770,411,600,376,761,1360,1165,488,1216,787,728,876],hi:[2729,2052,2779,2351,2292,2440,2263,1904,2093,1869,2254,2853,2658,1982,2709,2280,2221,2369]},sarima:{name:'SARIMA',rmse:579,color:'#E24B4A',fc:[1742,1168,1876,1380,1507,1459,1438,1063,1221,1216,1448,1815,1671,1035,1731,1277,1294,1339],lo:[802,208,907,401,519,462,431,51,201,188,411,770,513,0,538,70,73,103],hi:[2682,2128,2846,2359,2495,2457,2444,2075,2241,2244,2485,2861,2829,2212,2923,2484,2516,2576]},prophet:{name:'Prophet',rmse:360,color:'#5DCAA5',fc:[1987,986,1938,1500,1418,1566,1306,956,1336,735,1170,2074,1930,560,1789,1345,1246,1388],lo:[1522,489,1492,1031,965,1119,859,519,874,273,700,1585,1470,83,1351,835,792,892],hi:[2465,1440,2397,1969,1882,2021,1805,1425,1817,1184,1640,2499,2380,987,2265,1813,1694,1844]}};
+const FC_ENS=FC_DATES.map((_,i)=>Math.round((FC_M.hw.fc[i]+FC_M.sarima.fc[i]+FC_M.prophet.fc[i])/3));
+const FC_LO=FC_DATES.map((_,i)=>Math.min(FC_M.hw.lo[i],FC_M.sarima.lo[i],FC_M.prophet.lo[i]));
+const FC_HI=FC_DATES.map((_,i)=>Math.max(FC_M.hw.hi[i],FC_M.sarima.hi[i],FC_M.prophet.hi[i]));
+const ACT_V=[1856,1603,1745,1312,2420,2070,2129,2188,2936,2326,2253,2855,1958,1895,2284,1668,2032,2670,2333,1961,2813,2680,2486,3147,2485,1915,2500,1395,2615,3456,4303,1997,3034,2258,1928,2105,2486,1719,1850,1381,2019,3387,2343,1550,2476,2071,1803,1913,1503,1588,1314,1632,1560,2596,2007,1738,1814,1851,1688,1559,1961,1302,1500,1815,1330,2188,1584,1160,1918,1219,1861,1381,1635,1331,1466,1925,1848,1617];
+const ACT_D=['2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12','2021-01','2021-02','2021-03','2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12','2022-01','2022-02','2022-03','2022-04','2022-05','2022-06','2022-07','2022-08','2022-09','2022-10','2022-11','2022-12','2023-01','2023-02','2023-03','2023-04','2023-05','2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'];
 const MNS=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 const YRS=[2020,2021,2022,2023,2024,2025];
 const YC=['#C8DFFA','#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7'];
+const YR_TOT=[25693,27927,29991,24998,20850,19219];
 
-// Helper functions
+// ============================================================
+// LIVE DATA STATE
+// ============================================================
+var LIVE={loaded:false,summary:null,weekly:null,pipeline:null,repeat:null,sumber:null};
+var WKC={}; // weekly per cabang dari live
+var WEEKS=[]; // week labels
+
+// ============================================================
+// HELPERS
+// ============================================================
 function gm(){return parseInt(document.getElementById('selBulan').value);}
 function gmn(){return ['Januari','Februari','Maret','April','Mei','Juni'][gm()-1];}
 function pt(a,b){if(!a)return b>0?999:0;return Math.round((b-a)/a*100);}
-function ps(a,b){const p=pt(a,b);if(p===999)return'—';return(p>0?'+':'')+p+'%';}
-function pc(a,b){const p=pt(a,b);return p>5?'up':p<-5?'dn':'neu';}
-function hb(v){
-  if(!v||v===0)return'background:#FCEBEB;color:#A32D2D';
-  if(v<=2)return'background:#F7C1C1;color:#993C1D';
-  if(v<=5)return'background:#FAEEDA;color:#854F0B';
-  if(v<=15)return'background:#C0DD97;color:#27500A';
-  if(v<=30)return'background:#378ADD;color:#fff';
-  return'background:#0C447C;color:#fff';
+function ps(a,b){var p=pt(a,b);if(p===999)return'—';return(p>0?'+':'')+p+'%';}
+function pc(a,b){var p=pt(a,b);return p>5?'up':p<-5?'dn':'neu';}
+function hb(v){if(!v||v===0)return'background:#FCEBEB;color:#A32D2D';if(v<=2)return'background:#F7C1C1;color:#993C1D';if(v<=5)return'background:#FAEEDA;color:#854F0B';if(v<=15)return'background:#C0DD97;color:#27500A';if(v<=30)return'background:#378ADD;color:#fff';return'background:#0C447C;color:#fff';}
+function ch(id){var c=document.getElementById(id);if(c&&c._c)c._c.destroy();return c;}
+function spk6(vals){var mx=Math.max.apply(null,vals.concat([1]));return '<div class="spk">'+vals.map(function(x,i){var h=Math.max(2,Math.round(x/mx*24));var cl=i===vals.length-1?'pk':x<=2?'lo':'';return'<div class="sb '+cl+'" style="height:'+h+'px"></div>';}).join('')+'</div>';}
+function setStatus(s,lbl){var el=document.getElementById('liveStatus');if(!el)return;var bg={ok:'#3B6D11',err:'#A32D2D',loading:'#EF9F27',demo:'#6B5E45'};el.style.background=bg[s]||bg.demo;el.textContent=lbl;}
+
+// ============================================================
+// FETCH LIVE
+// ============================================================
+async function fetchLive(){
+  setStatus('loading','⏳ Memuat...');
+  try {
+    var [sum,wk,pip,src] = await Promise.all([
+      fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber')
+    ]);
+    // Update HM 2026 dari daily summary
+    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src};
+    if(wk && wk.by_cabang){
+      WKC=wk.by_cabang;
+      WEEKS=wk.weeks||[];
+      // Update HM 2026 monthly dari weekly data
+      updateHM2026(wk);
+    }
+    setStatus('ok','● Live');
+    document.getElementById('lastUpdate').textContent='Update: '+new Date().toLocaleTimeString('id-ID');
+    var act=document.querySelector('.nb.on');if(act)act.click();
+  } catch(e){
+    setStatus('err','✕ '+e.message);
+  }
 }
-function spk6(c){
-  const v=(WKC[c]||[]).slice(-6),mx=Math.max(...v,1);
-  return '<div class="spk">'+v.map((x,i)=>{const h=Math.max(2,Math.round(x/mx*24));const cl=i===v.length-1?'pk':x<=2?'lo':'';return`<div class="sb ${cl}" style="height:${h}px"></div>`;}).join('')+'</div>';
+
+function updateHM2026(wk){
+  // Rebuild HM[2026] dari weekly data
+  var monthly=[0,0,0,0,0,0,0,0,0,0,0,0];
+  // Gunakan pipeline data dan summary untuk update
+  if(LIVE.summary){
+    var s=LIVE.summary;
+    var m=new Date().getMonth(); // 0-based
+    HM[2026][m]=s.this_month;
+  }
 }
+
+async function fetchAPI(type){
+  var url=API+'?type='+type;
+  var res=await fetch(url);
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  var json=await res.json();
+  if(!json.ok)throw new Error(json.error||'API error');
+  return json.data;
+}
+
+setInterval(fetchLive,5*60*1000);
+
+// ============================================================
+// NAV
+// ============================================================
+function onFil(){var id=document.querySelector('.sec.on').id.replace('s-','');if(id==='utama')bUtama();else if(id==='sumber')bSumber();}
+
+function SS(id,btn){
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('s-'+id).classList.add('on');
+  btn.classList.add('on');
+  var f={pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,forecast:function(){bFc('ensemble');}};
+  if(f[id])f[id]();
+}
+
+// ============================================================
+// UTAMA
+// ============================================================
+function bUtama(){
+  var m=gm(),mn=gmn(),cur=HM[2026][m-1],p25=HM[2025][m-1],pm=m>1?HM[2026][m-2]:null;
+  var ytd26=HM[2026].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var ytd25=HM[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var c25=pt(p25,cur),cMoM=pm?pt(pm,cur):null;
+  var liveSumm=LIVE.summary;
+  var liveExtra='';
+  if(liveSumm&&liveSumm.today!==undefined){
+    liveExtra='<div class="mc live-card"><div class="ml" style="color:#3B6D11">🟢 Hari ini (live)</div><div class="mv up">'+liveSumm.today.toLocaleString('id')+'</div><div class="ms neu">kemarin: '+liveSumm.yesterday.toLocaleString('id')+'</div></div>'
+    +'<div class="mc live-card"><div class="ml" style="color:#3B6D11">Bulan ini (live)</div><div class="mv">'+liveSumm.this_month.toLocaleString('id')+'</div><div class="ms '+(liveSumm.mom_pct>=0?'up':'dn')+'">'+(liveSumm.mom_pct>=0?'▲':'▼')+' '+Math.abs(liveSumm.mom_pct||0)+'% vs bln lalu</div></div>';
+  }
+  document.getElementById('mMet').innerHTML=liveExtra
+    +'<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms '+(c25>0?'up':'dn')+'">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'% vs '+mn+' \'25</div></div>'
+    +'<div class="mc"><div class="ml">Customer '+mn+' 2025</div><div class="mv">'+p25.toLocaleString('id')+'</div><div class="ms neu">pembanding</div></div>'
+    +'<div class="mc"><div class="ml">Selisih</div><div class="mv '+(c25>0?'up':'dn')+'">'+(cur-p25>0?'+':'')+(cur-p25).toLocaleString('id')+'</div><div class="ms">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'%</div></div>'
+    +'<div class="mc"><div class="ml">YTD 2025</div><div class="mv">'+ytd25.toLocaleString('id')+'</div><div class="ms neu">s.d. '+mn+'</div></div>'
+    +'<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms '+(ytd26>ytd25?'up':'dn')+'">'+(ytd26>ytd25?'▲':'▼')+' '+Math.abs(pt(ytd25,ytd26))+'%</div></div>'
+    +(cMoM!==null?'<div class="mc"><div class="ml">MoM vs '+MNS[m-2]+'</div><div class="mv '+(cMoM>0?'up':'dn')+'">'+(cMoM>0?'+':'')+cMoM+'%</div><div class="ms neu">bln sebelumnya</div></div>':'');
+
+  var c;
+  c=ch('cB26');if(c)c._c=new Chart(c,{type:'bar',data:{labels:MNS,datasets:[{data:HM[2026].map(function(v){return v||null;}),backgroundColor:MNS.map(function(_,i){return i===m-1?'#BA7517':i<6?'#D4A04A':'#EDE3D4';})}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  c=ch('c5y');if(c)c._c=new Chart(c,{type:'bar',data:{labels:['2021','2022','2023','2024','2025'],datasets:[{data:[27927,29991,24998,20850,19219],backgroundColor:['#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:false,min:17000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  c=ch('c3y');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:[{label:'2024',data:HM[2024],borderColor:'#B5D4F4',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]},{label:'2025',data:HM[2025],borderColor:'#EF9F27',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},{label:'2026',data:HM[2026].map(function(v){return v||null;}),borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:2.5,pointRadius:3,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+
+  var sd=SRC26[m]||{},sk=Object.keys(sd),sv=Object.values(sd),st=sv.reduce(function(a,b){return a+b;},0);
+  c=ch('cPS');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgPS').innerHTML=sk.map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+SC[i]+'"></span>'+k+' <strong>'+Math.round(sv[i]/st*100)+'%</strong></span>';}).join('');
+
+  var kd=KB26[m]||{},kK=['Puas','Super','Istimewa','Hemat','Platinum','Tasyakuran','Lainnya'],kV=kK.map(function(k){return kd[k]||0;});
+  c=ch('cPK');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:kK,datasets:[{data:kV,backgroundColor:KB_C,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgPK').innerHTML=kK.filter(function(_,i){return kV[i]>0;}).map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+KB_C[i]+'"></span>'+k+' <strong>'+kV[i]+'%</strong></span>';}).join('');
+
+  var ytd25_=HM[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
+  document.getElementById('cmpBox').innerHTML='<table class="tbl"><thead><tr><th>Bulan</th><th class="nr">2025</th><th class="nr">2026</th><th class="nr">%</th></tr></thead><tbody>'
+    +Array.from({length:m},function(_,i){return'<tr'+(i===m-1?' style="font-weight:800;background:#F9F7F2"':'')+'><td>'+MNS[i]+'</td><td class="nr">'+HM[2025][i].toLocaleString('id')+'</td><td class="nr">'+HM[2026][i].toLocaleString('id')+'</td><td class="nr '+pc(HM[2025][i],HM[2026][i])+'">'+ps(HM[2025][i],HM[2026][i])+'</td></tr>';}).join('')
+    +'<tr style="font-weight:800;border-top:2px solid #E8E4DA;background:#F9F7F2"><td>YTD</td><td class="nr">'+ytd25_.toLocaleString('id')+'</td><td class="nr">'+ytd26.toLocaleString('id')+'</td><td class="nr '+pc(ytd25_,ytd26)+'">'+ps(ytd25_,ytd26)+'</td></tr>'
+    +'</tbody></table>';
+
+  var allW=WK20.concat(WK21,WK22,WK23,WK24,WK25);
+  // Tambah WK26 dari live jika ada
+  if(LIVE.weekly&&LIVE.weekly.totals){
+    var wt=LIVE.weekly.totals;
+    Object.keys(wt).sort().forEach(function(wk){allW.push(wt[wk]||0);});
+  }
+  c=ch('c6y');if(c)c._c=new Chart(c,{type:'line',data:{labels:Array.from({length:allW.length},function(_,i){return i+1;}),datasets:[{data:allW,borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10},maxTicksLimit:10},grid:{display:false}}}}});
+}
+
+// ============================================================
+// PIPELINE
+// ============================================================
+function bPipeline(){
+  var pip=LIVE.pipeline;
+  var MN=['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  var now=new Date(),curM=now.getMonth()+1;
+
+  if(!pip){
+    // Static fallback
+    pip={
+      table:[
+        {bulan_kirim:2,bulan_kirim_nama:'Februari',total_lintas_bulan:351},
+        {bulan_kirim:3,bulan_kirim_nama:'Maret',total_lintas_bulan:229},
+        {bulan_kirim:4,bulan_kirim_nama:'April',total_lintas_bulan:553},
+        {bulan_kirim:5,bulan_kirim_nama:'Mei',total_lintas_bulan:547},
+        {bulan_kirim:6,bulan_kirim_nama:'Juni',total_lintas_bulan:448},
+        {bulan_kirim:7,bulan_kirim_nama:'Juli',total_lintas_bulan:197},
+        {bulan_kirim:8,bulan_kirim_nama:'Agustus',total_lintas_bulan:29},
+        {bulan_kirim:9,bulan_kirim_nama:'September',total_lintas_bulan:7},
+        {bulan_kirim:10,bulan_kirim_nama:'Oktober',total_lintas_bulan:2},
+        {bulan_kirim:11,bulan_kirim_nama:'November',total_lintas_bulan:1},
+        {bulan_kirim:12,bulan_kirim_nama:'Desember',total_lintas_bulan:1}
+      ],
+      avg_pipeline:426,current_month:curM,next_month:curM+1,
+      next_pipeline:curM===6?197:0,gap_next:426-(curM===6?197:0)
+    };
+  }
+
+  // Metric cards
+  var avgPip=pip.avg_pipeline||0;
+  var nextPip=pip.next_pipeline||0;
+  var gap=pip.gap_next||0;
+  document.getElementById('pipMet').innerHTML=
+    '<div class="mc"><div class="ml">Rata-rata Pipeline/Bulan</div><div class="mv">'+avgPip.toLocaleString('id')+'</div><div class="ms neu">Feb–'+MN[curM-1]+' 2026</div></div>'
+    +'<div class="mc '+(nextPip>=avgPip?'live-card':'')+'"><div class="ml">Pipeline '+(pip.next_month_nama||MN[curM])+' (sudah masuk)</div><div class="mv '+(nextPip>=avgPip?'up':'dn')+'">'+nextPip.toLocaleString('id')+'</div><div class="ms '+(nextPip>=avgPip?'up':'dn')+'">'+(nextPip>=avgPip?'✅ On track':'⚠ Gap '+(gap).toLocaleString('id')+' customer')+'</div></div>'
+    +'<div class="mc"><div class="ml">Gap vs Rata-rata</div><div class="mv '+(gap<=0?'up':'dn')+'">'+(gap<=0?'0':'+'+gap.toLocaleString('id'))+'</div><div class="ms neu">'+(gap>0?'customer yang perlu di-push':'sudah melampaui rata-rata')+'</div></div>'
+    +'<div class="mc"><div class="ml">Pipeline Terbaik 2026</div><div class="mv" style="font-size:18px">April</div><div class="ms neu">553 customer lintas bulan</div></div>';
+
+  // Tabel pipeline
+  var rows=pip.table||[];
+  var tHtml=rows.map(function(r){
+    var isCur=r.bulan_kirim===curM;
+    var isNext=r.bulan_kirim===curM+1;
+    var note='';
+    if(r.total_lintas_bulan===553) note=' <em style="font-size:11px;color:#854F0B">(tertinggi)</em>';
+    return '<tr class="'+(isCur?'cur-month':isNext?'next-month':'')+'"><td>'+r.bulan_kirim_nama+'</td><td>'+r.total_lintas_bulan.toLocaleString('id')+' Customer'+note+'</td></tr>';
+  }).join('');
+  document.getElementById('tPipeline').innerHTML=tHtml||'<tr><td colspan="2" style="text-align:center;color:#9B8E78;padding:16px">Tidak ada data</td></tr>';
+
+  // Chart
+  var labels=rows.map(function(r){return r.bulan_kirim_nama.substr(0,3);});
+  var vals=rows.map(function(r){return r.total_lintas_bulan;});
+  var colors=rows.map(function(r){return r.bulan_kirim===curM?'#BA7517':r.bulan_kirim===curM+1?'#185FA5':'#D4C9B0';});
+  var c=ch('cPip');if(c)c._c=new Chart(c,{type:'bar',data:{labels:labels,datasets:[{data:vals,backgroundColor:colors}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toLocaleString('id')+' customer';}}}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}}); 
+}
+
+// ============================================================
+// HISTORIS
+// ============================================================
+function bHistoris(){
+  var yt26=HM[2026].reduce(function(a,b){return a+b;},0);
+  var c;
+  c=ch('cHY');if(c)c._c=new Chart(c,{type:'bar',data:{labels:YRS.map(String).concat(['2026*']),datasets:[{data:YRS.map(function(y){return HM[y].reduce(function(a,b){return a+b;},0);}).concat([yt26]),backgroundColor:YC.concat(['#BA7517'])}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:false,min:9000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  c=ch('cHM');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:YRS.map(function(y,i){return{label:String(y),data:HM[y],borderColor:YC[i],backgroundColor:'transparent',borderWidth:i>=3?2:1.5,pointRadius:0,tension:0.3,borderDash:i<3?[4,3]:[]};}).concat([{label:'2026',data:HM[2026].map(function(v){return v||null;}),borderColor:'#BA7517',backgroundColor:'transparent',borderWidth:2.5,pointRadius:2,tension:0.3}])},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  document.getElementById('lgdH').innerHTML=YRS.map(function(y,i){return'<span><span class="lsq" style="background:'+YC[i]+'"></span>'+y+'</span>';}).join('')+'<span><span class="lsq" style="background:#BA7517"></span><strong>2026 ★</strong></span>';
+
+  var rows=[2026].concat(YRS.slice().reverse());
+  document.getElementById('tHist').innerHTML=rows.map(function(y){
+    var d=HM[y],tot=d.reduce(function(a,b){return a+b;},0);
+    var py=y>2020?HM[y-1]:null,pt2=py?py.reduce(function(a,b){return a+b;},0):null;
+    var chg=pt2?pt(pt2,tot):null,cc=chg&&chg>0?'up':chg&&chg<0?'dn':'neu';
+    return '<tr class="'+(y===2026?'r-hi':'')+'"><td style="font-weight:800">'+y+(y===2026?' ★':'')+'</td>'+d.map(function(v,i){return'<td class="nr"'+(y===2026&&i>=6?' style="color:#D4C9B0"':'')+'>'+( v||'—')+'</td>';}).join('')+'<td class="nr" style="font-weight:800">'+tot.toLocaleString('id')+'</td><td class="nr '+cc+'">'+( chg!==null?(chg>0?'+':'')+chg+'%':'—')+'</td></tr>';
+  }).join('');
+}
+
+// ============================================================
+// SUMBER
+// ============================================================
+function bSumber(){
+  var m=gm(),mn=gmn();
+  document.getElementById('srcBulLbl').textContent=mn+' 2026';
+  var liveS=LIVE.sumber;
+  var sd,sk,sv,st;
+
+  if(liveS&&m===new Date().getMonth()+1){
+    // Pakai data live untuk bulan berjalan
+    sd={};
+    liveS.forEach(function(r){sd[r.sumber]=r.this_month;});
+  } else {
+    sd=SRC26[m]||{};
+  }
+  sk=Object.keys(sd);sv=Object.values(sd);st=sv.reduce(function(a,b){return a+b;},0);
+
+  var c;
+  c=ch('cSB');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgSB').innerHTML=sk.map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px;font-size:11px"><span class="lsq" style="background:'+SC[i]+'"></span>'+k+': <strong>'+sv[i].toLocaleString('id')+'</strong> ('+Math.round(sv[i]/st*100)+'%)</span>';}).join('');
+
+  var srcK=Object.keys(SRC_YR);
+  c=ch('cST');if(c)c._c=new Chart(c,{type:'line',data:{labels:YRS.map(String).concat(["'26*"]),datasets:srcK.map(function(k,i){return{label:k,data:SRC_YR[k],borderColor:SC[i],backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3};})},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  document.getElementById('lgST').innerHTML=srcK.map(function(k,i){return'<span><span class="lsq" style="background:'+SC[i]+'"></span>'+k+'</span>';}).join('');
+
+  var allSK=Array.from(new Set(Object.values(SRC26).reduce(function(a,o){return a.concat(Object.keys(o));},[])));
+  allSK.sort(function(a,b){var ta=Object.values(SRC26).reduce(function(s,o){return s+(o[a]||0);},0);var tb=Object.values(SRC26).reduce(function(s,o){return s+(o[b]||0);},0);return tb-ta;});
+  document.getElementById('tS26').innerHTML=allSK.map(function(k){var v=[1,2,3,4,5,6].map(function(mo){return SRC26[mo]&&SRC26[mo][k]||0;});var tot=v.reduce(function(a,b){return a+b;},0);return'<tr><td style="font-weight:600">'+k+'</td>'+v.map(function(x){return'<td class="nr">'+(x||'—')+'</td>';}).join('')+'<td class="nr" style="font-weight:800">'+tot.toLocaleString('id')+'</td></tr>';}).join('');
+
+  window._srcMode=window._srcMode||'pct';
+  renderSrcYrTable();
+}
+
+function renderSrcYrTable(){
+  var srcK=Object.keys(SRC_YR),isPct=window._srcMode==='pct';
+  document.getElementById('tSY').innerHTML=srcK.map(function(k){
+    var vals=SRC_YR[k];
+    return'<tr><td style="font-weight:600">'+k+'</td>'+vals.map(function(v,i){
+      if(isPct){var p=(v/YR_TOT[i]*100).toFixed(1);var col=p>=30?'#3B6D11':p>=20?'#185FA5':p>=10?'#854F0B':'inherit';return'<td class="nr" style="color:'+col+';font-weight:'+(p>=20?700:400)+'">'+p+'%</td>';}
+      return'<td class="nr">'+v.toLocaleString('id')+'</td>';
+    }).join('')+'</tr>';
+  }).join('');
+  document.getElementById('btnSrcMode').textContent=isPct?'Tampilkan angka':'Tampilkan %';
+}
+
+function toggleSrcMode(){window._srcMode=window._srcMode==='pct'?'num':'pct';renderSrcYrTable();}
+
+// ============================================================
+// BRANCH MONITOR (menggunakan data live WKC)
+// ============================================================
+function getCabs(){return Object.keys(WKC).length>0?Object.keys(WKC):[];}
+function getVals(c){return WKC[c]?Object.keys(WKC[c]).sort().map(function(w){return WKC[c][w]||0;}):[0,0,0,0,0,0];}
+function getLast(c,n){var v=getVals(c);return v.slice(-n);}
+function getW(c,idx){var v=getVals(c);return v[v.length-1+idx]||0;}
+
 function wkSc(c){
-  const v=WKC[c]||[],mx=Math.max(...CABS.map(c2=>(WKC[c2]||[])[NW-1]||0),1);
-  const last=v[NW-1]||0,prev=v[NW-2]||0;
-  // Performa: nilai W26 relatif terhadap cabang terbaik
-  const cur=(last/mx)*100;
-  // Growth: WoW W25→W26 (bukan min-to-max), dinormalisasi ke 0-100
-  const wow=prev>0?((last-prev)/prev*100):0;
-  const g=Math.min(100,Math.max(0,wow+50)); // +50 bias agar netral=50
-  // Stabilitas: konsistensi 26 minggu (CV rendah = stabil)
-  const nz=v.filter(x=>x>0),mn=nz.length?nz.reduce((a,b)=>a+b)/nz.length:0;
-  const cv=mn>0?Math.sqrt(nz.reduce((a,b)=>a+(b-mn)**2,0)/nz.length)/mn:1;
+  var v=getVals(c),cabs=getCabs();
+  var mx=Math.max.apply(null,cabs.map(function(c2){return getW(c2,0)||0;}).concat([1]));
+  var last=getW(c,0),prev=getW(c,-1);
+  var cur=(last/mx)*100;
+  var wow=prev>0?((last-prev)/prev*100):0;
+  var g=Math.min(100,Math.max(0,wow+50));
+  var nz=v.filter(function(x){return x>0;});
+  var mn=nz.length?nz.reduce(function(a,b){return a+b;})/nz.length:0;
+  var cv=mn>0?Math.sqrt(nz.reduce(function(a,b){return a+(b-mn)*(b-mn);},0)/nz.length)/mn:1;
   return Math.round(cur*0.4+g*0.35+Math.max(0,100-cv*100)*0.25);
 }
+
 function wkEw(c){
-  const v=WKC[c]||[],l=v[NW-1]||0,p=v[NW-2]||0,p2=v[NW-3]||0;
+  var l=getW(c,0),p=getW(c,-1),p2=getW(c,-2);
   if(l<=1)return{l:'🔴 Kritis',c:'br'};
   if(l<p*0.55&&p<p2*0.55)return{l:'🔴 Kritis',c:'br'};
   if(l<=3||l<p*0.7)return{l:'🟠 Perhatian',c:'ba'};
   if(l<p*0.9)return{l:'🟡 Waspada',c:'ba'};
   return{l:'🟢 Aman',c:'bg'};
 }
-function wkDs(c){const v=WKC[c]||[];let s=0;for(let i=v.length-1;i>0;i--){if(v[i]<v[i-1])s++;else break;}return s;}
-function wkUs(c){const v=WKC[c]||[];let s=0;for(let i=v.length-1;i>0;i--){if(v[i]>v[i-1])s++;else break;}return s;}
+function wkDs(c){var v=getVals(c);var s=0;for(var i=v.length-1;i>0;i--){if(v[i]<v[i-1])s++;else break;}return s;}
+function wkUs(c){var v=getVals(c);var s=0;for(var i=v.length-1;i>0;i--){if(v[i]>v[i-1])s++;else break;}return s;}
 function wkRisk(c){
-  const v=WKC[c]||[];
-  const cf=v.filter(x=>x<=1).length/v.length*100;
-  let ds=0;for(let i=v.length-1;i>0;i--){if(v[i]<v[i-1])ds++;else break;}
-  const gn=v[0]>0&&v[v.length-1]<v[0]?Math.min(100,(v[0]-v[v.length-1])/v[0]*100):0;
-  let un=0;for(let i=2;i<v.length;i++)if(v[i-2]>0&&v[i-1]<v[i-2]*0.8&&v[i]<v[i-1]*0.8)un=50;
-  return Math.round(cf*0.4+Math.min(100,ds/v.length*100)*0.3+gn*0.2+un*0.1);
-}
-function ch(id){const c=document.getElementById(id);if(c&&c._c)c._c.destroy();return c;}
-
-function onFil(){const id=document.querySelector('.sec.on').id.replace('s-','');if(id==='utama')bUtama();else if(id==='sumber')bSumber();}
-
-function SS(id,btn){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('s-'+id).classList.add('on');btn.classList.add('on');
-  const f={historis:bHist,sumber:bSumber,ranking:()=>bRank('all'),kritis:bKritis,recovery:bRec,risk:bRisk,insight:bInsight,forecast:()=>bForecast('ensemble')};
-  if(f[id])f[id]();
-}
-
-function bUtama(){
-  // Inject live 2026 data jika sudah loaded
-  if (LIVE.loaded) HM[2026] = getLiveHM2026();
-
-  const m=gm(),mn=gmn(),cur=HM[2026][m-1],p25=HM[2025][m-1],pm=m>1?HM[2026][m-2]:null;
-  const ytd26=HM[2026].slice(0,m).reduce((a,b)=>a+b),ytd25=HM[2025].slice(0,m).reduce((a,b)=>a+b);
-  const c25=pt(p25,cur),cMoM=pm?pt(pm,cur):null;
-  const liveSumm=getLiveSummaryText();
-
-  // Card hari ini (live) + card bulan ini (live) jika tersedia
-  let liveExtra='';
-  if(liveSumm&&liveSumm.today!==undefined){
-    liveExtra=`
-    <div class="mc" style="border:1.5px solid #3B6D11">
-      <div class="ml" style="color:#3B6D11">🟢 Hari ini (live)</div>
-      <div class="mv up">${liveSumm.today.toLocaleString('id')}</div>
-      <div class="ms neu">kemarin: ${liveSumm.yesterday.toLocaleString('id')}</div>
-    </div>
-    <div class="mc" style="border:1.5px solid #3B6D11">
-      <div class="ml" style="color:#3B6D11">Bulan ini (live)</div>
-      <div class="mv">${liveSumm.this_month.toLocaleString('id')}</div>
-      <div class="ms ${(liveSumm.mom_pct||0)>0?'up':'dn'}">${(liveSumm.mom_pct||0)>0?'▲':'▼'} ${Math.abs(liveSumm.mom_pct||0)}% vs bln lalu</div>
-    </div>`;
-  }
-
-  document.getElementById('mMet').innerHTML=liveExtra+`
-    <div class="mc"><div class="ml">Customer ${mn} 2026</div><div class="mv">${cur.toLocaleString('id')}</div><div class="ms ${c25>0?'up':'dn'}">${c25>0?'▲':'▼'} ${Math.abs(c25)}% vs ${mn} '25</div></div>
-    <div class="mc"><div class="ml">Customer ${mn} 2025</div><div class="mv">${p25.toLocaleString('id')}</div><div class="ms neu">pembanding</div></div>
-    <div class="mc"><div class="ml">Selisih</div><div class="mv ${c25>0?'up':'dn'}">${cur-p25>0?'+':''}${(cur-p25).toLocaleString('id')}</div><div class="ms">${c25>0?'▲':'▼'} ${Math.abs(c25)}%</div></div>
-    <div class="mc"><div class="ml">YTD 2025</div><div class="mv">${ytd25.toLocaleString('id')}</div><div class="ms neu">s.d. ${mn}</div></div>
-    <div class="mc"><div class="ml">YTD 2026</div><div class="mv">${ytd26.toLocaleString('id')}</div><div class="ms ${ytd26>ytd25?'up':'dn'}">${ytd26>ytd25?'▲':'▼'} ${Math.abs(pt(ytd25,ytd26))}%</div></div>
-    ${cMoM!==null?`<div class="mc"><div class="ml">MoM vs ${MNS[m-2]}</div><div class="mv ${cMoM>0?'up':'dn'}">${cMoM>0?'+':''}${cMoM}%</div><div class="ms neu">bln sebelumnya</div></div>`:''}`;
-
-  let c;
-  c=ch('cB26');if(c)c._c=new Chart(c,{type:'bar',data:{labels:MNS,datasets:[{data:HM[2026].map(v=>v||null),backgroundColor:MNS.map((_,i)=>i===m-1?'#BA7517':i<6?'#D4A04A':'#EDE3D4')}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
-  c=ch('c5y');if(c)c._c=new Chart(c,{type:'bar',data:{labels:['2021','2022','2023','2024','2025'],datasets:[{data:[27927,29991,24998,20850,19219],backgroundColor:['#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{beginAtZero:false,min:17000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
-  c=ch('c3y');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:[{label:'2024',data:HM[2024],borderColor:'#B5D4F4',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]},{label:'2025',data:HM[2025],borderColor:'#EF9F27',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},{label:'2026',data:HM[2026].map(v=>v||null),borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:2.5,pointRadius:3,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
-
-  const sd=SRC26[m]||{},sk=Object.keys(sd),sv=Object.values(sd),st=sv.reduce((a,b)=>a+b,0);
-  c=ch('cPS');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
-  document.getElementById('lgPS').innerHTML=sk.map((k,i)=>`<span style="display:flex;align-items:center;gap:4px"><span class="lsq" style="background:${SC[i]}"></span>${k} <strong>${Math.round(sv[i]/st*100)}%</strong></span>`).join('');
-
-  const kd=KB26[m]||{},kK=['Puas','Super','Istimewa','Hemat','Platinum','Tasyakuran','Lainnya'],kV=kK.map(k=>kd[k]||0);
-  c=ch('cPK');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:kK,datasets:[{data:kV,backgroundColor:KB_C,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
-  document.getElementById('lgPK').innerHTML=kK.filter((_,i)=>kV[i]>0).map((k,i)=>`<span style="display:flex;align-items:center;gap:4px"><span class="lsq" style="background:${KB_C[i]}"></span>${k} <strong>${kV[i]}%</strong></span>`).join('');
-
-  document.getElementById('cmpBox').innerHTML=`<table class="tbl"><thead><tr><th>Bln</th><th class="nr">2025</th><th class="nr">2026</th><th class="nr">%</th></tr></thead><tbody>${[...Array(m)].map((_,i)=>`<tr${i===m-1?' style="font-weight:800;background:#F9F7F2"':''}><td>${MNS[i]}</td><td class="nr">${HM[2025][i].toLocaleString('id')}</td><td class="nr">${HM[2026][i].toLocaleString('id')}</td><td class="nr ${pc(HM[2025][i],HM[2026][i])}">${ps(HM[2025][i],HM[2026][i])}</td></tr>`).join('')}<tr style="font-weight:800;border-top:2px solid #E8E4DA;background:#F9F7F2"><td>YTD</td><td class="nr">${ytd25.toLocaleString('id')}</td><td class="nr">${ytd26.toLocaleString('id')}</td><td class="nr ${pc(ytd25,ytd26)}">${ps(ytd25,ytd26)}</td></tr></tbody></table>`;
-
-  const allW=[...WK20,...WK21,...WK22,...WK23,...WK24,...WK25,...WK26];
-  c=ch('c8y');if(c)c._c=new Chart(c,{type:'line',data:{labels:Array.from({length:allW.length},(_,i)=>i+1),datasets:[{data:allW,borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10},maxTicksLimit:10},grid:{display:false}}}}});
-}
-
-function bHist(){
-  const yt26=HM[2026].reduce((a,b)=>a+b);
-  let c;
-  c=ch('cHY');if(c)c._c=new Chart(c,{type:'bar',data:{labels:[...YRS.map(String),'2026*'],datasets:[{data:[...YRS.map(y=>HM[y].reduce((a,b)=>a+b)),yt26],backgroundColor:[...YC,'#BA7517']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{beginAtZero:false,min:9000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
-  c=ch('cHM');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:[...YRS.map((y,i)=>({label:String(y),data:HM[y],borderColor:YC[i],backgroundColor:'transparent',borderWidth:i>=3?2:1.5,pointRadius:0,tension:0.3,borderDash:i<3?[4,3]:[]})),{label:'2026',data:HM[2026].map(v=>v||null),borderColor:'#BA7517',backgroundColor:'transparent',borderWidth:2.5,pointRadius:2,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
-  document.getElementById('lgdH').innerHTML=[...YRS.map((y,i)=>`<span><span class="lsq" style="background:${YC[i]}"></span>${y}</span>`),'<span><span class="lsq" style="background:#BA7517"></span><strong>2026 ★</strong></span>'].join('');
-  const rows=[2026,...[...YRS].reverse()];
-  document.getElementById('tHist').innerHTML=rows.map(y=>{
-    const d=HM[y],tot=d.reduce((a,b)=>a+b),py=y>2020?HM[y-1]:null,pt2=py?py.reduce((a,b)=>a+b):null;
-    const chg=pt2?pt(pt2,tot):null,cc=chg&&chg>0?'up':chg&&chg<0?'dn':'neu';
-    return`<tr class="${y===2026?'r26':''}"><td style="font-weight:800">${y}${y===2026?' ★':''}</td>${d.map((v,i)=>`<td class="nr" ${y===2026&&i>=6?'style="color:#D4C9B0"':''}>${v||'—'}</td>`).join('')}<td class="nr" style="font-weight:800">${tot.toLocaleString('id')}</td><td class="nr ${cc}">${chg!==null?(chg>0?'+':'')+chg+'%':'—'}</td></tr>`;
-  }).join('');
-}
-
-function bSumber(){
-  const m=gm(),mn=gmn();
-  document.getElementById('srcLbl').textContent=mn+' 2026';
-  const sd=SRC26[m]||{},sk=Object.keys(sd),sv=Object.values(sd),st=sv.reduce((a,b)=>a+b,0);
-  let c;
-  c=ch('cSB');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
-  document.getElementById('lgSB').innerHTML=sk.map((k,i)=>`<span style="display:flex;align-items:center;gap:4px"><span class="lsq" style="background:${SC[i]}"></span>${k}: <strong>${sv[i].toLocaleString('id')}</strong> (${Math.round(sv[i]/st*100)}%)</span>`).join('');
-  const srcK=Object.keys(SRC_YR);
-  c=ch('cST');if(c)c._c=new Chart(c,{type:'line',data:{labels:[...YRS.map(String),"'26*"],datasets:srcK.map((k,i)=>({label:k,data:SRC_YR[k],borderColor:SC[i],backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
-  document.getElementById('lgST').innerHTML=srcK.map((k,i)=>`<span><span class="lsq" style="background:${SC[i]}"></span>${k}</span>`).join('');
-  const allSK=[...new Set(Object.values(SRC26).flatMap(o=>Object.keys(o)))].sort((a,b)=>{const t=k=>Object.values(SRC26).reduce((s,o)=>s+(o[k]||0),0);return t(b)-t(a);});
-  document.getElementById('tS26').innerHTML=allSK.map(k=>{const v=[1,2,3,4,5,6].map(mo=>SRC26[mo]?.[k]||0),tot=v.reduce((a,b)=>a+b);return`<tr><td style="font-weight:600">${k}</td>${v.map(x=>`<td class="nr">${x||'—'}</td>`).join('')}<td class="nr" style="font-weight:800">${tot.toLocaleString('id')}</td></tr>`;}).join('');
-  // Render tabel sumber per tahun dalam %
-  window._srcMode='pct';
-  renderSrcYrTable();
+  var v=getVals(c);
+  var cf=v.filter(function(x){return x<=1;}).length/Math.max(v.length,1)*100;
+  var ds=wkDs(c);
+  var gn=v[0]>0&&v[v.length-1]<v[0]?Math.min(100,(v[0]-v[v.length-1])/v[0]*100):0;
+  var un=0;for(var i=2;i<v.length;i++)if(v[i-2]>0&&v[i-1]<v[i-2]*0.8&&v[i]<v[i-1]*0.8)un=50;
+  return Math.round(cf*0.4+Math.min(100,ds/Math.max(v.length,1)*100)*0.3+gn*0.2+un*0.1);
 }
 
 function bRank(f){
-  let rows=[...CABS].sort((a,b)=>wkSc(b)-wkSc(a));
+  var cabs=getCabs();
+  if(cabs.length===0){document.getElementById('tRank').innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:#9B8E78">Data mingguan belum dimuat. Tunggu sebentar...</td></tr>';document.getElementById('rankDataNote').textContent='Menunggu data live...';return;}
+  document.getElementById('rankDataNote').textContent='Data live '+WEEKS.length+' minggu · W'+WEEKS[0]+' s.d. W'+WEEKS[WEEKS.length-1];
+  var rows=cabs.slice().sort(function(a,b){return wkSc(b)-wkSc(a);});
   if(f==='top10')rows=rows.slice(0,10);
   else if(f==='bot10')rows=rows.slice(-10).reverse();
-  else if(f==='naik')rows=rows.filter(c=>wkUs(c)>=2);
-  else if(f==='turun')rows=rows.filter(c=>wkDs(c)>=3);
-  const gold=['style="color:#BA7517;font-weight:800"','style="color:#6B5E45;font-weight:800"','style="color:#8B4513;font-weight:800"'];
-  document.getElementById('tRank').innerHTML=rows.map((c,i)=>{
-    const v=WKC[c]||[],e=wkEw(c),s=wkSc(c),w26=v[NW-1]||0,w25=v[NW-2]||0;
-    return`<tr><td ${gold[i]||''}>${i+1}</td><td style="font-weight:600">${c}</td><td class="nr">${w25}</td><td class="nr" style="font-weight:700">${w26}</td><td class="nr ${pc(w25,w26)}">${ps(w25,w26)}</td><td><div style="display:flex;align-items:center;gap:5px"><div style="width:50px;height:5px;background:#D4C9B0;border-radius:3px;overflow:hidden"><div style="height:100%;width:${s}%;background:#BA7517;border-radius:3px"></div></div><span style="font-size:11px;font-weight:700">${s}</span></div></td><td><span class="bdg ${e.c}">${e.l}</span></td><td>${spk6(c)}</td></tr>`;
+  else if(f==='naik')rows=rows.filter(function(c){return wkUs(c)>=2;});
+  else if(f==='turun')rows=rows.filter(function(c){return wkDs(c)>=3;});
+  var gold=['style="color:#BA7517;font-weight:800"','style="color:#6B5E45;font-weight:800"','style="color:#8B4513;font-weight:800"'];
+  document.getElementById('tRank').innerHTML=rows.map(function(c,i){
+    var e=wkEw(c),s=wkSc(c),w26=getW(c,0),w25=getW(c,-1);
+    return'<tr><td '+( gold[i]||'')+'>'+(i+1)+'</td><td style="font-weight:600">'+c+'</td><td class="nr">'+w25+'</td><td class="nr" style="font-weight:700">'+w26+'</td><td class="nr '+pc(w25,w26)+'">'+ps(w25,w26)+'</td><td><div style="display:flex;align-items:center;gap:4px"><div style="width:50px;height:5px;background:#E8E4DA;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+s+'%;background:#BA7517;border-radius:2px"></div></div><span style="font-size:10px;font-weight:700">'+s+'</span></div></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td><td>'+spk6(getLast(c,6))+'</td></tr>';
   }).join('');
 }
 
 function bKritis(){
-  const kritis=CABS.filter(c=>{const v=WKC[c]||[];return v.slice(-4).some(x=>x<=2);}).sort((a,b)=>{
-    const fa=(WKC[a]||[]).filter(x=>x<=2).length,fb=(WKC[b]||[]).filter(x=>x<=2).length;return fb-fa;});
-  document.getElementById('tKritis').innerHTML=kritis.map((c,i)=>{
-    const v=WKC[c]||[],fq=v.filter(x=>x<=2).length,e=wkEw(c),last4=v.slice(-4);
-    return`<tr><td style="color:#6B5E45">${i+1}</td><td style="font-weight:600">${c}</td>${last4.map(x=>`<td class="nr" style="${hb(x)};font-weight:${x<=2?800:400}">${x}</td>`).join('')}<td class="nr"><span class="bdg ${fq>=15?'br':fq>=8?'ba':'bgr'}">${fq}x</span></td><td><span class="bdg ${e.c}">${e.l}</span></td></tr>`;
+  var cabs=getCabs();
+  if(cabs.length===0){document.getElementById('tKritis').innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:#9B8E78">Memuat data...</td></tr>';return;}
+  document.getElementById('kritisNote').textContent='Data live '+WEEKS.length+' minggu';
+  var kritis=cabs.filter(function(c){return getLast(c,4).some(function(x){return x<=2;});}).sort(function(a,b){return getVals(b).filter(function(x){return x<=2;}).length-getVals(a).filter(function(x){return x<=2;}).length;});
+  document.getElementById('tKritis').innerHTML=kritis.map(function(c,i){
+    var l4=getLast(c,4),fq=getVals(c).filter(function(x){return x<=2;}).length,e=wkEw(c);
+    return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td>'+l4.map(function(x){return'<td class="nr" style="'+hb(x)+';font-weight:'+(x<=2?800:400)+'">'+x+'</td>';}).join('')+'<td class="nr"><span class="bdg '+(fq>=15?'br':fq>=8?'ba':'bgr')+'">'+fq+'x</span></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td></tr>';
   }).join('');
-  const top20=CABS.slice(0,20),wkRange=Array.from({length:10},(_,i)=>16+i);
-  const wkLabels=wkRange.map(i=>`W${String(i+1).padStart(2,'0')}`);
-  let h=`<div style="display:grid;grid-template-columns:90px repeat(10,1fr);gap:1px;background:#E8E4DA;border-radius:10px;overflow:hidden;font-size:10px;min-width:540px">`;
-  h+=`<div style="background:#F9F7F2;padding:4px 8px;font-weight:700;color:#6B5E45">Cabang</div>`;
-  wkLabels.forEach(wk=>h+=`<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">${wk}</div>`);
-  top20.forEach(c=>{
-    h+=`<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">${c}</div>`;
-    wkRange.forEach(j=>{const v=(WKC[c]||[])[j]||0;h+=`<div style="${hb(v)};padding:4px;text-align:center">${v||''}</div>`;});
+
+  // Heatmap top 20, 10 weeks terakhir
+  var top20=cabs.slice(0,20);
+  var lastWks=WEEKS.slice(-10);
+  var h='<div style="display:grid;grid-template-columns:90px repeat('+lastWks.length+',1fr);gap:1px;background:#E8E4DA;border-radius:10px;overflow:hidden;font-size:10px;min-width:540px">';
+  h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:700;color:#6B5E45">Cabang</div>';
+  lastWks.forEach(function(wk){h+='<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">'+wk+'</div>';});
+  top20.forEach(function(c){
+    h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+c+'</div>';
+    lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+( v||'')+'</div>';});
   });
   h+='</div>';
   document.getElementById('hmWrap').innerHTML=h;
 }
 
 function bRec(){
-  // Recovery: cabang yang naik signifikan W25→W26 (WoW positif)
-  const wowArr=CABS.map(c=>{
-    const v=WKC[c]||[],last=v[NW-1]||0,prev=v[NW-2]||0;
-    const wow=prev>0?Math.round((last-prev)/prev*100):0;
-    return{c,wow,last,prev};
-  }).filter(d=>d.wow>0&&d.last>0).sort((a,b)=>b.wow-a.wow);
-
-  document.getElementById('tRec').innerHTML=wowArr.slice(0,12).map((d,i)=>`<tr><td style="color:#6B5E45">${i+1}</td><td style="font-weight:600">${d.c}</td><td>${spk6(d.c)}</td><td class="nr up" style="font-weight:700">+${d.wow}% (${d.prev}→${d.last})</td><td><span class="bdg bg">▲ Naik</span></td></tr>`).join('');
-  document.getElementById('tGrow').innerHTML=CABS.filter(c=>wkUs(c)>=2).sort((a,b)=>wkUs(b)-wkUs(a)).slice(0,10).map((c,i)=>`<tr><td style="color:#6B5E45">${i+1}</td><td style="font-weight:600">${c}</td><td>${spk6(c)}</td><td class="nr"><span class="bdg bg">${wkUs(c)} mgg</span></td></tr>`).join('');
-  document.getElementById('tDecl').innerHTML=CABS.filter(c=>wkDs(c)>=3).sort((a,b)=>wkDs(b)-wkDs(a)).map((c,i)=>`<tr><td style="color:#6B5E45">${i+1}</td><td style="font-weight:600">${c}</td><td>${spk6(c)}</td><td class="nr"><span class="bdg br">${wkDs(c)} mgg</span></td></tr>`).join('');
+  var cabs=getCabs();
+  var wowArr=cabs.map(function(c){var last=getW(c,0),prev=getW(c,-1);return{c:c,wow:prev>0?Math.round((last-prev)/prev*100):0,last:last,prev:prev};}).filter(function(d){return d.wow>0&&d.last>0;}).sort(function(a,b){return b.wow-a.wow;});
+  document.getElementById('tRec').innerHTML=wowArr.slice(0,12).map(function(d,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+d.c+'</td><td>'+spk6(getLast(d.c,6))+'</td><td class="nr up" style="font-weight:700">+'+d.wow+'% ('+d.prev+'→'+d.last+')</td><td><span class="bdg bg">▲ Naik</span></td></tr>';}).join('');
+  document.getElementById('tGrow').innerHTML=cabs.filter(function(c){return wkUs(c)>=2;}).sort(function(a,b){return wkUs(b)-wkUs(a);}).slice(0,10).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg bg">'+wkUs(c)+' mgg</span></td></tr>';}).join('');
+  document.getElementById('tDecl').innerHTML=cabs.filter(function(c){return wkDs(c)>=3;}).sort(function(a,b){return wkDs(b)-wkDs(a);}).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg br">'+wkDs(c)+' mgg</span></td></tr>';}).join('');
 }
 
 function bRisk(){
-  const ri=CABS.map(c=>({c,rs:wkRisk(c),e:wkEw(c)})).filter(d=>d.rs>0).sort((a,b)=>b.rs-a.rs);
-  const cl=['#E24B4A','#D85A30','#BA7517','#185FA5'];
-  document.getElementById('riskWrap').innerHTML=ri.slice(0,24).map((d,i)=>{
-    const clr=d.rs>=70?cl[0]:d.rs>=50?cl[1]:d.rs>=30?cl[2]:cl[3];
-    const v=WKC[d.c]||[],fq=v.filter(x=>x<=1).length,dss=wkDs(d.c);
-    return`<div class="ri"><div class="rin">${i+1}. ${d.c}</div><div class="rbar"><div class="rf" style="width:${d.rs}%;background:${clr}"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:${clr}">Risk ${d.rs}/100</span><span class="bdg ${d.e.c}">${d.e.l}</span></div><div class="rmeta">${fq>0?`<span class="bdg br">${fq}x kritis</span>`:''} ${dss>=2?`<span class="bdg ba">↓${dss} mgg</span>`:''}</div></div>`;
+  var cabs=getCabs();
+  var ri=cabs.map(function(c){return{c:c,rs:wkRisk(c),e:wkEw(c)};}).filter(function(d){return d.rs>0;}).sort(function(a,b){return b.rs-a.rs;});
+  var cl=['#E24B4A','#D85A30','#BA7517','#185FA5'];
+  document.getElementById('riskWrap').innerHTML=ri.slice(0,24).map(function(d,i){
+    var clr=d.rs>=70?cl[0]:d.rs>=50?cl[1]:d.rs>=30?cl[2]:cl[3];
+    var fq=getVals(d.c).filter(function(x){return x<=1;}).length,dss=wkDs(d.c);
+    return'<div class="ri"><div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:4px">'+(i+1)+'. '+d.c+'</div><div style="height:5px;border-radius:2px;background:#E8E4DA;margin-bottom:4px;overflow:hidden"><div style="height:100%;border-radius:2px;width:'+d.rs+'%;background:'+clr+'"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:'+clr+'">Risk '+d.rs+'/100</span><span class="bdg '+d.e.c+'">'+d.e.l+'</span></div><div style="font-size:10px;color:#6B5E45;display:flex;flex-wrap:wrap;gap:3px">'+(fq>0?'<span class="bdg br">'+fq+'x kritis</span>':'')+(dss>=2?'<span class="bdg ba">↓'+dss+' mgg</span>':'')+'</div></div>';
   }).join('');
 }
 
-function bInsight(){
-  const insights=[
-    {name:'SRAGEN',status:'🔴 KRITIS',color:'#A32D2D',bg:'#FCEBEB',border:'#E24B4A',
-      data:'W01→W26: 0,4,2,4,0,2,2,3,2,2,0,1,4,1,2,1,2,2,2,2,0,0,1,1,0,2',
-      body:'Sragen konsisten masuk zona kritis sepanjang 2026. Dari 26 minggu, hanya 16 minggu aktif dengan rata-rata 1,6 customer/minggu. Tidak ada tanda pemulihan — W22–W26 bernilai 0,0,1,1,0,2.',
-      rekom:['Audit pipeline dan aktivitas marketing mingguan','Evaluasi keaktifan tim CS lokal','Kolaborasi bidan, klinik, RS setempat','Pertimbangkan program referral intensif 30 hari','Monitoring harian oleh area supervisor']},
-    {name:'UNGARAN',status:'🟠 PERLU PERHATIAN',color:'#854F0B',bg:'#FAEEDA',border:'#EF9F27',
-      data:'W14–W26: 3,6,12,3,4,3,1,4,1,1,1,1,1',
-      body:'Ungaran mencapai peak W16 (12) tapi langsung turun drastis. 6 minggu terakhir rata-rata hanya 1,3 customer/minggu. Tren turun 5 minggu berurutan.',
-      rekom:['Investigasi penyebab turun pasca-W16','Evaluasi tim dan coverage area','Perkuat digital presence di area Ungaran']},
-    {name:'SURABAYA',status:'🟢 SOLID',color:'#3B6D11',bg:'#EAF3DE',border:'#5C9E2A',
-      data:'W01–W26: avg 81/minggu, peak W22=129',
-      body:'Surabaya konsisten sebagai backbone nasional dengan kontribusi ~18-22% total mingguan. Peak W22 mencapai 129. Stabil di kisaran 78–113 dalam 10 minggu terakhir.',
-      rekom:['Pertahankan momentum dengan program retention','Dokumentasikan best practice untuk replikasi','Ekspansi coverage ke kecamatan yang belum terjangkau']},
-    {name:'TASIKMALAYA',status:'🟡 WASPADA',color:'#854F0B',bg:'#FAEEDA',border:'#EF9F27',
-      data:'W14–W26: 10,7,10,6,13,12,8,12,8,6,5,2,5',
-      body:'Tasikmalaya menunjukkan pola tidak stabil. Sempat naik di W19 (13) dan W20 (12) tapi turun lagi ke 2 di W25. Risiko masuk zona kritis permanen jika tidak diintervensi.',
-      rekom:['Review strategi retention dan pipeline lokal','Aktifkan kembali kerjasama bidan dan klinik','Program customer referral dari existing customer']},
-  ];
+// ============================================================
+// FORECAST
+// ============================================================
+var _fcM='ensemble';
+function setFcModel(m){_fcM=m;document.querySelectorAll('.fcbtn').forEach(function(b){b.classList.remove('active-fc');});document.getElementById('btn-'+m).classList.add('active-fc');bFc(m);}
 
-  document.getElementById('insightCabang').innerHTML=insights.map(ins=>`
-    <div class="card" style="border-left:4px solid ${ins.border}">
-      <div class="ct">${ins.name} — ${ins.status}</div>
-      <div style="background:${ins.bg};border-radius:8px;padding:.75rem;margin-bottom:.625rem">
-        <div style="font-size:11px;color:#6B5E45;margin-bottom:4px">Tren: <code style="background:#fff;padding:2px 6px;border-radius:4px;font-size:11px">${ins.data}</code></div>
-        <div style="font-size:12px;color:${ins.color};line-height:1.6">${ins.body}</div>
-        <div style="margin-top:8px">
-          <div style="font-size:10px;font-weight:700;color:#6B5E45;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Rekomendasi:</div>
-          <ul style="font-size:11px;color:#3B2A13;padding-left:16px;line-height:1.8">${ins.rekom.map(r=>`<li>${r}</li>`).join('')}</ul>
-        </div>
-      </div>
-    </div>`).join('');
+function bFc(model){
+  var fc=model==='ensemble'?FC_ENS:FC_M[model].fc;
+  var lo=model==='ensemble'?FC_LO:FC_M[model].lo;
+  var hi=model==='ensemble'?FC_HI:FC_M[model].hi;
+  var rmse=model==='ensemble'?373:FC_M[model].rmse;
+  var act26=HM[2026].slice(0,6).reduce(function(a,b){return a+b;},0);
+  var fc26=fc.slice(0,6).reduce(function(a,b){return a+b;},0);
+  var fc27=fc.slice(6).reduce(function(a,b){return a+b;},0);
+  var total26=act26+fc26,chg26=pt(19219,total26),chg27=pt(total26,fc27);
+  var descMap={ensemble:'Ensemble = rata-rata 3 model. CI = spread min/max antar model.',hw:'Holt-Winters ETS: eksponensial smoothing dengan tren + seasonal. RMSE=381.',sarima:'SARIMA(1,1,1)(1,1,1,12): autoregressive seasonal. RMSE=579.',prophet:'Prophet (Meta): changepoint detection + seasonality. RMSE=360 (terbaik).'};
+  document.getElementById('fcDesc').textContent=descMap[model];
+  document.getElementById('fcMetrik').innerHTML='<div class="mc"><div class="ml">Model</div><div class="mv" style="font-size:14px">'+(model==='ensemble'?'Ensemble':FC_M[model].name)+'</div><div class="ms neu">RMSE ≈ '+rmse+'</div></div>'+'<div class="mc"><div class="ml">Proyeksi 2026</div><div class="mv">'+total26.toLocaleString('id')+'</div><div class="ms '+(chg26>0?'up':'dn')+'">'+(chg26>0?'▲':'▼')+' '+Math.abs(chg26)+'% vs 2025</div></div>'+'<div class="mc"><div class="ml">Proyeksi 2027</div><div class="mv">'+fc27.toLocaleString('id')+'</div><div class="ms '+(chg27>0?'up':'dn')+'">'+(chg27>0?'▲':'▼')+' '+Math.abs(chg27)+'% vs 2026</div></div>'+'<div class="mc"><div class="ml">Peak forecast</div><div class="mv">'+Math.max.apply(null,fc).toLocaleString('id')+'</div><div class="ms neu">'+FC_DATES[fc.indexOf(Math.max.apply(null,fc))]+'</div></div>';
+
+  var n=ACT_V.length,nullN=FC_DATES.length;
+  var act0_72=[].concat(ACT_V.slice(0,72),Array(6+nullN).fill(null));
+  var act72=[].concat(Array(72).fill(null),ACT_V.slice(72),Array(nullN).fill(null));
+  var fcFull=[].concat(Array(n).fill(null),fc);
+  var hiFull=[].concat(Array(n).fill(null),hi);
+  var loFull=[].concat(Array(n).fill(null),lo);
+  var fcColor=model==='ensemble'?'#BA7517':FC_M[model].color;
+  var allLabels=ACT_D.concat(FC_DATES);
+
+  var c;
+  c=ch('cFcMain');if(c)c._c=new Chart(c,{type:'line',data:{labels:allLabels,datasets:[{label:'Aktual',data:act0_72,borderColor:'#185FA5',backgroundColor:'rgba(55,138,221,0.06)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.2,order:5},{label:'2026',data:act72,borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:'#5DCAA5',tension:0.2,order:4},{label:'CI Upper',data:hiFull,borderColor:'transparent',backgroundColor:'rgba(186,117,23,0.12)',borderWidth:0,pointRadius:0,fill:'+1',tension:0.3,order:3},{label:'CI Lower',data:loFull,borderColor:'transparent',backgroundColor:'rgba(186,117,23,0.12)',borderWidth:0,pointRadius:0,fill:false,tension:0.3,order:2},{label:'Forecast',data:fcFull,borderColor:fcColor,backgroundColor:'transparent',borderWidth:2.5,borderDash:[5,4],pointRadius:2,pointBackgroundColor:fcColor,tension:0.3,order:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},scales:{y:{min:600,ticks:{font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'k':v;}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxTicksLimit:20,maxRotation:30},grid:{display:false}}}}});
+  c=ch('cFcModels');if(c)c._c=new Chart(c,{type:'line',data:{labels:FC_DATES,datasets:['hw','sarima','prophet'].map(function(k){return{label:FC_M[k].name,data:FC_M[k].fc,borderColor:FC_M[k].color,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3};}).concat([{label:'Ensemble',data:FC_ENS,borderColor:'#BA7517',backgroundColor:'transparent',borderWidth:3,pointRadius:3,tension:0.3}])},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'k':v;}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxRotation:30},grid:{display:false}}}}});
+
+  document.getElementById('tFcMod').innerHTML=[{n:'Holt-Winters',r:381,k:'hw'},{n:'SARIMA',r:579,k:'sarima'},{n:'Prophet ⭐',r:360,k:'prophet'},{n:'Ensemble',r:373,k:'ensemble'}].map(function(m2){
+    var mfc=m2.k==='ensemble'?FC_ENS:FC_M[m2.k].fc;
+    var t26=act26+mfc.slice(0,6).reduce(function(a,b){return a+b;},0);
+    var t27=mfc.slice(6).reduce(function(a,b){return a+b;},0);
+    var chg=pt(19219,t26);
+    return'<tr'+(m2.k===model?' style="font-weight:800;background:#F9F7F2"':'')+'><td>'+m2.n+'</td><td class="nr">'+m2.r+'</td><td class="nr">'+t26.toLocaleString('id')+'</td><td class="nr">'+t27.toLocaleString('id')+'</td><td class="nr '+(chg>0?'up':'dn')+'">'+(chg>0?'+':'')+chg+'%</td></tr>';
+  }).join('');
+
+  document.getElementById('tFcDetail').innerHTML=FC_DATES.map(function(d,i){
+    var hw=FC_M.hw.fc[i],sar=FC_M.sarima.fc[i],pro=FC_M.prophet.fc[i],ens=FC_ENS[i];
+    var is27=d.startsWith('2027');
+    return'<tr'+(is27?' style="background:#F9F7F2"':'')+'><td style="font-weight:'+(is27?700:500)+'">'+d+'</td><td class="nr">'+hw.toLocaleString('id')+'</td><td class="nr">'+sar.toLocaleString('id')+'</td><td class="nr">'+pro.toLocaleString('id')+'</td><td class="nr" style="font-weight:700">'+ens.toLocaleString('id')+'</td><td class="nr" style="color:#6B5E45">'+FC_LO[i].toLocaleString('id')+'</td><td class="nr" style="color:#6B5E45">'+FC_HI[i].toLocaleString('id')+'</td></tr>';
+  }).join('');
 }
 
-async function askAI(q){
-  const chat=document.getElementById('aiChat');
-  const msgs=document.getElementById('aiMessages');
-  chat.style.display='block';
-  msgs.innerHTML+=`<div style="background:#E6F1FB;border-radius:8px;padding:.625rem .875rem;margin-bottom:.5rem;font-size:12px;color:#042C53;font-weight:500">${q}</div>`;
-  const loadId='load_'+Date.now();
-  msgs.innerHTML+=`<div id="${loadId}" style="font-size:12px;color:#6B5E45;padding:.5rem 0">
-    <span style="animation:pulse 1.2s infinite;display:inline-block">●</span>
-    <span style="animation:pulse 1.2s infinite .2s;display:inline-block">●</span>
-    <span style="animation:pulse 1.2s infinite .4s;display:inline-block">●</span>
-    <span style="margin-left:6px">AI sedang menganalisis data ANH...</span>
-  </div>`;
-  chat.scrollTop=chat.scrollHeight;
-
-  // Build context
-  const histCtx=Object.entries(HM).map(([y,v])=>`${y}: [${v.join(',')}]`).join(' | ');
-  const wkCtx=Object.entries(WKC).map(([c,v])=>`${c}: W01-W26=[${v.join(',')}]`).join(' | ');
-  const srcCtx=Object.entries(SRC_YR).map(([k,v])=>`${k}: [${v.join(',')}]`).join(' | ');
-
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',max_tokens:1000,
-        system:`Kamu adalah Business Intelligence Analyst senior untuk Aqiqah Nurul Hayat (ANH), bisnis aqiqah catering terbesar di Indonesia dengan 51+ cabang.
-
-DATA HISTORIS BULANAN (Tanggal Pesan, Jan-Des):
-${histCtx}
-
-DATA MINGGUAN PER CABANG 2026 (Tanggal Pesan, W01-W26):
-${wkCtx}
-
-DATA SUMBER PESANAN per tahun 2020-2026:
-${srcCtx}
-
-Berikan analisis tajam, spesifik dengan angka nyata dari data, dan rekomendasi actionable dalam Bahasa Indonesia. Format: bullet points yang jelas dan terstruktur.`,
-        messages:[{role:'user',content:q}]
-      })
-    });
-    const d=await res.json();
-    document.getElementById(loadId)?.remove();
-    const txt=d.content?.[0]?.text||'Tidak dapat memproses permintaan.';
-    msgs.innerHTML+=`<div style="background:#F9F7F2;border-radius:8px;padding:.75rem .875rem;margin-bottom:.625rem;font-size:12px;color:#2C2C2A;line-height:1.7;border:1px solid #E8E4DA">${txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>')}</div>`;
-  }catch(e){
-    document.getElementById(loadId)?.remove();
-    msgs.innerHTML+=`<div style="background:#FCEBEB;border-radius:8px;padding:.625rem;font-size:12px;color:#A32D2D">Gagal memuat respons AI. Coba refresh halaman.</div>`;
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', function() {
+  // Set default filter ke bulan berjalan
+  var curM = new Date().getMonth()+1;
+  var sel = document.getElementById('selBulan');
+  for(var i=0;i<sel.options.length;i++){
+    if(parseInt(sel.options[i].value)===curM){sel.selectedIndex=i;break;}
   }
-  chat.scrollTop=chat.scrollHeight;
-}
-
-function renderSrcYrTable(){
-  const YR_TOTALS=[25693,27927,29991,24998,20850,19219,9822];
-  const srcK=Object.keys(SRC_YR);
-  const isPct=window._srcMode==='pct';
-  document.getElementById('tSY').innerHTML=srcK.map(k=>{
-    const vals=SRC_YR[k];
-    const cells=vals.map((v,i)=>{
-      if(isPct){
-        const pct=(v/YR_TOTALS[i]*100).toFixed(1);
-        const col=pct>=30?'#3B6D11':pct>=20?'#185FA5':pct>=10?'#854F0B':'inherit';
-        return `<td class="nr" style="color:${col};font-weight:${pct>=20?'700':'400'}">${pct}%</td>`;
-      } else {
-        return `<td class="nr">${v.toLocaleString('id')}</td>`;
-      }
-    }).join('');
-    return `<tr><td style="font-weight:600">${k}</td>${cells}</tr>`;
-  }).join('');
-  document.getElementById('btnSrcMode').textContent=isPct?'Tampilkan angka':'Tampilkan %';
-}
-
-function toggleSrcMode(){
-  window._srcMode=window._srcMode==='pct'?'num':'pct';
-  renderSrcYrTable();
-}
-
-// ===== FORECAST DATA (dari model statistik: HW, SARIMA, Prophet) =====
-const FC_DATES=['2026-07','2026-08','2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08','2027-09','2027-10','2027-11','2027-12'];
-const FC_MODELS={
-  hw:  {name:'Holt-Winters',rmse:381,color:'#185FA5',fc:[1983,1306,2033,1604,1546,1693,1516,1158,1347,1122,1508,2106,1912,1235,1962,1533,1475,1623],lo:[1236,559,1286,858,799,947,770,411,600,376,761,1360,1165,488,1216,787,728,876],hi:[2729,2052,2779,2351,2292,2440,2263,1904,2093,1869,2254,2853,2658,1982,2709,2280,2221,2369]},
-  sarima:{name:'SARIMA(1,1,1)(1,1,1,12)',rmse:579,color:'#E24B4A',fc:[1742,1168,1876,1380,1507,1459,1438,1063,1221,1216,1448,1815,1671,1035,1731,1277,1294,1339],lo:[802,208,907,401,519,462,431,51,201,188,411,770,513,0,538,70,73,103],hi:[2682,2128,2846,2359,2495,2457,2444,2075,2241,2244,2485,2861,2829,2212,2923,2484,2516,2576]},
-  prophet:{name:'Prophet',rmse:360,color:'#5DCAA5',fc:[1987,986,1938,1500,1418,1566,1306,956,1336,735,1170,2074,1930,560,1789,1345,1246,1388],lo:[1522,489,1492,1031,965,1119,859,519,874,273,700,1585,1470,83,1351,835,792,892],hi:[2465,1440,2397,1969,1882,2021,1805,1425,1817,1184,1640,2499,2380,987,2265,1813,1694,1844]}
-};
-const FC_ENSEMBLE=FC_DATES.map((_,i)=>Math.round((FC_MODELS.hw.fc[i]+FC_MODELS.sarima.fc[i]+FC_MODELS.prophet.fc[i])/3));
-const FC_ENS_LO=FC_DATES.map((_,i)=>Math.min(FC_MODELS.hw.lo[i],FC_MODELS.sarima.lo[i],FC_MODELS.prophet.lo[i]));
-const FC_ENS_HI=FC_DATES.map((_,i)=>Math.max(FC_MODELS.hw.hi[i],FC_MODELS.sarima.hi[i],FC_MODELS.prophet.hi[i]));
-
-const ACTUAL_DATES=Object.keys({...{'2020-01':1856,'2020-02':1603,'2020-03':1745,'2020-04':1312,'2020-05':2420,'2020-06':2070,'2020-07':2129,'2020-08':2188,'2020-09':2936,'2020-10':2326,'2020-11':2253,'2020-12':2855},...{'2021-01':1958,'2021-02':1895,'2021-03':2284,'2021-04':1668,'2021-05':2032,'2021-06':2670,'2021-07':2333,'2021-08':1961,'2021-09':2813,'2021-10':2680,'2021-11':2486,'2021-12':3147},...{'2022-01':2485,'2022-02':1915,'2022-03':2500,'2022-04':1395,'2022-05':2615,'2022-06':3456,'2022-07':4303,'2022-08':1997,'2022-09':3034,'2022-10':2258,'2022-11':1928,'2022-12':2105},...{'2023-01':2486,'2023-02':1719,'2023-03':1850,'2023-04':1381,'2023-05':2019,'2023-06':3387,'2023-07':2343,'2023-08':1550,'2023-09':2476,'2023-10':2071,'2023-11':1803,'2023-12':1913},...{'2024-01':1503,'2024-02':1588,'2024-03':1314,'2024-04':1632,'2024-05':1560,'2024-06':2596,'2024-07':2007,'2024-08':1738,'2024-09':1814,'2024-10':1851,'2024-11':1688,'2024-12':1559},...{'2025-01':1961,'2025-02':1302,'2025-03':1500,'2025-04':1815,'2025-05':1330,'2025-06':2188,'2025-07':1584,'2025-08':1160,'2025-09':1918,'2025-10':1219,'2025-11':1861,'2025-12':1381}});
-const ACTUAL_VALS=[1856,1603,1745,1312,2420,2070,2129,2188,2936,2326,2253,2855,1958,1895,2284,1668,2032,2670,2333,1961,2813,2680,2486,3147,2485,1915,2500,1395,2615,3456,4303,1997,3034,2258,1928,2105,2486,1719,1850,1381,2019,3387,2343,1550,2476,2071,1803,1913,1503,1588,1314,1632,1560,2596,2007,1738,1814,1851,1688,1559,1961,1302,1500,1815,1330,2188,1584,1160,1918,1219,1861,1381,1635,1331,1466,1925,1848,1617];
-const HW_FITTED=[1878,1632,1721,1368,2375,2129,2086,2214,2904,2364,2213,2898,1911,1858,2261,1670,2023,2697,2314,1973,2798,2655,2488,3119,2519,1929,2497,1380,2618,3422,4345,1991,3001,2292,1922,2106,2448,1716,1847,1361,2012,3351,2347,1545,2474,2054,1820,1878,1515,1600,1323,1644,1565,2603,1989,1740,1817,1866,1698,1573,1968,1295,1500,1822,1328,2199,1576,1150,1920,1221,1858,1371,1649,1315,1468,1924,1855,1608];
-
-let _fcModel='ensemble';
-
-function setFcModel(m){
-  _fcModel=m;
-  document.querySelectorAll('.fcbtn').forEach(b=>b.classList.remove('active-fc'));
-  document.getElementById('btn-'+m).classList.add('active-fc');
-  bForecast(m);
-}
-
-function bForecast(model){
-  _fcModel=model;
-  const fc=model==='ensemble'?FC_ENSEMBLE:FC_MODELS[model].fc;
-  const lo=model==='ensemble'?FC_ENS_LO:FC_MODELS[model].lo;
-  const hi=model==='ensemble'?FC_ENS_HI:FC_MODELS[model].hi;
-  const rmse=model==='ensemble'?Math.round((381+579+360)/3):FC_MODELS[model].rmse;
-
-  const act26_jan_jun=1635+1331+1466+1925+1848+1617;
-  const fc26=fc.slice(0,6).reduce((a,b)=>a+b);
-  const fc27=fc.slice(6,18).reduce((a,b)=>a+b);
-  const total26=act26_jan_jun+fc26;
-  const chg26=Math.round((total26/19219-1)*100);
-  const chg27=Math.round((fc27/total26-1)*100);
-
-  const descMap={
-    ensemble:'Ensemble = rata-rata 3 model. CI = spread min/max antar model.',
-    hw:'Holt-Winters ETS: eksponensial smoothing dengan komponen tren + seasonal additif. RMSE=381.',
-    sarima:'SARIMA(1,1,1)(1,1,1,12): autoregressive seasonal dengan differencing. RMSE=579.',
-    prophet:'Prophet (Meta): dekomposisi trend + seasonality dengan changepoint detection. RMSE=360.'
-  };
-  document.getElementById('fcModelDesc').textContent=descMap[model];
-
-  document.getElementById('fcMetrik').innerHTML=`
-    <div class="mc"><div class="ml">Model aktif</div><div class="mv" style="font-size:14px">${model==='ensemble'?'Ensemble':FC_MODELS[model]?.name||model}</div><div class="ms neu">RMSE ≈ ${rmse}</div></div>
-    <div class="mc"><div class="ml">Proyeksi 2026</div><div class="mv">${total26.toLocaleString('id')}</div><div class="ms ${chg26>0?'up':'dn'}">${chg26>0?'▲':'▼'} ${Math.abs(chg26)}% vs 2025</div></div>
-    <div class="mc"><div class="ml">Proyeksi 2027</div><div class="mv">${fc27.toLocaleString('id')}</div><div class="ms ${chg27>0?'up':'dn'}">${chg27>0?'▲':'▼'} ${Math.abs(chg27)}% vs 2026</div></div>
-    <div class="mc"><div class="ml">Peak forecast</div><div class="mv">${Math.max(...fc).toLocaleString('id')}</div><div class="ms neu">${FC_DATES[fc.indexOf(Math.max(...fc))]}</div></div>
-    <div class="mc"><div class="ml">Trough forecast</div><div class="mv">${Math.min(...fc).toLocaleString('id')}</div><div class="ms neu">${FC_DATES[fc.indexOf(Math.min(...fc))]}</div></div>`;
-
-  // Main chart
-  const allLabels=[...ACTUAL_DATES,...FC_DATES];
-  const n=ACTUAL_VALS.length;
-  const nullN=FC_DATES.length;
-  const act2020_2025=[...ACTUAL_VALS.slice(0,72),...Array(6+nullN).fill(null)];
-  const act2026=[...Array(72).fill(null),...ACTUAL_VALS.slice(72),...Array(nullN).fill(null)];
-  const fcFull=[...Array(n).fill(null),...fc];
-  const hiFull=[...Array(n).fill(null),...hi];
-  const loFull=[...Array(n).fill(null),...lo];
-  const fcColor=model==='ensemble'?'#BA7517':FC_MODELS[model]?.color||'#BA7517';
-
-  const cM=document.getElementById('cFcMain');if(cM._c)cM._c.destroy();
-  cM._c=new Chart(cM,{type:'line',data:{labels:allLabels,datasets:[
-    {label:'Aktual',data:act2020_2025,borderColor:'#185FA5',backgroundColor:'rgba(55,138,221,0.06)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.2,order:5},
-    {label:'Aktual 2026',data:act2026,borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:'#5DCAA5',tension:0.2,order:4},
-    {label:'CI Upper',data:hiFull,borderColor:'transparent',backgroundColor:'rgba(186,117,23,0.12)',borderWidth:0,pointRadius:0,fill:'+1',tension:0.3,order:3},
-    {label:'CI Lower',data:loFull,borderColor:'transparent',backgroundColor:'rgba(186,117,23,0.12)',borderWidth:0,pointRadius:0,fill:false,tension:0.3,order:2},
-    {label:'Forecast',data:fcFull,borderColor:fcColor,backgroundColor:'transparent',borderWidth:2.5,borderDash:[5,4],pointRadius:2,pointBackgroundColor:fcColor,tension:0.3,order:1},
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${ctx.parsed.y!=null?ctx.parsed.y.toLocaleString('id'):'-'}`}}},
-    scales:{y:{min:600,ticks:{font:{size:10},callback:(v)=>v>=1000?Math.round(v/1000)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxTicksLimit:20,maxRotation:30},grid:{display:false}}}
-  }});
-
-  // Model comparison chart
-  const cMod=document.getElementById('cFcModels');if(cMod._c)cMod._c.destroy();
-  cMod._c=new Chart(cMod,{type:'line',data:{labels:FC_DATES,datasets:[
-    {label:'HW',data:FC_MODELS.hw.fc,borderColor:'#185FA5',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3},
-    {label:'SARIMA',data:FC_MODELS.sarima.fc,borderColor:'#E24B4A',backgroundColor:'transparent',borderWidth:2,borderDash:[4,3],pointRadius:2,tension:0.3},
-    {label:'Prophet',data:FC_MODELS.prophet.fc,borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2,borderDash:[2,2],pointRadius:2,tension:0.3},
-    {label:'Ensemble',data:FC_ENSEMBLE,borderColor:'#BA7517',backgroundColor:'transparent',borderWidth:3,pointRadius:3,tension:0.3},
-  ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{y:{ticks:{font:{size:10},callback:(v)=>v>=1000?Math.round(v/1000)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxRotation:30},grid:{display:false}}}
-  }});
-
-  // Table model comparison
-  const models=[
-    {name:'Holt-Winters',rmse:381,k:'hw'},
-    {name:'SARIMA',rmse:579,k:'sarima'},
-    {name:'Prophet',rmse:360,k:'prophet'},
-    {name:'Ensemble',rmse:373,k:'ensemble'},
-  ];
-  document.getElementById('tFcModels').innerHTML=models.map(m=>{
-    const mfc=m.k==='ensemble'?FC_ENSEMBLE:FC_MODELS[m.k].fc;
-    const t26=act26_jan_jun+mfc.slice(0,6).reduce((a,b)=>a+b);
-    const t27=mfc.slice(6).reduce((a,b)=>a+b);
-    const chg=Math.round((t26/19219-1)*100);
-    const best=m.k==='prophet'?' ★':'';
-    return`<tr${m.k===model?' style="font-weight:700;background:#F9F7F2"':''}><td>${m.name}${best}</td><td class="nr">${m.rmse.toLocaleString('id')}</td><td class="nr">${t26.toLocaleString('id')}</td><td class="nr">${t27.toLocaleString('id')}</td><td class="nr ${chg>0?'up':'dn'}">${chg>0?'+':''}${chg}%</td></tr>`;
-  }).join('');
-
-  // Residual chart (HW vs actual)
-  const residuals=HW_FITTED.map((f,i)=>ACTUAL_VALS[i]-f);
-  const cRes=document.getElementById('cFcResid');if(cRes._c)cRes._c.destroy();
-  cRes._c=new Chart(cRes,{type:'bar',data:{labels:ACTUAL_DATES,datasets:[{
-    label:'Residual (Aktual − HW)',
-    data:residuals,
-    backgroundColor:residuals.map(v=>v>=0?'rgba(93,202,165,0.6)':'rgba(226,75,74,0.6)'),
-    borderWidth:0
-  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxTicksLimit:15,maxRotation:30},grid:{display:false}}}
-  }});
-
-  // Detail table
-  document.getElementById('tFcDetail').innerHTML=FC_DATES.map((d,i)=>{
-    const hw=FC_MODELS.hw.fc[i],sar=FC_MODELS.sarima.fc[i],pro=FC_MODELS.prophet.fc[i];
-    const ens=FC_ENSEMBLE[i];
-    const ciLo=FC_ENS_LO[i],ciHi=FC_ENS_HI[i];
-    const isFc=d.startsWith('2027');
-    return`<tr${isFc?' style="background:#F9F7F2"':''}><td style="font-weight:${isFc?700:500}">${d}</td><td class="nr">${hw.toLocaleString('id')}</td><td class="nr">${sar.toLocaleString('id')}</td><td class="nr">${pro.toLocaleString('id')}</td><td class="nr" style="font-weight:700">${ens.toLocaleString('id')}</td><td class="nr" style="color:#6B5E45">${ciLo.toLocaleString('id')}</td><td class="nr" style="color:#6B5E45">${ciHi.toLocaleString('id')}</td></tr>`;
-  }).join('');
-}
-
-function exportCSV(){
-  const rows=[['Tahun','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des','Total']];
-  [2026,...[...Object.keys(HM)].reverse().filter(y=>parseInt(y)<2026)].forEach(y=>{
-    const d=HM[y],tot=d.reduce((a,b)=>a+b);
-    rows.push([y,...d,tot]);
-  });
-  const csv=rows.map(r=>r.join(',')).join('\n');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ANH_Historis_2020_2026.csv';a.click();
-}
-
-function exportWeeklyCSV(){
-  const weeks=Array.from({length:26},(_,i)=>`W${String(i+1).padStart(2,'0')}`);
-  const rows=[['Cabang',...weeks,'Total']];
-  CABS.forEach(c=>{
-    const v=WKC[c]||Array(26).fill(0);
-    const tot=v.reduce((a,b)=>a+b);
-    rows.push([c,...v,tot]);
-  });
-  const csv=rows.map(r=>r.join(',')).join('\n');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ANH_Weekly_Cabang_2026.csv';a.click();
-}
-
-// Init
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
+  setTimeout(function(){
     bUtama();
-    fetchLiveData(); // Fetch live data dari Google Sheets
+    fetchLive();
   },100);
 });
 </script>
