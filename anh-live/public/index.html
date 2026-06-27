@@ -535,7 +535,7 @@ async function fetchLive(){
     var [sum,wk,pip,src,paket,srcCab,kec,daily] = await Promise.all([
       fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber'),
       fetchAPI('paket'), fetchAPI('sumber_cabang'), fetchAPI('kecamatan'),
-      fetchAPI('daily&days=200')
+      fetchDaily(200)
     ]);
     LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab,kecamatan:kec,daily:daily};
     if(wk && wk.by_cabang){
@@ -583,6 +583,15 @@ async function fetchAPI(type){
   return json.data;
 }
 
+async function fetchDaily(days){
+  var url=API+'?type=daily&days='+days;
+  var res=await fetch(url);
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  var json=await res.json();
+  if(!json.ok)throw new Error(json.error||'API error');
+  return json.data;
+}
+
 setInterval(fetchLive,5*60*1000);
 
 // ============================================================
@@ -595,7 +604,7 @@ function SS(id,btn){
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   document.getElementById('s-'+id).classList.add('on');
   btn.classList.add('on');
-  var f={pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,analisa:function(){bAnalisa('pct');},kecamatan:bKecamatan,forecast:function(){bFc('ensemble');}};
+  var f={utama:bUtama,pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,analisa:function(){bAnalisa('pct');},kecamatan:bKecamatan,forecast:function(){bFc('ensemble');}};
   if(f[id])f[id]();
 }
 
