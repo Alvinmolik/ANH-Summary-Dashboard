@@ -109,6 +109,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="nb" onclick="SS('recovery',this)">📈 Recovery</button>
   <button class="nb" onclick="SS('risk',this)">🛡️ Risk Monitor</button>
   <button class="nb" onclick="SS('analisa',this)">🏢 Analisa Cabang</button>
+  <button class="nb" onclick="SS('kecamatan',this)">🗺️ Kecamatan</button>
   <button class="nb" onclick="SS('forecast',this)">🔮 Forecast</button>
 </div></div>
 
@@ -264,8 +265,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="ct">Heatmap Mingguan — 10 Minggu Terakhir · Semua Cabang</div>
     <div class="heat-wrap"><div id="hmWrap"></div></div>
     <div class="lgd" style="margin-top:8px">
-      <span><span style="display:inline-block;width:12px;height:12px;background:#FCEBEB;border-radius:2px;vertical-align:middle;margin-right:3px"></span>0</span>
-      <span><span style="display:inline-block;width:12px;height:12px;background:#FAEEDA;border-radius:2px;vertical-align:middle;margin-right:3px"></span>1–5</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#E24B4A;border-radius:2px;vertical-align:middle;margin-right:3px"></span>0 (kritis)</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#F09595;border-radius:2px;vertical-align:middle;margin-right:3px"></span>1–2</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#FAEEDA;border-radius:2px;vertical-align:middle;margin-right:3px"></span>3–5</span>
       <span><span style="display:inline-block;width:12px;height:12px;background:#C0DD97;border-radius:2px;vertical-align:middle;margin-right:3px"></span>6–15</span>
       <span><span style="display:inline-block;width:12px;height:12px;background:#378ADD;border-radius:2px;vertical-align:middle;margin-right:3px"></span>16–30</span>
       <span><span style="display:inline-block;width:12px;height:12px;background:#0C447C;border-radius:2px;vertical-align:middle;margin-right:3px"></span>30+</span>
@@ -361,6 +363,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li><strong>Cabang dengan Repeat Order tinggi</strong> = customer loyal kuat. Indikator product-market-fit yang baik di area tersebut.</li>
       <li><strong>Cabang dengan Lainnya/blank tinggi</strong> = pencatatan sumber tidak rapi, perlu training CS untuk dokumentasi sumber leads.</li>
       <li><strong>Aksi strategis</strong>: Identifikasi cabang "juara" di setiap channel, lalu transfer playbook-nya ke cabang lain.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== KECAMATAN ===== -->
+<div class="sec" id="s-kecamatan">
+  <div style="background:#F9F7F2;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:#6B5E45;line-height:1.7;border:1px solid #E8E4DA">
+    <strong style="color:#3B2A13">Heatmap Kecamatan per Cabang — 2026:</strong> Data dari kolom KECAMATAN di spreadsheet. Membantu tim ekspansi mengidentifikasi area dengan permintaan tinggi dan area yang masih bisa digarap.
+  </div>
+  <div class="mr" id="kecMet"></div>
+  <div class="card">
+    <div class="ct">Pilih Cabang
+      <select id="selKecCab" onchange="renderKec()" style="font-size:12px;padding:5px 12px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600">
+        <option value="">— Pilih cabang —</option>
+      </select>
+    </div>
+    <div id="kecCabContent"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Top 10 Kecamatan Terbesar Nasional</div>
+    <div class="cs">Kecamatan dengan permintaan tertinggi lintas cabang</div>
+    <div id="topKecNas"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Konsentrasi Pasar per Cabang</div>
+    <div class="cs">Cabang yang sangat tergantung satu kecamatan dominan (≥30% dari total) — peluang ekspansi ke kecamatan lain</div>
+    <div id="konsentrasiCab"></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Heatmap Kecamatan</h4>
+    <ul>
+      <li><strong>Top kecamatan per cabang</strong> = area "panas" yang sudah aktif. Pastikan supply chain dan delivery di area ini optimal.</li>
+      <li><strong>Cabang dengan konsentrasi tinggi (≥30% di 1 kecamatan)</strong> = bisnis terlalu bergantung pada 1 area. Risiko tinggi kalau ada kompetitor masuk. Diversifikasi ke kecamatan lain.</li>
+      <li><strong>Cabang dengan banyak kecamatan unik (40+)</strong> = penetrasi pasar luas, sustainable growth. Contoh: Surabaya dengan 84 kecamatan.</li>
+      <li><strong>Cabang dengan kecamatan unik sedikit (≤10)</strong> = peluang besar untuk ekspansi marketing ke kecamatan tetangga yang belum tersentuh.</li>
+      <li><strong>Insight strategis</strong>: Bandingkan kecamatan dominan antar cabang yang sama provinsi — apakah ada pola demografi yang bisa dipelajari?</li>
     </ul>
   </div>
 </div>
@@ -483,7 +521,7 @@ function gmn(){return ['Januari','Februari','Maret','April','Mei','Juni'][gm()-1
 function pt(a,b){if(!a)return b>0?999:0;return Math.round((b-a)/a*100);}
 function ps(a,b){var p=pt(a,b);if(p===999)return'—';return(p>0?'+':'')+p+'%';}
 function pc(a,b){var p=pt(a,b);return p>5?'up':p<-5?'dn':'neu';}
-function hb(v){if(!v||v===0)return'background:#FCEBEB;color:#A32D2D';if(v<=2)return'background:#F7C1C1;color:#993C1D';if(v<=5)return'background:#FAEEDA;color:#854F0B';if(v<=15)return'background:#C0DD97;color:#27500A';if(v<=30)return'background:#378ADD;color:#fff';return'background:#0C447C;color:#fff';}
+function hb(v){if(!v||v===0)return'background:#E24B4A;color:#fff;font-weight:700';if(v<=2)return'background:#F09595;color:#7a1a1a;font-weight:600';if(v<=5)return'background:#FAEEDA;color:#854F0B';if(v<=15)return'background:#C0DD97;color:#27500A';if(v<=30)return'background:#378ADD;color:#fff';return'background:#0C447C;color:#fff';}
 function ch(id){var c=document.getElementById(id);if(c&&c._c)c._c.destroy();return c;}
 function spk6(vals){var mx=Math.max.apply(null,vals.concat([1]));return '<div class="spk">'+vals.map(function(x,i){var h=Math.max(2,Math.round(x/mx*24));var cl=i===vals.length-1?'pk':x<=2?'lo':'';return'<div class="sb '+cl+'" style="height:'+h+'px"></div>';}).join('')+'</div>';}
 function setStatus(s,lbl){var el=document.getElementById('liveStatus');if(!el)return;var bg={ok:'#3B6D11',err:'#A32D2D',loading:'#EF9F27',demo:'#6B5E45'};el.style.background=bg[s]||bg.demo;el.textContent=lbl;}
@@ -494,11 +532,11 @@ function setStatus(s,lbl){var el=document.getElementById('liveStatus');if(!el)re
 async function fetchLive(){
   setStatus('loading','⏳ Memuat...');
   try {
-    var [sum,wk,pip,src,paket,srcCab] = await Promise.all([
+    var [sum,wk,pip,src,paket,srcCab,kec] = await Promise.all([
       fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber'),
-      fetchAPI('paket'), fetchAPI('sumber_cabang')
+      fetchAPI('paket'), fetchAPI('sumber_cabang'), fetchAPI('kecamatan')
     ]);
-    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab};
+    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab,kecamatan:kec};
     if(wk && wk.by_cabang){
       WKC=wk.by_cabang;
       WEEKS=wk.weeks||[];
@@ -544,7 +582,7 @@ function SS(id,btn){
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   document.getElementById('s-'+id).classList.add('on');
   btn.classList.add('on');
-  var f={pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,analisa:function(){bAnalisa('pct');},forecast:function(){bFc('ensemble');}};
+  var f={pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,analisa:function(){bAnalisa('pct');},kecamatan:bKecamatan,forecast:function(){bFc('ensemble');}};
   if(f[id])f[id]();
 }
 
@@ -805,7 +843,7 @@ function bKritis(){
   lastWks.forEach(function(wk){h+='<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">'+wk+'</div>';});
   allCabs.forEach(function(c){
     h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+c+'</div>';
-    lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+( v||'')+'</div>';});
+    lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+v+'</div>';});
   });
   h+='</div>';
   document.getElementById('hmWrap').innerHTML=h;
@@ -905,6 +943,98 @@ function bAnalisa(mode){
   uniqHtml+='</tbody></table>';
   if(unique.length===0) uniqHtml='<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Belum ada cabang yang sangat tergantung satu channel (≥50%)</div>';
   document.getElementById('cabUnik').innerHTML=uniqHtml;
+}
+
+// ============================================================
+// KECAMATAN
+// ============================================================
+function bKecamatan(){
+  var data=LIVE.kecamatan;
+  if(!data||data.length===0){
+    document.getElementById('kecCabContent').innerHTML='<div style="text-align:center;padding:30px;color:#9B8E78">Data belum dimuat...</div>';
+    document.getElementById('topKecNas').innerHTML='';
+    document.getElementById('konsentrasiCab').innerHTML='';
+    return;
+  }
+
+  // Metric cards
+  var totalCustomer=data.reduce(function(s,d){return s+d.total;},0);
+  var totalKecamatanUnik={};
+  data.forEach(function(d){d.kecamatan.forEach(function(k){totalKecamatanUnik[k.nama]=(totalKecamatanUnik[k.nama]||0)+k.count;});});
+  var totalKecUniq=Object.keys(totalKecamatanUnik).length;
+  var cabBanyak=data.slice().sort(function(a,b){return b.kecamatan_count-a.kecamatan_count;})[0];
+  var cabSedikit=data.slice().filter(function(d){return d.total>=20;}).sort(function(a,b){return a.kecamatan_count-b.kecamatan_count;})[0];
+
+  document.getElementById('kecMet').innerHTML=
+    '<div class="mc"><div class="ml">Total customer 2026</div><div class="mv">'+totalCustomer.toLocaleString('id')+'</div><div class="ms neu">dari kecamatan</div></div>'
+    +'<div class="mc"><div class="ml">Kecamatan unik nasional</div><div class="mv">'+totalKecUniq.toLocaleString('id')+'</div><div class="ms neu">area aktif</div></div>'
+    +'<div class="mc"><div class="ml">Penetrasi terluas</div><div class="mv" style="font-size:14px">'+(cabBanyak?cabBanyak.cabang:'-')+'</div><div class="ms neu">'+(cabBanyak?cabBanyak.kecamatan_count+' kecamatan':'')+'</div></div>'
+    +'<div class="mc"><div class="ml">Penetrasi tersempit</div><div class="mv" style="font-size:14px">'+(cabSedikit?cabSedikit.cabang:'-')+'</div><div class="ms dn">'+(cabSedikit?cabSedikit.kecamatan_count+' kecamatan':'')+'</div></div>';
+
+  // Populate cabang selector
+  var sel=document.getElementById('selKecCab');
+  if(sel.options.length<=1){
+    data.forEach(function(d){
+      var opt=document.createElement('option');
+      opt.value=d.cabang;opt.textContent=d.cabang+' ('+d.total+' customer, '+d.kecamatan_count+' kecamatan)';
+      sel.appendChild(opt);
+    });
+    // Auto select cabang terbesar
+    sel.value=data[0].cabang;
+  }
+  renderKec();
+
+  // Top kecamatan nasional
+  var topNas=Object.keys(totalKecamatanUnik).map(function(k){return {nama:k,count:totalKecamatanUnik[k]};}).sort(function(a,b){return b.count-a.count;}).slice(0,15);
+  var maxNas=topNas[0].count;
+  document.getElementById('topKecNas').innerHTML='<table class="tbl"><thead><tr><th>#</th><th>Kecamatan</th><th class="nr">Total Customer</th><th>Distribusi</th></tr></thead><tbody>'
+    +topNas.map(function(k,i){var pct=Math.round(k.count/maxNas*100);return '<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+k.nama+'</td><td class="nr" style="font-weight:700">'+k.count+'</td><td><div style="width:140px;height:6px;background:#E8E4DA;border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:#BA7517;border-radius:3px"></div></div></td></tr>';}).join('')
+    +'</tbody></table>';
+
+  // Konsentrasi cabang
+  var konsentrasi=data.filter(function(d){return d.top_pct>=30 && d.total>=20;}).sort(function(a,b){return b.top_pct-a.top_pct;});
+  document.getElementById('konsentrasiCab').innerHTML=konsentrasi.length>0?'<table class="tbl"><thead><tr><th>Cabang</th><th>Kecamatan dominan</th><th class="nr">% dari total</th><th class="nr">Total cabang</th><th class="nr"># kecamatan</th></tr></thead><tbody>'
+    +konsentrasi.map(function(d){var clr=d.top_pct>=50?'br':d.top_pct>=40?'ba':'bgr';return '<tr><td style="font-weight:600">'+d.cabang+'</td><td><span class="bdg '+clr+'">'+d.top_kecamatan+'</span></td><td class="nr" style="font-weight:700;color:'+(d.top_pct>=50?'#A32D2D':d.top_pct>=40?'#854F0B':'#6B5E45')+'">'+d.top_pct+'%</td><td class="nr">'+d.total.toLocaleString('id')+'</td><td class="nr">'+d.kecamatan_count+'</td></tr>';}).join('')
+    +'</tbody></table>':'<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Tidak ada cabang dengan konsentrasi tinggi (≥30% di 1 kecamatan)</div>';
+}
+
+function renderKec(){
+  var cab=document.getElementById('selKecCab').value;
+  if(!cab||!LIVE.kecamatan){document.getElementById('kecCabContent').innerHTML='<div style="text-align:center;padding:20px;color:#9B8E78;font-size:12px">Pilih cabang untuk melihat distribusi kecamatan</div>';return;}
+  var d=LIVE.kecamatan.find(function(x){return x.cabang===cab;});
+  if(!d){document.getElementById('kecCabContent').innerHTML='<div style="text-align:center;padding:20px;color:#9B8E78">Data tidak ditemukan</div>';return;}
+
+  var max=d.kecamatan[0].count;
+  // Top 20 kecamatan, sisanya digabung
+  var top=d.kecamatan.slice(0,20);
+  var sisa=d.kecamatan.slice(20);
+  var sisaTotal=sisa.reduce(function(s,k){return s+k.count;},0);
+
+  var h='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem">';
+  // Tabel
+  h+='<div><table class="tbl"><thead><tr><th>#</th><th>Kecamatan</th><th class="nr">Customer</th><th class="nr">%</th></tr></thead><tbody>';
+  top.forEach(function(k,i){
+    var pct=(k.count/d.total*100).toFixed(1);
+    h+='<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+k.nama+'</td><td class="nr" style="font-weight:700">'+k.count+'</td><td class="nr">'+pct+'%</td></tr>';
+  });
+  if(sisa.length>0){
+    var pct=(sisaTotal/d.total*100).toFixed(1);
+    h+='<tr style="background:#F9F7F2"><td colspan="2" style="font-style:italic;color:#6B5E45">+ '+sisa.length+' kecamatan lain</td><td class="nr">'+sisaTotal+'</td><td class="nr">'+pct+'%</td></tr>';
+  }
+  h+='<tr style="background:#F9F7F2;font-weight:700;border-top:2px solid #E8E4DA"><td colspan="2">TOTAL</td><td class="nr">'+d.total+'</td><td class="nr">100%</td></tr>';
+  h+='</tbody></table></div>';
+
+  // Heatmap bars
+  h+='<div><div style="font-size:11px;color:#6B5E45;margin-bottom:8px;font-weight:600">Distribusi visual top 20 kecamatan</div>';
+  top.forEach(function(k,i){
+    var pct=k.count/max*100;
+    var pctTotal=(k.count/d.total*100).toFixed(1);
+    var bg=k.count/d.total>=0.3?'#A32D2D':k.count/d.total>=0.15?'#BA7517':k.count/d.total>=0.05?'#378ADD':'#5DCAA5';
+    h+='<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="font-weight:600;color:#2C2C2A">'+k.nama+'</span><span style="color:#6B5E45">'+k.count+' ('+pctTotal+'%)</span></div><div style="height:8px;background:#F0EDE5;border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+bg+';border-radius:3px"></div></div></div>';
+  });
+  h+='</div></div>';
+
+  document.getElementById('kecCabContent').innerHTML='<div style="background:#F9F7F2;padding:10px 14px;border-radius:8px;margin-bottom:.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px"><span><strong>'+d.cabang+'</strong> · '+d.total.toLocaleString('id')+' customer · <strong>'+d.kecamatan_count+'</strong> kecamatan unik</span><span style="color:#6B5E45">Top: <strong>'+d.top_kecamatan+'</strong> ('+d.top_pct+'%)</span></div>'+h;
 }
 
 // ============================================================
