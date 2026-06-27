@@ -532,11 +532,12 @@ function setStatus(s,lbl){var el=document.getElementById('liveStatus');if(!el)re
 async function fetchLive(){
   setStatus('loading','⏳ Memuat...');
   try {
-    var [sum,wk,pip,src,paket,srcCab,kec] = await Promise.all([
+    var [sum,wk,pip,src,paket,srcCab,kec,daily] = await Promise.all([
       fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber'),
-      fetchAPI('paket'), fetchAPI('sumber_cabang'), fetchAPI('kecamatan')
+      fetchAPI('paket'), fetchAPI('sumber_cabang'), fetchAPI('kecamatan'),
+      fetchAPI('daily&days=200')
     ]);
-    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab,kecamatan:kec};
+    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab,kecamatan:kec,daily:daily};
     if(wk && wk.by_cabang){
       WKC=wk.by_cabang;
       WEEKS=wk.weeks||[];
@@ -551,13 +552,25 @@ async function fetchLive(){
 }
 
 function updateHM2026(wk){
-  // Rebuild HM[2026] dari weekly data
-  var monthly=[0,0,0,0,0,0,0,0,0,0,0,0];
-  // Gunakan pipeline data dan summary untuk update
+  // Rebuild HM[2026] dari daily data (lebih akurat per bulan)
+  if(LIVE.daily && LIVE.daily.daily){
+    var monthly=[0,0,0,0,0,0,0,0,0,0,0,0];
+    LIVE.daily.daily.forEach(function(d){
+      var ym=d.date.substr(0,7); // YYYY-MM
+      if(ym.startsWith('2026')){
+        var mIdx=parseInt(d.date.substr(5,2))-1;
+        monthly[mIdx]+=d.count;
+      }
+    });
+    // Update HM[2026] dengan data yang ada (non-zero saja, biar bulan kosong tetap 0)
+    for(var i=0;i<12;i++){
+      if(monthly[i]>0) HM[2026][i]=monthly[i];
+    }
+  }
+  // Fallback: summary untuk bulan berjalan
   if(LIVE.summary){
-    var s=LIVE.summary;
-    var m=new Date().getMonth(); // 0-based
-    HM[2026][m]=s.this_month;
+    var m=new Date().getMonth();
+    HM[2026][m]=LIVE.summary.this_month;
   }
 }
 
