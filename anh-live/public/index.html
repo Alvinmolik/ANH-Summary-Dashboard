@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Usaha Aqiqah — ANH</title>
+<title>Dashboard Marketing Aqiqah Nurul Hayat</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -82,7 +82,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
 
 <div class="topbar">
-  <div><h1>Dashboard Usaha Aqiqah — ANH</h1><p>45 cabang aktif · Historis 2020–2025 + Live 2026 · Tanggal Pesan</p></div>
+  <div><h1>Dashboard Marketing Aqiqah Nurul Hayat</h1><p>53 cabang aktif · Historis 2020–2025 + Live 2026 · Tanggal Pesan</p></div>
   <div style="display:flex;align-items:center;gap:6px">
     <span id="liveStatus" class="live-badge">⏳ Memuat...</span>
     <span id="lastUpdate" class="last-update"></span>
@@ -108,6 +108,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="nb" onclick="SS('kritis',this)">⚠️ Zona Kritis</button>
   <button class="nb" onclick="SS('recovery',this)">📈 Recovery</button>
   <button class="nb" onclick="SS('risk',this)">🛡️ Risk Monitor</button>
+  <button class="nb" onclick="SS('analisa',this)">🏢 Analisa Cabang</button>
   <button class="nb" onclick="SS('forecast',this)">🔮 Forecast</button>
 </div></div>
 
@@ -123,9 +124,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="lgd"><span><span class="lsq" style="background:#B5D4F4"></span>2024</span><span><span class="lsq" style="background:#EF9F27"></span>2025</span><span><span class="lsq" style="background:#BA7517"></span>2026</span></div>
     <div style="position:relative;height:195px"><canvas id="c3y"></canvas></div>
   </div>
-  <div class="g3">
-    <div class="card"><div class="ct">Sumber Pesanan</div><div style="position:relative;height:170px"><canvas id="cPS"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPS"></div></div>
-    <div class="card"><div class="ct">Tipe Kambing</div><div style="position:relative;height:170px"><canvas id="cPK"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPK"></div></div>
+  <div class="g3" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="ct">Sumber Pesanan</div><div style="position:relative;height:160px"><canvas id="cPS"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPS"></div></div>
+    <div class="card"><div class="ct">Tipe Kambing</div><div style="position:relative;height:160px"><canvas id="cPK"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPK"></div></div>
+    <div class="card"><div class="ct">Paket Pesanan</div><div style="position:relative;height:160px"><canvas id="cPP"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPP"></div></div>
     <div class="card"><div class="ct">2025 × 2026</div><div id="cmpBox"></div></div>
   </div>
   <div class="card">
@@ -259,7 +261,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W-3</th><th class="nr">W-2</th><th class="nr">W-1</th><th class="nr">W terkini</th><th class="nr">Frek Kritis</th><th>Status</th></tr></thead><tbody id="tKritis"></tbody></table></div>
   </div>
   <div class="card">
-    <div class="ct">Heatmap Mingguan — 10 Minggu Terakhir · Top 20 Cabang</div>
+    <div class="ct">Heatmap Mingguan — 10 Minggu Terakhir · Semua Cabang</div>
     <div class="heat-wrap"><div id="hmWrap"></div></div>
     <div class="lgd" style="margin-top:8px">
       <span><span style="display:inline-block;width:12px;height:12px;background:#FCEBEB;border-radius:2px;vertical-align:middle;margin-right:3px"></span>0</span>
@@ -319,6 +321,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <li><strong>Risk Score 30–49 (kuning)</strong> = perlu perhatian. Monitor lebih ketat.</li>
       <li><strong>Risk Score 0–29 (biru)</strong> = kondisi normal/baik.</li>
       <li><strong>Formula risk score</strong>: Memperhitungkan seberapa sering masuk zona kritis (40%), seberapa panjang tren turun saat ini (30%), apakah pertumbuhan tahunan negatif (20%), dan seberapa tidak stabil performanya (10%).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== ANALISA CABANG ===== -->
+<div class="sec" id="s-analisa">
+  <div style="background:#F9F7F2;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:#6B5E45;line-height:1.7;border:1px solid #E8E4DA">
+    <strong style="color:#3B2A13">Analisa Mendalam per Cabang:</strong> Setiap cabang punya karakter channel marketing yang berbeda. Tab ini menampilkan breakdown sumber pesanan per cabang untuk menemukan pola sukses yang bisa direplikasi.
+  </div>
+  <div class="card">
+    <div class="ct">Heatmap Sumber Pesanan per Cabang — 2026
+      <select onchange="bAnalisa(this.value)" id="selAnalisa" style="font-size:11px;padding:5px 10px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600">
+        <option value="pct">% per cabang</option>
+        <option value="num">Angka absolut</option>
+      </select>
+    </div>
+    <div class="cs">Persentase setiap sumber pesanan terhadap total customer cabang · Diurutkan total customer tertinggi</div>
+    <div class="heat-wrap"><div id="hmSumberCab"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Top Cabang per Channel — 2026</div>
+      <div class="cs">Cabang dengan persentase tertinggi untuk setiap channel marketing</div>
+      <div id="topPerChannel"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Cabang dengan Karakter Unik</div>
+      <div class="cs">Cabang yang sangat bergantung pada satu channel (≥50%)</div>
+      <div id="cabUnik"></div>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Analisa Cabang</h4>
+    <ul>
+      <li><strong>Heatmap warna gelap</strong> = persentase tinggi, cabang sangat bergantung pada channel tersebut. Warna terang = channel minor.</li>
+      <li><strong>Cabang dengan Referensi tinggi (60%+)</strong> = bisnisnya kuat di word-of-mouth, kepuasan customer existing sangat menentukan. Fokus jaga kualitas layanan.</li>
+      <li><strong>Cabang dengan Instagram tinggi (30%+)</strong> = social media native. Replikasikan strategi konten ke cabang lain yang Instagramnya rendah.</li>
+      <li><strong>Cabang dengan Repeat Order tinggi</strong> = customer loyal kuat. Indikator product-market-fit yang baik di area tersebut.</li>
+      <li><strong>Cabang dengan Lainnya/blank tinggi</strong> = pencatatan sumber tidak rapi, perlu training CS untuk dokumentasi sumber leads.</li>
+      <li><strong>Aksi strategis</strong>: Identifikasi cabang "juara" di setiap channel, lalu transfer playbook-nya ke cabang lain.</li>
     </ul>
   </div>
 </div>
@@ -452,15 +494,14 @@ function setStatus(s,lbl){var el=document.getElementById('liveStatus');if(!el)re
 async function fetchLive(){
   setStatus('loading','⏳ Memuat...');
   try {
-    var [sum,wk,pip,src] = await Promise.all([
-      fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber')
+    var [sum,wk,pip,src,paket,srcCab] = await Promise.all([
+      fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber'),
+      fetchAPI('paket'), fetchAPI('sumber_cabang')
     ]);
-    // Update HM 2026 dari daily summary
-    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src};
+    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab};
     if(wk && wk.by_cabang){
       WKC=wk.by_cabang;
       WEEKS=wk.weeks||[];
-      // Update HM 2026 monthly dari weekly data
       updateHM2026(wk);
     }
     setStatus('ok','● Live');
@@ -503,7 +544,7 @@ function SS(id,btn){
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   document.getElementById('s-'+id).classList.add('on');
   btn.classList.add('on');
-  var f={pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,forecast:function(){bFc('ensemble');}};
+  var f={pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,analisa:function(){bAnalisa('pct');},forecast:function(){bFc('ensemble');}};
   if(f[id])f[id]();
 }
 
@@ -541,6 +582,15 @@ function bUtama(){
   var kd=KB26[m]||{},kK=['Puas','Super','Istimewa','Hemat','Platinum','Tasyakuran','Lainnya'],kV=kK.map(function(k){return kd[k]||0;});
   c=ch('cPK');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:kK,datasets:[{data:kV,backgroundColor:KB_C,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
   document.getElementById('lgPK').innerHTML=kK.filter(function(_,i){return kV[i]>0;}).map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+KB_C[i]+'"></span>'+k+' <strong>'+kV[i]+'%</strong></span>';}).join('');
+
+  // Paket pesanan (Nikmat/Luxury/Hemat/Praktis)
+  var paketData = LIVE.paket && LIVE.paket.monthly_all && LIVE.paket.monthly_all[m] ? LIVE.paket.monthly_all[m] : {Nikmat:0,Luxury:0,Hemat:0,Praktis:0};
+  var pkK=['Nikmat','Luxury','Hemat','Praktis'];
+  var pkV=pkK.map(function(k){return paketData[k]||0;});
+  var pkTot=pkV.reduce(function(a,b){return a+b;},0);
+  var PK_C=['#BA7517','#534AB7','#3B6D11','#185FA5'];
+  c=ch('cPP');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:pkK,datasets:[{data:pkV,backgroundColor:PK_C,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgPP').innerHTML=pkK.map(function(k,i){var pct=pkTot>0?Math.round(pkV[i]/pkTot*100):0;return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+PK_C[i]+'"></span>'+k+' <strong>'+pkV[i].toLocaleString('id')+'</strong> ('+pct+'%)</span>';}).join('');
 
   var ytd25_=HM[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
   document.getElementById('cmpBox').innerHTML='<table class="tbl"><thead><tr><th>Bulan</th><th class="nr">2025</th><th class="nr">2026</th><th class="nr">%</th></tr></thead><tbody>'
@@ -747,13 +797,13 @@ function bKritis(){
     return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td>'+l4.map(function(x){return'<td class="nr" style="'+hb(x)+';font-weight:'+(x<=2?800:400)+'">'+x+'</td>';}).join('')+'<td class="nr"><span class="bdg '+(fq>=15?'br':fq>=8?'ba':'bgr')+'">'+fq+'x</span></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td></tr>';
   }).join('');
 
-  // Heatmap top 20, 10 weeks terakhir
-  var top20=cabs.slice(0,20);
+  // Heatmap semua cabang, 10 weeks terakhir
+  var allCabs=cabs.slice();
   var lastWks=WEEKS.slice(-10);
   var h='<div style="display:grid;grid-template-columns:90px repeat('+lastWks.length+',1fr);gap:1px;background:#E8E4DA;border-radius:10px;overflow:hidden;font-size:10px;min-width:540px">';
   h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:700;color:#6B5E45">Cabang</div>';
   lastWks.forEach(function(wk){h+='<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">'+wk+'</div>';});
-  top20.forEach(function(c){
+  allCabs.forEach(function(c){
     h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+c+'</div>';
     lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+( v||'')+'</div>';});
   });
@@ -778,6 +828,83 @@ function bRisk(){
     var fq=getVals(d.c).filter(function(x){return x<=1;}).length,dss=wkDs(d.c);
     return'<div class="ri"><div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:4px">'+(i+1)+'. '+d.c+'</div><div style="height:5px;border-radius:2px;background:#E8E4DA;margin-bottom:4px;overflow:hidden"><div style="height:100%;border-radius:2px;width:'+d.rs+'%;background:'+clr+'"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:'+clr+'">Risk '+d.rs+'/100</span><span class="bdg '+d.e.c+'">'+d.e.l+'</span></div><div style="font-size:10px;color:#6B5E45;display:flex;flex-wrap:wrap;gap:3px">'+(fq>0?'<span class="bdg br">'+fq+'x kritis</span>':'')+(dss>=2?'<span class="bdg ba">↓'+dss+' mgg</span>':'')+'</div></div>';
   }).join('');
+}
+
+// ============================================================
+// ANALISA CABANG (Heatmap sumber per cabang)
+// ============================================================
+function bAnalisa(mode){
+  mode=mode||'pct';
+  document.getElementById('selAnalisa').value=mode;
+  var data=LIVE.sumber_cabang;
+  if(!data||data.length===0){
+    document.getElementById('hmSumberCab').innerHTML='<div style="text-align:center;padding:30px;color:#9B8E78">Data belum dimuat. Tunggu sebentar...</div>';
+    return;
+  }
+
+  // Channel kolom
+  var channels=['Referensi','Repeat Order','Instagram','Website','Facebook','Banner','GMB','Brosur','TikTok','Lainnya'];
+
+  var h='<div style="overflow-x:auto"><table class="tbl" style="min-width:900px"><thead><tr><th>#</th><th>Cabang</th><th class="nr">Total</th>';
+  channels.forEach(function(ch){h+='<th class="nr" style="font-size:9px">'+ch.substr(0,8)+'</th>';});
+  h+='</tr></thead><tbody>';
+
+  data.forEach(function(d,i){
+    h+='<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+d.cabang+'</td><td class="nr" style="font-weight:700">'+d.total.toLocaleString('id')+'</td>';
+    channels.forEach(function(ch){
+      var v=d.sumber[ch]||0;
+      var pct=d.total>0?v/d.total*100:0;
+      if(mode==='pct'){
+        var bg='';
+        if(pct>=50) bg='background:#0C447C;color:#fff;font-weight:700';
+        else if(pct>=30) bg='background:#378ADD;color:#fff;font-weight:700';
+        else if(pct>=15) bg='background:#85B7EB;color:#0C447C';
+        else if(pct>=5) bg='background:#D6E5F4;color:#0C447C';
+        else if(pct>0) bg='background:#F0EDE5;color:#6B5E45';
+        else bg='color:#D4C9B0';
+        h+='<td class="nr" style="'+bg+'">'+(pct>0?pct.toFixed(0)+'%':'—')+'</td>';
+      } else {
+        h+='<td class="nr">'+(v||'—')+'</td>';
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('hmSumberCab').innerHTML=h;
+
+  // Top per channel
+  var topPerCh={};
+  channels.forEach(function(ch){
+    var sorted=data.filter(function(d){return (d.sumber[ch]||0)>0;}).sort(function(a,b){
+      var pa=(a.sumber[ch]||0)/a.total;
+      var pb=(b.sumber[ch]||0)/b.total;
+      return pb-pa;
+    });
+    topPerCh[ch]=sorted.slice(0,3);
+  });
+
+  var topHtml='<table class="tbl"><thead><tr><th>Channel</th><th>Top 3 Cabang</th></tr></thead><tbody>';
+  channels.forEach(function(ch){
+    if(topPerCh[ch].length===0) return;
+    var topStr=topPerCh[ch].map(function(d){
+      var pct=Math.round((d.sumber[ch]||0)/d.total*100);
+      return d.cabang+' <span class="bdg bb" style="font-size:9px">'+pct+'%</span>';
+    }).join('<br>');
+    topHtml+='<tr><td style="font-weight:600">'+ch+'</td><td style="font-size:11px;line-height:1.7">'+topStr+'</td></tr>';
+  });
+  topHtml+='</tbody></table>';
+  document.getElementById('topPerChannel').innerHTML=topHtml;
+
+  // Cabang dengan karakter unik (>=50% di satu channel)
+  var unique=data.filter(function(d){return d.top_pct>=50;}).sort(function(a,b){return b.top_pct-a.top_pct;});
+  var uniqHtml='<table class="tbl"><thead><tr><th>Cabang</th><th>Channel Dominan</th><th class="nr">%</th><th class="nr">Total</th></tr></thead><tbody>';
+  unique.forEach(function(d){
+    var clr=d.top_sumber==='Referensi'?'bb':d.top_sumber==='Instagram'?'br':d.top_sumber==='Repeat Order'?'bg':'ba';
+    uniqHtml+='<tr><td style="font-weight:600">'+d.cabang+'</td><td><span class="bdg '+clr+'">'+d.top_sumber+'</span></td><td class="nr" style="font-weight:700">'+d.top_pct+'%</td><td class="nr">'+d.total.toLocaleString('id')+'</td></tr>';
+  });
+  uniqHtml+='</tbody></table>';
+  if(unique.length===0) uniqHtml='<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Belum ada cabang yang sangat tergantung satu channel (≥50%)</div>';
+  document.getElementById('cabUnik').innerHTML=uniqHtml;
 }
 
 // ============================================================
