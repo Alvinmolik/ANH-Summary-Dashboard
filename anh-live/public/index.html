@@ -541,8 +541,8 @@ async function fetchLive(){
     if(wk && wk.by_cabang){
       WKC=wk.by_cabang;
       WEEKS=wk.weeks||[];
-      updateHM2026(wk);
     }
+    updateHM2026(wk);
     setStatus('ok','● Live');
     document.getElementById('lastUpdate').textContent='Update: '+new Date().toLocaleTimeString('id-ID');
     var act=document.querySelector('.nb.on');if(act)act.click();
