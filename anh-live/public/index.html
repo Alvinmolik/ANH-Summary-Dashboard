@@ -40,31 +40,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
 @media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
 @media(max-width:600px){
-  .topbar{flex-direction:column;align-items:flex-start;padding:.625rem .875rem}
-  .topbar h1{font-size:14px}
-  .topbar p{font-size:9px}
-  .fbar{padding:.4rem .875rem;gap:6px}
+  body{padding-top:env(safe-area-inset-top,0)}
+  .topbar{flex-direction:column;align-items:flex-start;padding:.75rem .875rem;gap:4px}
+  .topbar h1{font-size:14px;line-height:1.3}
+  .topbar p{font-size:9px;line-height:1.4}
+  .topbar > div:last-child{align-self:flex-start;font-size:10px}
+  #liveStatus{padding:3px 8px;font-size:10px}
+  #lastUpdate{font-size:9px}
+  .fbar{padding:.5rem .875rem;gap:6px;flex-wrap:wrap}
   .fbar-lbl{font-size:10px}
-  .fsel{font-size:11px;padding:5px 10px}
-  .nav-wrap{padding:0 .5rem}
-  .nb{padding:8px 10px;font-size:11px}
-  .sec{padding:.875rem .875rem}
-  .mr{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:.875rem}
-  .mc{padding:.625rem .75rem}
-  .ml{font-size:9px}
-  .mv{font-size:18px}
-  .ms{font-size:10px}
-  .card{padding:.75rem .875rem;border-radius:10px}
-  .ct{font-size:12px}
+  .fsel{font-size:11px;padding:5px 10px;min-width:90px}
+  .fbar-info{font-size:9px;width:100%;margin-top:2px}
+  .nav-wrap{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav-wrap::-webkit-scrollbar{display:none}
+  .nb{padding:8px 10px;font-size:10px;white-space:nowrap;flex-shrink:0}
+  .sec{padding:.75rem .75rem}
+  .mr{grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.875rem}
+  .mc{padding:.5rem .625rem}
+  .ml{font-size:9px;line-height:1.2;margin-bottom:2px}
+  .mv{font-size:16px;line-height:1.1}
+  .ms{font-size:9px;margin-top:2px}
+  .card{padding:.625rem .75rem;border-radius:10px;margin-bottom:.625rem}
+  .ct{font-size:12px;display:block}
+  .ct select{margin-top:6px;width:100%;font-size:11px}
   .cs{font-size:10px}
-  .g3[style*="repeat(4"]{grid-template-columns:1fr 1fr!important}
-  .tbl{font-size:11px}
-  .tbl th{font-size:9px;padding:5px 6px}
-  .tbl td{padding:5px 6px}
+  .g3[style*="repeat(4"]{grid-template-columns:1fr 1fr!important;gap:8px}
+  .tbl{font-size:10px;width:100%}
+  .tbl th{font-size:9px;padding:4px 5px}
+  .tbl td{padding:4px 5px}
   .how-to{padding:.625rem .75rem}
+  .how-to h4{font-size:11px}
   .how-to p,.how-to li{font-size:10px;line-height:1.6}
-  .pip-table td{padding:8px 10px;font-size:12px}
-  .pip-table td:first-child{width:120px}
+  .pip-table td{padding:6px 8px;font-size:11px}
+  /* Kecamatan tab specific - stack table dan distribusi visual */
+  #kecCabContent > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:1rem!important}
+  /* Heatmap wrapper scrollable */
+  .heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Doughnut charts smaller */
+  canvas{max-height:140px}
+  /* Legend wrap better */
+  [id^="lg"]{font-size:9px!important}
 }
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{font-weight:700;font-size:10px;color:#6B5E45;text-align:left;padding:6px 8px;border-bottom:1.5px solid #E8E4DA;background:#F9F7F2;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
@@ -661,7 +676,7 @@ function bUtama(){
     +'<div class="mc"><div class="ml">Customer '+mn+' 2025</div><div class="mv">'+p25.toLocaleString('id')+'</div><div class="ms neu">pembanding</div></div>'
     +'<div class="mc"><div class="ml">YTD 2025</div><div class="mv">'+ytd25.toLocaleString('id')+'</div><div class="ms neu">s.d. '+mn+'</div></div>'
     +'<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms '+(ytd26>ytd25?'up':'dn')+'">'+(ytd26>ytd25?'▲':'▼')+' '+Math.abs(pt(ytd25,ytd26))+'%</div></div>'
-    +(cMoM!==null?'<div class="mc"><div class="ml">MoM vs '+MNS[m-2]+'</div><div class="mv '+(cMoM>0?'up':'dn')+'">'+(cMoM>0?'+':'')+cMoM+'%</div><div class="ms neu">bln sebelumnya</div></div>':'');
+    +(pm!==null?'<div class="mc"><div class="ml">'+MNS[m-2]+' (full)</div><div class="mv">'+pm.toLocaleString('id')+'</div><div class="ms neu">bulan penuh</div></div>':'');
 
   var c;
   c=ch('cB26');if(c)c._c=new Chart(c,{type:'bar',data:{labels:MNS,datasets:[{data:HM[2026].map(function(v){return v||null;}),backgroundColor:MNS.map(function(_,i){return i===m-1?'#BA7517':i<6?'#D4A04A':'#EDE3D4';})}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
