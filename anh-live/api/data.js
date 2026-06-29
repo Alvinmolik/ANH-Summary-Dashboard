@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Cache-Control', 's-maxage=60'); // cache 5 menit di Vercel edge
+  res.setHeader('Cache-Control', 's-maxage=21600'); // cache 6 jam (data update harian jam 00:00)
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();

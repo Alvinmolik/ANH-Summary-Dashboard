@@ -39,6 +39,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
 @media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .topbar{flex-direction:column;align-items:flex-start;padding:.625rem .875rem}
+  .topbar h1{font-size:14px}
+  .topbar p{font-size:9px}
+  .fbar{padding:.4rem .875rem;gap:6px}
+  .fbar-lbl{font-size:10px}
+  .fsel{font-size:11px;padding:5px 10px}
+  .nav-wrap{padding:0 .5rem}
+  .nb{padding:8px 10px;font-size:11px}
+  .sec{padding:.875rem .875rem}
+  .mr{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:.875rem}
+  .mc{padding:.625rem .75rem}
+  .ml{font-size:9px}
+  .mv{font-size:18px}
+  .ms{font-size:10px}
+  .card{padding:.75rem .875rem;border-radius:10px}
+  .ct{font-size:12px}
+  .cs{font-size:10px}
+  .g3[style*="repeat(4"]{grid-template-columns:1fr 1fr!important}
+  .tbl{font-size:11px}
+  .tbl th{font-size:9px;padding:5px 6px}
+  .tbl td{padding:5px 6px}
+  .how-to{padding:.625rem .75rem}
+  .how-to p,.how-to li{font-size:10px;line-height:1.6}
+  .pip-table td{padding:8px 10px;font-size:12px}
+  .pip-table td:first-child{width:120px}
+}
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{font-weight:700;font-size:10px;color:#6B5E45;text-align:left;padding:6px 8px;border-bottom:1.5px solid #E8E4DA;background:#F9F7F2;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
 .tbl td{padding:6px 8px;border-bottom:1px solid #F0EDE5;color:#2C2C2A}
@@ -592,7 +619,7 @@ async function fetchDaily(days){
   return json.data;
 }
 
-setInterval(fetchLive,5*60*1000);
+setInterval(fetchLive,6*60*60*1000); // refresh tiap 6 jam (data spreadsheet update harian jam 00:00)
 
 // ============================================================
 // NAV
@@ -618,14 +645,20 @@ function bUtama(){
   var c25=pt(p25,cur),cMoM=pm?pt(pm,cur):null;
   var liveSumm=LIVE.summary;
   var liveExtra='';
-  if(liveSumm&&liveSumm.today!==undefined){
-    liveExtra='<div class="mc live-card"><div class="ml" style="color:#3B6D11">🟢 Hari ini (live)</div><div class="mv up">'+liveSumm.today.toLocaleString('id')+'</div><div class="ms neu">kemarin: '+liveSumm.yesterday.toLocaleString('id')+'</div></div>'
-    +'<div class="mc live-card"><div class="ml" style="color:#3B6D11">Bulan ini (live)</div><div class="mv">'+liveSumm.this_month.toLocaleString('id')+'</div><div class="ms '+(liveSumm.mom_pct>=0?'up':'dn')+'">'+(liveSumm.mom_pct>=0?'▲':'▼')+' '+Math.abs(liveSumm.mom_pct||0)+'% vs bln lalu</div></div>';
+  if(liveSumm&&liveSumm.this_month!==undefined){
+    var dom = liveSumm.day_of_month;
+    var lmsd = liveSumm.last_month_same_day || 0;
+    var diff = liveSumm.this_month - lmsd;
+    var pctChg = lmsd>0 ? Math.round(diff/lmsd*100) : 0;
+    var nowDate = new Date();
+    var monthBerjalan = nowDate.toLocaleString('id-ID',{month:'long'});
+    var monthLalu = new Date(nowDate.getFullYear(), nowDate.getMonth()-1, 1).toLocaleString('id-ID',{month:'long'});
+    liveExtra='<div class="mc live-card"><div class="ml" style="color:#3B6D11">🟢 '+monthBerjalan+' ini (per kemarin)</div><div class="mv">'+liveSumm.this_month.toLocaleString('id')+'</div><div class="ms neu">s.d. tgl '+dom+'</div></div>'
+    +'<div class="mc"><div class="ml">'+monthLalu+' 1–'+dom+' (pembanding)</div><div class="mv">'+lmsd.toLocaleString('id')+'</div><div class="ms '+(pctChg>=0?'up':'dn')+'">'+(pctChg>=0?'▲':'▼')+' '+Math.abs(pctChg)+'% ('+(diff>=0?'+':'')+diff+')</div></div>';
   }
   document.getElementById('mMet').innerHTML=liveExtra
     +'<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms '+(c25>0?'up':'dn')+'">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'% vs '+mn+' \'25</div></div>'
     +'<div class="mc"><div class="ml">Customer '+mn+' 2025</div><div class="mv">'+p25.toLocaleString('id')+'</div><div class="ms neu">pembanding</div></div>'
-    +'<div class="mc"><div class="ml">Selisih</div><div class="mv '+(c25>0?'up':'dn')+'">'+(cur-p25>0?'+':'')+(cur-p25).toLocaleString('id')+'</div><div class="ms">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'%</div></div>'
     +'<div class="mc"><div class="ml">YTD 2025</div><div class="mv">'+ytd25.toLocaleString('id')+'</div><div class="ms neu">s.d. '+mn+'</div></div>'
     +'<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms '+(ytd26>ytd25?'up':'dn')+'">'+(ytd26>ytd25?'▲':'▼')+' '+Math.abs(pt(ytd25,ytd26))+'%</div></div>'
     +(cMoM!==null?'<div class="mc"><div class="ml">MoM vs '+MNS[m-2]+'</div><div class="mv '+(cMoM>0?'up':'dn')+'">'+(cMoM>0?'+':'')+cMoM+'%</div><div class="ms neu">bln sebelumnya</div></div>':'');
