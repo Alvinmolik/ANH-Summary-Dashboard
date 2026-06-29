@@ -38,48 +38,56 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cs{font-size:11px;color:#6B5E45;margin-bottom:8px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
-@media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
+.kec-split{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem}
+@media(max-width:700px){.g2,.g3,.kec-split{grid-template-columns:1fr}}
 @media(max-width:600px){
-  body{padding-top:env(safe-area-inset-top,0)}
-  .topbar{flex-direction:column;align-items:flex-start;padding:.75rem .875rem;gap:4px}
-  .topbar h1{font-size:14px;line-height:1.3}
-  .topbar p{font-size:9px;line-height:1.4}
-  .topbar > div:last-child{align-self:flex-start;font-size:10px}
-  #liveStatus{padding:3px 8px;font-size:10px}
+  html{padding-top:env(safe-area-inset-top,0)}
+  body{margin:0}
+  .topbar{flex-direction:column;align-items:flex-start;padding:14px 14px 10px;gap:6px}
+  .topbar > div:first-child{width:100%}
+  .topbar h1{font-size:15px;line-height:1.3;margin:0}
+  .topbar p{font-size:10px;line-height:1.4;margin:2px 0 0}
+  .topbar > div:last-child{align-self:flex-start;display:flex;align-items:center;gap:6px}
+  #liveStatus{padding:3px 8px;font-size:10px;border-radius:6px}
   #lastUpdate{font-size:9px}
-  .fbar{padding:.5rem .875rem;gap:6px;flex-wrap:wrap}
-  .fbar-lbl{font-size:10px}
-  .fsel{font-size:11px;padding:5px 10px;min-width:90px}
-  .fbar-info{font-size:9px;width:100%;margin-top:2px}
+  .fbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .fbar > span:first-child{font-size:10px}
+  .fsel{font-size:11px;padding:6px 10px}
+  .fbar > span:last-child{font-size:9px;width:100%;flex-basis:100%;margin-top:2px}
   .nav-wrap{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .nav-wrap::-webkit-scrollbar{display:none}
-  .nb{padding:8px 10px;font-size:10px;white-space:nowrap;flex-shrink:0}
-  .sec{padding:.75rem .75rem}
-  .mr{grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.875rem}
-  .mc{padding:.5rem .625rem}
-  .ml{font-size:9px;line-height:1.2;margin-bottom:2px}
-  .mv{font-size:16px;line-height:1.1}
-  .ms{font-size:9px;margin-top:2px}
-  .card{padding:.625rem .75rem;border-radius:10px;margin-bottom:.625rem}
-  .ct{font-size:12px;display:block}
-  .ct select{margin-top:6px;width:100%;font-size:11px}
-  .cs{font-size:10px}
+  .nb{padding:10px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}
+  .sec{padding:12px}
+  .mr{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+  .mc{padding:10px 12px}
+  .ml{font-size:9px;line-height:1.3;margin-bottom:3px}
+  .mv{font-size:18px;line-height:1.1}
+  .ms{font-size:9px;margin-top:3px}
+  .card{padding:12px;border-radius:10px;margin-bottom:10px}
+  .ct{font-size:12px;display:block;line-height:1.4}
+  .ct select{margin-top:8px;width:100%;font-size:11px;padding:6px 10px}
+  .cs{font-size:10px;margin-bottom:8px}
   .g3[style*="repeat(4"]{grid-template-columns:1fr 1fr!important;gap:8px}
+  /* Table responsive */
   .tbl{font-size:10px;width:100%}
-  .tbl th{font-size:9px;padding:4px 5px}
-  .tbl td{padding:4px 5px}
-  .how-to{padding:.625rem .75rem}
-  .how-to h4{font-size:11px}
+  .tbl th{font-size:9px;padding:5px 4px;line-height:1.2}
+  .tbl td{padding:5px 4px;line-height:1.3}
+  .tbl .bdg{font-size:9px;padding:1px 5px}
+  /* Wrap any horizontally scrollable container */
+  .card > div[style*="overflow-x:auto"]{margin:0 -12px;padding:0 12px}
+  .how-to{padding:10px 12px}
+  .how-to h4{font-size:11px;margin-bottom:6px}
   .how-to p,.how-to li{font-size:10px;line-height:1.6}
-  .pip-table td{padding:6px 8px;font-size:11px}
-  /* Kecamatan tab specific - stack table dan distribusi visual */
-  #kecCabContent > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:1rem!important}
-  /* Heatmap wrapper scrollable */
-  .heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  /* Doughnut charts smaller */
-  canvas{max-height:140px}
-  /* Legend wrap better */
+  .pip-table td{padding:7px 8px;font-size:11px}
+  /* Kecamatan tab - stack tabel dan distribusi visual */
+  .kec-split{grid-template-columns:1fr!important;gap:14px!important}
+  /* Heatmap scrollable */
+  .heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px;padding:0 12px}
+  /* Charts ukuran proporsional */
+  canvas{max-height:160px}
   [id^="lg"]{font-size:9px!important}
+  /* Tabel konsentrasi & analisa - sembunyikan kolom kurang penting di mobile */
+  .hide-mobile{display:none}
 }
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{font-weight:700;font-size:10px;color:#6B5E45;text-align:left;padding:6px 8px;border-bottom:1.5px solid #E8E4DA;background:#F9F7F2;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
@@ -953,7 +961,7 @@ function bAnalisa(mode){
   // Channel kolom
   var channels=['Referensi','Repeat Order','Instagram','Website','Facebook','Banner','GMB','Brosur','TikTok','Lainnya'];
 
-  var h='<div style="overflow-x:auto"><table class="tbl" style="min-width:900px"><thead><tr><th>#</th><th>Cabang</th><th class="nr">Total</th>';
+  var h='<div class="heat-wrap"><table class="tbl" style="min-width:900px"><thead><tr><th>#</th><th>Cabang</th><th class="nr">Total</th>';
   channels.forEach(function(ch){h+='<th class="nr" style="font-size:9px">'+ch.substr(0,8)+'</th>';});
   h+='</tr></thead><tbody>';
 
@@ -1063,8 +1071,8 @@ function bKecamatan(){
 
   // Konsentrasi cabang
   var konsentrasi=data.filter(function(d){return d.top_pct>=30 && d.total>=20;}).sort(function(a,b){return b.top_pct-a.top_pct;});
-  document.getElementById('konsentrasiCab').innerHTML=konsentrasi.length>0?'<table class="tbl"><thead><tr><th>Cabang</th><th>Kecamatan dominan</th><th class="nr">% dari total</th><th class="nr">Total cabang</th><th class="nr"># kecamatan</th></tr></thead><tbody>'
-    +konsentrasi.map(function(d){var clr=d.top_pct>=50?'br':d.top_pct>=40?'ba':'bgr';return '<tr><td style="font-weight:600">'+d.cabang+'</td><td><span class="bdg '+clr+'">'+d.top_kecamatan+'</span></td><td class="nr" style="font-weight:700;color:'+(d.top_pct>=50?'#A32D2D':d.top_pct>=40?'#854F0B':'#6B5E45')+'">'+d.top_pct+'%</td><td class="nr">'+d.total.toLocaleString('id')+'</td><td class="nr">'+d.kecamatan_count+'</td></tr>';}).join('')
+  document.getElementById('konsentrasiCab').innerHTML=konsentrasi.length>0?'<table class="tbl"><thead><tr><th>Cabang</th><th>Kecamatan dominan</th><th class="nr">% dari total</th><th class="nr hide-mobile">Total cabang</th><th class="nr hide-mobile"># kecamatan</th></tr></thead><tbody>'
+    +konsentrasi.map(function(d){var clr=d.top_pct>=50?'br':d.top_pct>=40?'ba':'bgr';return '<tr><td style="font-weight:600">'+d.cabang+'</td><td><span class="bdg '+clr+'">'+d.top_kecamatan+'</span></td><td class="nr" style="font-weight:700;color:'+(d.top_pct>=50?'#A32D2D':d.top_pct>=40?'#854F0B':'#6B5E45')+'">'+d.top_pct+'%</td><td class="nr hide-mobile">'+d.total.toLocaleString('id')+'</td><td class="nr hide-mobile">'+d.kecamatan_count+'</td></tr>';}).join('')
     +'</tbody></table>':'<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Tidak ada cabang dengan konsentrasi tinggi (≥30% di 1 kecamatan)</div>';
 }
 
@@ -1080,7 +1088,7 @@ function renderKec(){
   var sisa=d.kecamatan.slice(20);
   var sisaTotal=sisa.reduce(function(s,k){return s+k.count;},0);
 
-  var h='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem">';
+  var h='<div class="kec-split">';
   // Tabel
   h+='<div><table class="tbl"><thead><tr><th>#</th><th>Kecamatan</th><th class="nr">Customer</th><th class="nr">%</th></tr></thead><tbody>';
   top.forEach(function(k,i){
