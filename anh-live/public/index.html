@@ -145,6 +145,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <option value="1">Januari 2026</option><option value="2">Februari 2026</option>
     <option value="3">Maret 2026</option><option value="4">April 2026</option>
     <option value="5">Mei 2026</option><option value="6">Juni 2026</option>
+    <option value="7">Juli 2026</option><option value="8">Agustus 2026</option>
+    <option value="9">September 2026</option><option value="10">Oktober 2026</option>
+    <option value="11">November 2026</option><option value="12">Desember 2026</option>
   </select>
   <span style="font-size:11px;color:#9B8E78">Filter berlaku untuk tab Utama & Sumber Pesanan</span>
 </div>
@@ -524,7 +527,7 @@ const HM={
   2023:[2486,1719,1850,1381,2019,3387,2343,1550,2476,2071,1803,1913],
   2024:[1503,1588,1314,1632,1560,2596,2007,1738,1814,1851,1688,1559],
   2025:[1961,1302,1500,1815,1330,2188,1584,1160,1918,1219,1861,1381],
-  2026:[1635,1331,1466,1925,1848,1617,0,0,0,0,0,0]
+  2026:[1635,1331,1466,1925,1848,1970,0,0,0,0,0,0]  // H1 2026 final (statis, spreadsheet lama sudah tutup), Jul-Des akan diupdate dari live
 };
 const SRC26={
   1:{Referensi:667,Instagram:406,'Repeat Order':321,Website:100,Banner:49,GMB:28,Facebook:26,Brosur:18,TikTok:13},
@@ -567,7 +570,7 @@ var WEEKS=[]; // week labels
 // HELPERS
 // ============================================================
 function gm(){return parseInt(document.getElementById('selBulan').value);}
-function gmn(){return ['Januari','Februari','Maret','April','Mei','Juni'][gm()-1];}
+function gmn(){return ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][gm()-1];}
 function pt(a,b){if(!a)return b>0?999:0;return Math.round((b-a)/a*100);}
 function ps(a,b){var p=pt(a,b);if(p===999)return'—';return(p>0?'+':'')+p+'%';}
 function pc(a,b){var p=pt(a,b);return p>5?'up':p<-5?'dn':'neu';}
@@ -602,25 +605,26 @@ async function fetchLive(){
 }
 
 function updateHM2026(wk){
-  // Rebuild HM[2026] dari daily data (lebih akurat per bulan)
+  // H1 2026 (Jan-Jun) sudah statis dari spreadsheet lama - TIDAK DIOVERRIDE
+  // Hanya update H2 (Jul-Des, index 6-11) dari live data spreadsheet baru
   if(LIVE.daily && LIVE.daily.daily){
     var monthly=[0,0,0,0,0,0,0,0,0,0,0,0];
     LIVE.daily.daily.forEach(function(d){
-      var ym=d.date.substr(0,7); // YYYY-MM
+      var ym=d.date.substr(0,7);
       if(ym.startsWith('2026')){
         var mIdx=parseInt(d.date.substr(5,2))-1;
         monthly[mIdx]+=d.count;
       }
     });
-    // Update HM[2026] dengan data yang ada (non-zero saja, biar bulan kosong tetap 0)
-    for(var i=0;i<12;i++){
+    // Override HANYA bulan Jul-Des (index 6-11)
+    for(var i=6;i<12;i++){
       if(monthly[i]>0) HM[2026][i]=monthly[i];
     }
   }
-  // Fallback: summary untuk bulan berjalan
+  // Fallback: summary untuk bulan berjalan (hanya kalau H2)
   if(LIVE.summary){
-    var m=new Date().getMonth();
-    HM[2026][m]=LIVE.summary.this_month;
+    var m=new Date().getMonth(); // 0-based
+    if(m>=6) HM[2026][m]=LIVE.summary.this_month;
   }
 }
 
