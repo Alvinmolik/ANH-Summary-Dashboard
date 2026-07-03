@@ -704,11 +704,23 @@ function bUtama(){
     liveExtra='<div class="mc live-card"><div class="ml" style="color:#3B6D11">🟢 '+monthBerjalan+' ini (per kemarin)</div><div class="mv">'+liveSumm.this_month.toLocaleString('id')+'</div><div class="ms neu">s.d. tgl '+dom+'</div></div>'
     +'<div class="mc"><div class="ml">'+monthLalu+' 1–'+dom+' (pembanding)</div><div class="mv">'+lmsd.toLocaleString('id')+'</div><div class="ms '+(pctChg>=0?'up':'dn')+'">'+(pctChg>=0?'▲':'▼')+' '+Math.abs(pctChg)+'% ('+(diff>=0?'+':'')+diff+')</div></div>';
   }
+  var isBulanBerjalan = m === (new Date().getMonth()+1);
+  var cust2026Card;
+  if (isBulanBerjalan && p25 > 0) {
+    // Progress vs full bulan tahun lalu
+    var progress = Math.round(cur / p25 * 100);
+    cust2026Card = '<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms neu">📈 '+progress+'% progress vs '+mn+' \'25</div></div>';
+  } else {
+    // Bulan sudah lewat: comparison biasa
+    cust2026Card = '<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms '+(c25>0?'up':'dn')+'">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'% vs '+mn+' \'25</div></div>';
+  }
   document.getElementById('mMet').innerHTML=liveExtra
-    +'<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms '+(c25>0?'up':'dn')+'">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'% vs '+mn+' \'25</div></div>'
+    +cust2026Card
     +'<div class="mc"><div class="ml">Customer '+mn+' 2025</div><div class="mv">'+p25.toLocaleString('id')+'</div><div class="ms neu">pembanding</div></div>'
     +'<div class="mc"><div class="ml">YTD 2025</div><div class="mv">'+ytd25.toLocaleString('id')+'</div><div class="ms neu">s.d. '+mn+'</div></div>'
-    +'<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms '+(ytd26>ytd25?'up':'dn')+'">'+(ytd26>ytd25?'▲':'▼')+' '+Math.abs(pt(ytd25,ytd26))+'%</div></div>'
+    +(isBulanBerjalan
+      ? '<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms neu">📈 '+Math.round(ytd26/ytd25*100)+'% vs YTD \'25</div></div>'
+      : '<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms '+(ytd26>ytd25?'up':'dn')+'">'+(ytd26>ytd25?'▲':'▼')+' '+Math.abs(pt(ytd25,ytd26))+'%</div></div>')
     +(pm!==null?'<div class="mc"><div class="ml">'+MNS[m-2]+' (full)</div><div class="mv">'+pm.toLocaleString('id')+'</div><div class="ms neu">bulan penuh</div></div>':'');
 
   var c;
