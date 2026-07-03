@@ -939,7 +939,7 @@ function toggleSrcMode(){window._srcMode=window._srcMode==='pct'?'num':'pct';ren
 // BRANCH MONITOR (menggunakan data live WKC)
 // ============================================================
 function getCabs(){return Object.keys(WKC).length>0?Object.keys(WKC):[];}
-function getVals(c){return WKC[c]?Object.keys(WKC[c]).sort().map(function(w){return WKC[c][w]||0;}):[0,0,0,0,0,0];}
+function getVals(c){if(!WKC[c])return WEEKS.length>0?WEEKS.map(function(){return 0;}):[0,0,0,0,0,0];return WEEKS.map(function(w){return WKC[c][w]||0;});}
 function getLast(c,n){var v=getVals(c);return v.slice(-n);}
 function getW(c,idx){var v=getVals(c);return v[v.length-1+idx]||0;}
 
