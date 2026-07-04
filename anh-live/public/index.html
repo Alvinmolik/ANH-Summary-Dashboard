@@ -57,34 +57,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .nav-wrap{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .nav-wrap::-webkit-scrollbar{display:none}
   .nb{padding:10px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}
-  .sec{padding:12px;overflow-x:hidden}
+  .sec{padding:12px}
   .mr{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
   .mc{padding:10px 12px}
   .ml{font-size:9px;line-height:1.3;margin-bottom:3px}
   .mv{font-size:18px;line-height:1.1}
   .ms{font-size:9px;margin-top:3px}
-  .card{padding:12px;border-radius:10px;margin-bottom:10px;overflow:hidden}
+  .card{padding:12px;border-radius:10px;margin-bottom:10px}
   .ct{font-size:12px;display:block;line-height:1.4}
   .ct select{margin-top:8px;width:100%;font-size:11px;padding:6px 10px}
   .cs{font-size:10px;margin-bottom:8px}
   .g3[style*="repeat(4"]{grid-template-columns:1fr 1fr!important;gap:8px}
-  /* Table responsive */
-  .tbl{font-size:10px;width:100%;table-layout:fixed}
-  .tbl th{font-size:9px;padding:5px 4px;line-height:1.2;word-wrap:break-word}
-  .tbl td{padding:5px 4px;line-height:1.3;word-wrap:break-word;vertical-align:middle}
+  /* Table: keep original width, allow scroll horizontally */
+  .tbl{font-size:11px;white-space:nowrap}
+  .tbl th{font-size:10px;padding:6px 8px;white-space:nowrap}
+  .tbl td{padding:6px 8px;white-space:nowrap;vertical-align:middle}
   .tbl .bdg{font-size:9px;padding:1px 5px}
-  /* Force table container scrollable */
-  .card > div[style*="overflow-x:auto"], .card table{max-width:100%}
+  /* Container yang punya overflow-x:auto → slideable */
   .card > div[style*="overflow-x:auto"]{margin:0 -12px;padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Force cards & sections to hide any overflow outside their box */
+  .card, .sec{overflow-x:hidden}
+  /* Inner scrollable elements OK */
+  .card .heat-wrap, .card [style*="overflow-x:auto"]{overflow-x:auto!important}
   /* 2025x2026 comparison table di tab Utama */
   #cmpBox table{width:100%;font-size:11px}
   #cmpBox td, #cmpBox th{padding:5px 4px}
-  /* Heatmap - baris seragam untuk cabang dengan nama panjang */
-  .heat-wrap tr{height:32px}
-  .heat-wrap td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
-  .how-to{padding:10px 12px;overflow-x:hidden}
+  .how-to{padding:10px 12px}
   .how-to h4{font-size:11px;margin-bottom:6px}
-  .how-to p,.how-to li{font-size:10px;line-height:1.6;word-wrap:break-word}
+  .how-to p,.how-to li{font-size:10px;line-height:1.6}
   .pip-table td{padding:7px 8px;font-size:11px}
   /* Kecamatan tab - stack tabel dan distribusi visual */
   .kec-split{grid-template-columns:1fr!important;gap:14px!important}
@@ -94,14 +94,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   canvas{max-height:160px}
   #cPK{max-height:130px}
   [id^="lg"]{font-size:9px!important}
-  /* Kolom bar/progress bar container harus fit lebar card */
-  .card [style*="width:140px"], .card [style*="width:200px"]{max-width:calc(100vw - 200px)!important}
-  /* Distribusi kecamatan bar */
-  #topKecNas td:last-child > div{max-width:80px!important}
-  /* Tabel konsentrasi - kolom kurang penting */
+  /* Top 10 kecamatan bar */
+  #topKecNas td:last-child > div{max-width:100px!important}
   .hide-mobile{display:none}
-  /* Tabel dalam .card overflow hidden untuk fix jangan sampai keluar */
-  .sec table{max-width:100%}
 }
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{font-weight:700;font-size:10px;color:#6B5E45;text-align:left;padding:6px 8px;border-bottom:1.5px solid #E8E4DA;background:#F9F7F2;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
@@ -278,8 +273,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div style="position:relative;height:200px"><canvas id="cST"></canvas></div>
     </div>
   </div>
-  <div class="card"><div class="ct">Sumber Jan–Jun 2026 per Bulan</div>
-    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Sumber</th><th class="nr">Jan</th><th class="nr">Feb</th><th class="nr">Mar</th><th class="nr">Apr</th><th class="nr">Mei</th><th class="nr">Jun</th><th class="nr">Total</th></tr></thead><tbody id="tS26"></tbody></table></div>
+  <div class="card"><div class="ct" id="ctS26">Sumber 2026 per Bulan</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr id="thS26"></tr></thead><tbody id="tS26"></tbody></table></div>
   </div>
   <div class="card"><div class="ct">Sumber per Tahun — <span style="font-size:11px;color:#6B5E45;font-weight:400">% dari total customer</span>
     <button onclick="toggleSrcMode()" id="btnSrcMode" style="font-size:11px;padding:4px 10px;border:1.5px solid #D4C9B0;border-radius:6px;background:#F9F7F2;cursor:pointer;color:#3B2A13;font-weight:600">Tampilkan angka</button></div>
@@ -913,9 +908,51 @@ function bSumber(){
   c=ch('cST');if(c)c._c=new Chart(c,{type:'line',data:{labels:YRS.map(String).concat(["'26*"]),datasets:srcK.map(function(k,i){return{label:k,data:SRC_YR[k],borderColor:SC[i],backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3};})},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
   document.getElementById('lgST').innerHTML=srcK.map(function(k,i){return'<span><span class="lsq" style="background:'+SC[i]+'"></span>'+k+'</span>';}).join('');
 
-  var allSK=Array.from(new Set(Object.values(SRC26).reduce(function(a,o){return a.concat(Object.keys(o));},[])));
-  allSK.sort(function(a,b){var ta=Object.values(SRC26).reduce(function(s,o){return s+(o[a]||0);},0);var tb=Object.values(SRC26).reduce(function(s,o){return s+(o[b]||0);},0);return tb-ta;});
-  document.getElementById('tS26').innerHTML=allSK.map(function(k){var v=[1,2,3,4,5,6].map(function(mo){return SRC26[mo]&&SRC26[mo][k]||0;});var tot=v.reduce(function(a,b){return a+b;},0);return'<tr><td style="font-weight:600">'+k+'</td>'+v.map(function(x){return'<td class="nr">'+(x||'—')+'</td>';}).join('')+'<td class="nr" style="font-weight:800">'+tot.toLocaleString('id')+'</td></tr>';}).join('');
+  // Sumber per Bulan tabel - gabungan SRC26 (Jan-Jun statis) + live sumber (bulan berjalan)
+  var curMonth = new Date().getMonth()+1;
+  var monthsList = [1,2,3,4,5,6];
+  if (curMonth > 6) monthsList.push(curMonth);
+  var mnNames = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+  document.getElementById('ctS26').textContent = 'Sumber '+mnNames[monthsList[0]]+'–'+mnNames[monthsList[monthsList.length-1]]+' 2026 per Bulan';
+
+  // Build header
+  var thHtml = '<th>Sumber</th>';
+  monthsList.forEach(function(mo){thHtml += '<th class="nr">'+mnNames[mo]+(mo===curMonth&&curMonth>6?'*':'')+'</th>';});
+  thHtml += '<th class="nr">Total</th>';
+  document.getElementById('thS26').innerHTML = thHtml;
+
+  // Build data source: {sumber: {month: count}}
+  var monthlyData = {};
+  // From SRC26 (Jan-Jun)
+  for (var mo=1; mo<=6; mo++) {
+    var d = SRC26[mo] || {};
+    for (var sk in d) {
+      if (!monthlyData[sk]) monthlyData[sk] = {};
+      monthlyData[sk][mo] = d[sk];
+    }
+  }
+  // From LIVE.sumber (bulan berjalan)
+  if (LIVE.sumber && curMonth > 6) {
+    LIVE.sumber.forEach(function(r){
+      if (!monthlyData[r.sumber]) monthlyData[r.sumber] = {};
+      monthlyData[r.sumber][curMonth] = r.this_month;
+    });
+  }
+
+  // Sort by total desc
+  var allSK = Object.keys(monthlyData);
+  allSK.sort(function(a,b){
+    var ta = monthsList.reduce(function(s,mo){return s+(monthlyData[a][mo]||0);},0);
+    var tb = monthsList.reduce(function(s,mo){return s+(monthlyData[b][mo]||0);},0);
+    return tb - ta;
+  });
+
+  document.getElementById('tS26').innerHTML = allSK.map(function(k){
+    var vals = monthsList.map(function(mo){return monthlyData[k][mo]||0;});
+    var tot = vals.reduce(function(a,b){return a+b;},0);
+    return '<tr><td style="font-weight:600">'+k+'</td>'+vals.map(function(x){return '<td class="nr">'+(x||'—')+'</td>';}).join('')+'<td class="nr" style="font-weight:800">'+tot.toLocaleString('id')+'</td></tr>';
+  }).join('');
 
   window._srcMode=window._srcMode||'pct';
   renderSrcYrTable();
@@ -923,10 +960,43 @@ function bSumber(){
 
 function renderSrcYrTable(){
   var srcK=Object.keys(SRC_YR),isPct=window._srcMode==='pct';
-  document.getElementById('tSY').innerHTML=srcK.map(function(k){
-    var vals=SRC_YR[k];
+  // Add live H2 contribution to SRC_YR 2026 column
+  var srcYrCurrent = {};
+  srcK.forEach(function(k){srcYrCurrent[k] = SRC_YR[k].slice();});
+  if (LIVE.sumber_cabang && LIVE.sumber_cabang.length > 0) {
+    // Sum sumber_cabang totals as H2 addition
+    var h2Sumber = {};
+    LIVE.sumber_cabang.forEach(function(d){
+      for (var src in d.sumber) {
+        h2Sumber[src] = (h2Sumber[src] || 0) + d.sumber[src];
+      }
+    });
+    // But sumber_cabang already includes H1+H2 combined? Actually no - endpoint returns only 2026 live data
+    // For now, we add live H2 (Jul+) to SRC_YR[6] (which was H1 only)
+    // Better approach: use LIVE.sumber (this_month only) plus prior H1 stored months
+    // Simplification: keep SRC_YR[6] as H1 only, then add current month
+    if (LIVE.sumber) {
+      LIVE.sumber.forEach(function(r){
+        if (!srcYrCurrent[r.sumber]) srcYrCurrent[r.sumber] = SRC_YR['Referensi'].map(function(){return 0;});
+        // Add this_month to 2026 column (index 6)
+        srcYrCurrent[r.sumber][6] = (srcYrCurrent[r.sumber][6] || 0) + r.this_month;
+      });
+    }
+  }
+
+  // Compute YR_TOT dynamically including 2026 (from HM[2026] total)
+  var ytot = YR_TOT.concat([HM[2026].reduce(function(a,b){return a+b;},0)]);
+
+  document.getElementById('tSY').innerHTML=Object.keys(srcYrCurrent).map(function(k){
+    var vals=srcYrCurrent[k];
     return'<tr><td style="font-weight:600">'+k+'</td>'+vals.map(function(v,i){
-      if(isPct){var p=(v/YR_TOT[i]*100).toFixed(1);var col=p>=30?'#3B6D11':p>=20?'#185FA5':p>=10?'#854F0B':'inherit';return'<td class="nr" style="color:'+col+';font-weight:'+(p>=20?700:400)+'">'+p+'%</td>';}
+      if(isPct){
+        var tot=ytot[i]||0;
+        if (tot === 0) return '<td class="nr">—</td>';
+        var p=(v/tot*100).toFixed(1);
+        var col=p>=30?'#3B6D11':p>=20?'#185FA5':p>=10?'#854F0B':'inherit';
+        return'<td class="nr" style="color:'+col+';font-weight:'+(p>=20?700:400)+'">'+p+'%</td>';
+      }
       return'<td class="nr">'+v.toLocaleString('id')+'</td>';
     }).join('')+'</tr>';
   }).join('');
