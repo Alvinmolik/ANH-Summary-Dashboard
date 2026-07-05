@@ -75,13 +75,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .tbl .bdg{font-size:9px;padding:1px 5px}
   /* Container yang punya overflow-x:auto → slideable */
   .card > div[style*="overflow-x:auto"]{margin:0 -12px;padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  /* Force cards & sections to hide any overflow outside their box */
-  .card, .sec{overflow-x:hidden}
-  /* Inner scrollable elements OK */
-  .card .heat-wrap, .card [style*="overflow-x:auto"]{overflow-x:auto!important}
-  /* 2025x2026 comparison table di tab Utama */
-  #cmpBox table{width:100%;font-size:11px}
-  #cmpBox td, #cmpBox th{padding:5px 4px}
+  /* Card container: hide overflow but child scrollable stays scrollable */
+  .card{overflow:hidden}
+  .card > div[style*="overflow-x:auto"]{overflow-x:auto!important}
+  .card .heat-wrap{overflow-x:auto!important}
   .how-to{padding:10px 12px}
   .how-to h4{font-size:11px;margin-bottom:6px}
   .how-to p,.how-to li{font-size:10px;line-height:1.6}
@@ -191,7 +188,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="card"><div class="ct">Sumber Pesanan</div><div style="position:relative;height:160px"><canvas id="cPS"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPS"></div></div>
     <div class="card"><div class="ct">Tipe Kambing</div><div style="position:relative;height:160px"><canvas id="cPK"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPK"></div></div>
     <div class="card"><div class="ct">Paket Pesanan</div><div style="position:relative;height:160px"><canvas id="cPP"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPP"></div></div>
-    <div class="card"><div class="ct">2025 × 2026</div><div id="cmpBox"></div></div>
+    <div class="card"><div class="ct">2025 × 2026</div><div id="cmpBox" style="overflow-x:auto"></div></div>
   </div>
   <div class="card">
     <div class="ct">Tren Mingguan 6 Tahun (Jan 2020 – Jun 2026)</div>

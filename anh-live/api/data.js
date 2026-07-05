@@ -1,7 +1,7 @@
 // Vercel Serverless Function — proxy ke Google Apps Script
 // File ini di-deploy otomatis oleh Vercel sebagai /api/data
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzgA5XAEc4LEJcZWphxVqT3wYSa7R05hx6Qzw5gBIKpv5G8Z2xA1LVTOqBxsuNUb4ns8A/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzShCCV4geLdXDhyMuQeI0Cc8KNhGchFCrysxD3gdQNmjScvzbFC4k1tFuC9O4zwC-ePw/exec';
 
 export default async function handler(req, res) {
   // CORS headers agar dashboard bisa fetch
