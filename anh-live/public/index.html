@@ -260,12 +260,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- ===== SUMBER ===== -->
 <div class="sec" id="s-sumber">
+  <div class="card" style="padding:10px 14px;background:#F9F7F2">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:12px;font-weight:600;color:#6B5E45">🏢 Filter Cabang:</span>
+      <select id="selCabangSumber" onchange="bSumber()" style="font-size:12px;padding:6px 12px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600;min-width:200px">
+        <option value="">— Semua Cabang (Nasional) —</option>
+      </select>
+      <span style="font-size:11px;color:#9B8E78" id="cabSumberInfo"></span>
+    </div>
+  </div>
   <div class="g2">
     <div class="card"><div class="ct">Sumber — <span id="srcBulLbl" class="bdg bb">bulan ini</span></div>
       <div style="position:relative;height:200px"><canvas id="cSB"></canvas></div>
       <div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgSB"></div>
     </div>
-    <div class="card"><div class="ct">Tren Sumber 2020–2026</div>
+    <div class="card"><div class="ct">Tren Sumber 2020–2026 <button onclick="toggleTrenMode()" id="btnTrenMode" style="font-size:10px;padding:4px 8px;border:1px solid #D4C9B0;border-radius:5px;background:#fff;cursor:pointer;margin-left:8px">Tampilkan %</button></div>
       <div class="lgd" id="lgST"></div>
       <div style="position:relative;height:200px"><canvas id="cST"></canvas></div>
     </div>
@@ -543,8 +552,14 @@ const SRC26={
   5:{Referensi:746,Instagram:408,'Repeat Order':397,Website:131,Banner:40,GMB:35,Facebook:33,Brosur:32,TikTok:19},
   6:{Referensi:632,Instagram:401,'Repeat Order':301,Website:90,Facebook:44,Banner:38,GMB:37,Brosur:30,TikTok:26}
 };
-const SRC_YR={'Referensi':[10546,10867,13055,10310,7882,7746,3934],'Instagram':[2751,4899,5892,5494,5567,4878,2373],'Repeat Order':[4092,6200,5447,4667,4169,3835,1961],'Website':[2940,3408,3123,2428,1664,1027,602],'Facebook':[307,753,721,543,464,358,192],'Banner':[289,699,550,436,554,370,240],'Brosur':[1440,607,672,568,70,377,157],'GMB':[0,0,1,1,83,332,166],'TikTok':[0,0,0,0,17,96,131]};
-const SC=['#185FA5','#E24B4A','#639922','#BA7517','#534AB7','#D85A30','#D4537E','#0F6E56','#888780'];
+const SRC_YR={"Referensi":[10546,10867,13055,10310,7882,7746,4071],"Instagram":[2751,4899,5892,5494,5567,4878,2464],"Repeat Order":[4092,6200,5447,4667,4169,3835,2016],"Website":[2940,3408,3123,2428,1664,1027,625],"Banner":[289,699,550,436,554,370,245],"Facebook":[307,753,721,543,464,358,207],"GMB":[0,0,1,1,83,332,170],"Brosur":[1440,607,672,568,70,377,163],"TikTok":[0,0,0,0,17,96,142],"Lainnya":[3328,494,530,551,380,200,72]};
+const SC=['#185FA5','#E24B4A','#639922','#BA7517','#534AB7','#D85A30','#D4537E','#0F6E56','#888780','#8B7355'];
+// Display name mapper — nama singkat untuk cabang panjang (data spreadsheet tetap nama panjang)
+const CABANG_DISPLAY = {
+  'TANGERANG SELATAN': 'TANGSEL',
+  'TANGERANG PUSAT': 'TANGKOT'
+};
+function cabName(c) { return CABANG_DISPLAY[c] || c; }
 const KB26={1:{Puas:38.5,Super:23.2,Hemat:7.6,Istimewa:9.8,Tasyakuran:0.6,Lainnya:14.7,Platinum:5.5},2:{Puas:37.0,Super:21.3,Hemat:8.2,Istimewa:8.3,Tasyakuran:0.3,Lainnya:20.6,Platinum:4.4},3:{Puas:37.4,Super:20.2,Hemat:8.0,Istimewa:7.2,Tasyakuran:0.3,Lainnya:23.4,Platinum:3.5},4:{Puas:39.5,Super:22.4,Hemat:7.1,Istimewa:8.6,Tasyakuran:0.1,Lainnya:17.8,Platinum:4.6},5:{Puas:36.9,Super:20.7,Hemat:8.8,Istimewa:8.2,Tasyakuran:0.2,Lainnya:20.3,Platinum:5.0},6:{Puas:37.2,Super:23.2,Hemat:8.3,Istimewa:7.2,Tasyakuran:0.4,Lainnya:18.6,Platinum:5.1}};
 const KB_C=['#BA7517','#185FA5','#E24B4A','#639922','#888780','#D85A30','#534AB7'];
 const WK20=[405,485,389,407,367,399,370,369,353,415,436,369,314,274,226,331,278,539,531,590,404,685,505,468,428,488,570,535,470,457,287,357,509,557,633,1038,800,480,517,499,494,535,533,576,578,497,504,492,585,578,597,673,517];
@@ -885,25 +900,74 @@ function bHistoris(){
 function bSumber(){
   var m=gm(),mn=gmn();
   document.getElementById('srcBulLbl').textContent=mn+' 2026';
-  var liveS=LIVE.sumber;
-  var sd,sk,sv,st;
 
-  if(liveS&&m===new Date().getMonth()+1){
-    // Pakai data live untuk bulan berjalan
-    sd={};
-    liveS.forEach(function(r){sd[r.sumber]=r.this_month;});
-  } else {
-    sd=SRC26[m]||{};
+  // Populate cabang selector jika belum
+  var selCab = document.getElementById('selCabangSumber');
+  if (selCab && selCab.options.length <= 1) {
+    // Collect all cabang from SRC_CAB26 + live sumber_cabang
+    var allCabsSet = {};
+    for (var cab in SRC_CAB26) allCabsSet[cab] = 1;
+    if (LIVE.sumber_cabang) LIVE.sumber_cabang.forEach(function(d){allCabsSet[d.cabang]=1;});
+    Object.keys(allCabsSet).sort().forEach(function(cab){
+      var opt = document.createElement('option');
+      opt.value = cab;
+      opt.textContent = cabName(cab);
+      selCab.appendChild(opt);
+    });
   }
-  sk=Object.keys(sd);sv=Object.values(sd);st=sv.reduce(function(a,b){return a+b;},0);
+  var filterCabang = selCab ? selCab.value : '';
+
+  // Info label
+  document.getElementById('cabSumberInfo').textContent = filterCabang
+    ? '(Data ' + cabName(filterCabang) + ' 2026)'
+    : '(Data seluruh 53 cabang)';
+
+  // Data doughnut untuk bulan terpilih
+  var sd = {};
+  if (filterCabang) {
+    // Filter per cabang — pakai SRC_CAB26 (agregat H1 total per cabang) — belum bisa per-bulan
+    // Untuk mode filter cabang, tampilkan agregat semua bulan cabang tsb (H1+H2)
+    var srcH1 = SRC_CAB26[filterCabang] || {};
+    Object.keys(srcH1).forEach(function(s){sd[s] = (sd[s]||0)+srcH1[s];});
+    // Add H2 live
+    if (LIVE.sumber_cabang) {
+      var liveCab = LIVE.sumber_cabang.find(function(d){return d.cabang===filterCabang;});
+      if (liveCab) {
+        Object.keys(liveCab.sumber).forEach(function(s){sd[s] = (sd[s]||0)+liveCab.sumber[s];});
+      }
+    }
+    document.getElementById('srcBulLbl').textContent = 'Total 2026';
+  } else {
+    // Nasional — pakai filter bulan
+    var liveS=LIVE.sumber;
+    if(liveS&&m===new Date().getMonth()+1){
+      liveS.forEach(function(r){sd[r.sumber]=r.this_month;});
+    } else {
+      sd=SRC26[m]||{};
+    }
+  }
+  var sk=Object.keys(sd), sv=sk.map(function(k){return sd[k];}), st=sv.reduce(function(a,b){return a+b;},0);
 
   var c;
   c=ch('cSB');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
-  document.getElementById('lgSB').innerHTML=sk.map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px;font-size:11px"><span class="lsq" style="background:'+SC[i]+'"></span>'+k+': <strong>'+sv[i].toLocaleString('id')+'</strong> ('+Math.round(sv[i]/st*100)+'%)</span>';}).join('');
+  document.getElementById('lgSB').innerHTML=st>0?sk.map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px;font-size:11px"><span class="lsq" style="background:'+SC[i]+'"></span>'+k+': <strong>'+sv[i].toLocaleString('id')+'</strong> ('+Math.round(sv[i]/st*100)+'%)</span>';}).join(''):'<span style="color:#9B8E78">Data belum tersedia</span>';
 
-  var srcK=Object.keys(SRC_YR);
-  c=ch('cST');if(c)c._c=new Chart(c,{type:'line',data:{labels:YRS.map(String).concat(["'26*"]),datasets:srcK.map(function(k,i){return{label:k,data:SRC_YR[k],borderColor:SC[i],backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3};})},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  // Tren Sumber 2020-2026 - toggle angka/persentase
+  var isPct = window._trenMode === 'pct';
+  var srcK = Object.keys(SRC_YR);
+  var ytot = YR_TOT.concat([HM[2026].reduce(function(a,b){return a+b;},0)]);
+  var datasets = srcK.map(function(k,i){
+    var vals;
+    if (isPct) {
+      vals = SRC_YR[k].map(function(v, idx){var t=ytot[idx]||1;return +(v/t*100).toFixed(1);});
+    } else {
+      vals = SRC_YR[k];
+    }
+    return {label:k, data:vals, borderColor:SC[i], backgroundColor:'transparent', borderWidth:2, pointRadius:2, tension:0.3};
+  });
+  c=ch('cST');if(c)c._c=new Chart(c,{type:'line',data:{labels:YRS.map(String).concat(["'26*"]),datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+(isPct?'%':'');}}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10},callback:function(v){return v+(isPct?'%':'');}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
   document.getElementById('lgST').innerHTML=srcK.map(function(k,i){return'<span><span class="lsq" style="background:'+SC[i]+'"></span>'+k+'</span>';}).join('');
+  document.getElementById('btnTrenMode').textContent = isPct ? 'Tampilkan angka' : 'Tampilkan %';
 
   // Sumber per Bulan tabel - gabungan SRC26 (Jan-Jun statis) + live sumber (bulan berjalan)
   var curMonth = new Date().getMonth()+1;
@@ -911,7 +975,7 @@ function bSumber(){
   if (curMonth > 6) monthsList.push(curMonth);
   var mnNames = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
-  document.getElementById('ctS26').textContent = 'Sumber '+mnNames[monthsList[0]]+'–'+mnNames[monthsList[monthsList.length-1]]+' 2026 per Bulan';
+  document.getElementById('ctS26').textContent = 'Sumber '+mnNames[monthsList[0]]+'–'+mnNames[monthsList[monthsList.length-1]]+' 2026 per Bulan (Nasional)';
 
   // Build header
   var thHtml = '<th>Sumber</th>';
@@ -1001,6 +1065,7 @@ function renderSrcYrTable(){
 }
 
 function toggleSrcMode(){window._srcMode=window._srcMode==='pct'?'num':'pct';renderSrcYrTable();}
+function toggleTrenMode(){window._trenMode=window._trenMode==='pct'?'num':'pct';bSumber();}
 
 // ============================================================
 // BRANCH MONITOR (menggunakan data live WKC)
@@ -1054,7 +1119,7 @@ function bRank(f){
   var gold=['style="color:#BA7517;font-weight:800"','style="color:#6B5E45;font-weight:800"','style="color:#8B4513;font-weight:800"'];
   document.getElementById('tRank').innerHTML=rows.map(function(c,i){
     var e=wkEw(c),s=wkSc(c),w26=getW(c,0),w25=getW(c,-1);
-    return'<tr><td '+( gold[i]||'')+'>'+(i+1)+'</td><td style="font-weight:600">'+c+'</td><td class="nr">'+w25+'</td><td class="nr" style="font-weight:700">'+w26+'</td><td class="nr '+pc(w25,w26)+'">'+ps(w25,w26)+'</td><td><div style="display:flex;align-items:center;gap:4px"><div style="width:50px;height:5px;background:#E8E4DA;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+s+'%;background:#BA7517;border-radius:2px"></div></div><span style="font-size:10px;font-weight:700">'+s+'</span></div></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td><td>'+spk6(getLast(c,6))+'</td></tr>';
+    return'<tr><td '+( gold[i]||'')+'>'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td><td class="nr">'+w25+'</td><td class="nr" style="font-weight:700">'+w26+'</td><td class="nr '+pc(w25,w26)+'">'+ps(w25,w26)+'</td><td><div style="display:flex;align-items:center;gap:4px"><div style="width:50px;height:5px;background:#E8E4DA;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+s+'%;background:#BA7517;border-radius:2px"></div></div><span style="font-size:10px;font-weight:700">'+s+'</span></div></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td><td>'+spk6(getLast(c,6))+'</td></tr>';
   }).join('');
 }
 
@@ -1065,7 +1130,7 @@ function bKritis(){
   var kritis=cabs.filter(function(c){return getLast(c,4).some(function(x){return x<=2;});}).sort(function(a,b){return getVals(b).filter(function(x){return x<=2;}).length-getVals(a).filter(function(x){return x<=2;}).length;});
   document.getElementById('tKritis').innerHTML=kritis.map(function(c,i){
     var l4=getLast(c,4),fq=getVals(c).filter(function(x){return x<=2;}).length,e=wkEw(c);
-    return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td>'+l4.map(function(x){return'<td class="nr" style="'+hb(x)+';font-weight:'+(x<=2?800:400)+'">'+x+'</td>';}).join('')+'<td class="nr"><span class="bdg '+(fq>=15?'br':fq>=8?'ba':'bgr')+'">'+fq+'x</span></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td></tr>';
+    return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td>'+l4.map(function(x){return'<td class="nr" style="'+hb(x)+';font-weight:'+(x<=2?800:400)+'">'+x+'</td>';}).join('')+'<td class="nr"><span class="bdg '+(fq>=15?'br':fq>=8?'ba':'bgr')+'">'+fq+'x</span></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td></tr>';
   }).join('');
 
   // Heatmap semua cabang, 10 weeks terakhir
@@ -1075,7 +1140,7 @@ function bKritis(){
   h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:700;color:#6B5E45">Cabang</div>';
   lastWks.forEach(function(wk){h+='<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">'+wk+'</div>';});
   allCabs.forEach(function(c){
-    h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+c+'</div>';
+    h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+cabName(c)+'</div>';
     lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+v+'</div>';});
   });
   h+='</div>';
@@ -1085,9 +1150,9 @@ function bKritis(){
 function bRec(){
   var cabs=getCabs();
   var wowArr=cabs.map(function(c){var last=getW(c,0),prev=getW(c,-1);return{c:c,wow:prev>0?Math.round((last-prev)/prev*100):0,last:last,prev:prev};}).filter(function(d){return d.wow>0&&d.last>0;}).sort(function(a,b){return b.wow-a.wow;});
-  document.getElementById('tRec').innerHTML=wowArr.slice(0,12).map(function(d,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+d.c+'</td><td>'+spk6(getLast(d.c,6))+'</td><td class="nr up" style="font-weight:700">+'+d.wow+'% ('+d.prev+'→'+d.last+')</td><td><span class="bdg bg">▲ Naik</span></td></tr>';}).join('');
-  document.getElementById('tGrow').innerHTML=cabs.filter(function(c){return wkUs(c)>=2;}).sort(function(a,b){return wkUs(b)-wkUs(a);}).slice(0,10).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg bg">'+wkUs(c)+' mgg</span></td></tr>';}).join('');
-  document.getElementById('tDecl').innerHTML=cabs.filter(function(c){return wkDs(c)>=3;}).sort(function(a,b){return wkDs(b)-wkDs(a);}).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+c+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg br">'+wkDs(c)+' mgg</span></td></tr>';}).join('');
+  document.getElementById('tRec').innerHTML=wowArr.slice(0,12).map(function(d,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(d.c)+'</td><td>'+spk6(getLast(d.c,6))+'</td><td class="nr up" style="font-weight:700">+'+d.wow+'% ('+d.prev+'→'+d.last+')</td><td><span class="bdg bg">▲ Naik</span></td></tr>';}).join('');
+  document.getElementById('tGrow').innerHTML=cabs.filter(function(c){return wkUs(c)>=2;}).sort(function(a,b){return wkUs(b)-wkUs(a);}).slice(0,10).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg bg">'+wkUs(c)+' mgg</span></td></tr>';}).join('');
+  document.getElementById('tDecl').innerHTML=cabs.filter(function(c){return wkDs(c)>=3;}).sort(function(a,b){return wkDs(b)-wkDs(a);}).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg br">'+wkDs(c)+' mgg</span></td></tr>';}).join('');
 }
 
 function bRisk(){
@@ -1097,7 +1162,7 @@ function bRisk(){
   document.getElementById('riskWrap').innerHTML=ri.slice(0,24).map(function(d,i){
     var clr=d.rs>=70?cl[0]:d.rs>=50?cl[1]:d.rs>=30?cl[2]:cl[3];
     var fq=getVals(d.c).filter(function(x){return x<=1;}).length,dss=wkDs(d.c);
-    return'<div class="ri"><div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:4px">'+(i+1)+'. '+d.c+'</div><div style="height:5px;border-radius:2px;background:#E8E4DA;margin-bottom:4px;overflow:hidden"><div style="height:100%;border-radius:2px;width:'+d.rs+'%;background:'+clr+'"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:'+clr+'">Risk '+d.rs+'/100</span><span class="bdg '+d.e.c+'">'+d.e.l+'</span></div><div style="font-size:10px;color:#6B5E45;display:flex;flex-wrap:wrap;gap:3px">'+(fq>0?'<span class="bdg br">'+fq+'x kritis</span>':'')+(dss>=2?'<span class="bdg ba">↓'+dss+' mgg</span>':'')+'</div></div>';
+    return'<div class="ri"><div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:4px">'+(i+1)+'. '+cabName(d.c)+'</div><div style="height:5px;border-radius:2px;background:#E8E4DA;margin-bottom:4px;overflow:hidden"><div style="height:100%;border-radius:2px;width:'+d.rs+'%;background:'+clr+'"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:'+clr+'">Risk '+d.rs+'/100</span><span class="bdg '+d.e.c+'">'+d.e.l+'</span></div><div style="font-size:10px;color:#6B5E45;display:flex;flex-wrap:wrap;gap:3px">'+(fq>0?'<span class="bdg br">'+fq+'x kritis</span>':'')+(dss>=2?'<span class="bdg ba">↓'+dss+' mgg</span>':'')+'</div></div>';
   }).join('');
 }
 
@@ -1156,7 +1221,7 @@ function bAnalisa(mode){
   h+='</tr></thead><tbody>';
 
   data.forEach(function(d,i){
-    h+='<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+d.cabang+'</td><td class="nr" style="font-weight:700">'+d.total.toLocaleString('id')+'</td>';
+    h+='<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(d.cabang)+'</td><td class="nr" style="font-weight:700">'+d.total.toLocaleString('id')+'</td>';
     channels.forEach(function(ch){
       var v=d.sumber[ch]||0;
       var pct=d.total>0?v/d.total*100:0;
@@ -1194,7 +1259,7 @@ function bAnalisa(mode){
     if(topPerCh[ch].length===0) return;
     var topStr=topPerCh[ch].map(function(d){
       var pct=Math.round((d.sumber[ch]||0)/d.total*100);
-      return d.cabang+' <span class="bdg bb" style="font-size:9px">'+pct+'%</span>';
+      return cabName(d.cabang)+' <span class="bdg bb" style="font-size:9px">'+pct+'%</span>';
     }).join('<br>');
     topHtml+='<tr><td style="font-weight:600">'+ch+'</td><td style="font-size:11px;line-height:1.7">'+topStr+'</td></tr>';
   });
@@ -1206,7 +1271,7 @@ function bAnalisa(mode){
   var uniqHtml='<table class="tbl"><thead><tr><th>Cabang</th><th>Channel Dominan</th><th class="nr">%</th><th class="nr">Total</th></tr></thead><tbody>';
   unique.forEach(function(d){
     var clr=d.top_sumber==='Referensi'?'bb':d.top_sumber==='Instagram'?'br':d.top_sumber==='Repeat Order'?'bg':'ba';
-    uniqHtml+='<tr><td style="font-weight:600">'+d.cabang+'</td><td><span class="bdg '+clr+'">'+d.top_sumber+'</span></td><td class="nr" style="font-weight:700">'+d.top_pct+'%</td><td class="nr">'+d.total.toLocaleString('id')+'</td></tr>';
+    uniqHtml+='<tr><td style="font-weight:600">'+cabName(d.cabang)+'</td><td><span class="bdg '+clr+'">'+d.top_sumber+'</span></td><td class="nr" style="font-weight:700">'+d.top_pct+'%</td><td class="nr">'+d.total.toLocaleString('id')+'</td></tr>';
   });
   uniqHtml+='</tbody></table>';
   if(unique.length===0) uniqHtml='<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Belum ada cabang yang sangat tergantung satu channel (≥50%)</div>';
@@ -1282,7 +1347,7 @@ function bKecamatan(){
   if(sel.options.length<=1){
     data.forEach(function(d){
       var opt=document.createElement('option');
-      opt.value=d.cabang;opt.textContent=d.cabang+' ('+d.total+' customer, '+d.kecamatan_count+' kecamatan)';
+      opt.value=d.cabang;opt.textContent=cabName(d.cabang)+' ('+d.total+' customer, '+d.kecamatan_count+' kecamatan)';
       sel.appendChild(opt);
     });
     // Auto select cabang terbesar
@@ -1300,7 +1365,7 @@ function bKecamatan(){
   // Konsentrasi cabang
   var konsentrasi=data.filter(function(d){return d.top_pct>=30 && d.total>=20;}).sort(function(a,b){return b.top_pct-a.top_pct;});
   document.getElementById('konsentrasiCab').innerHTML=konsentrasi.length>0?'<table class="tbl"><thead><tr><th>Cabang</th><th>Kecamatan dominan</th><th class="nr">% dari total</th><th class="nr hide-mobile">Total cabang</th><th class="nr hide-mobile"># kecamatan</th></tr></thead><tbody>'
-    +konsentrasi.map(function(d){var clr=d.top_pct>=50?'br':d.top_pct>=40?'ba':'bgr';return '<tr><td style="font-weight:600">'+d.cabang+'</td><td><span class="bdg '+clr+'">'+d.top_kecamatan+'</span></td><td class="nr" style="font-weight:700;color:'+(d.top_pct>=50?'#A32D2D':d.top_pct>=40?'#854F0B':'#6B5E45')+'">'+d.top_pct+'%</td><td class="nr hide-mobile">'+d.total.toLocaleString('id')+'</td><td class="nr hide-mobile">'+d.kecamatan_count+'</td></tr>';}).join('')
+    +konsentrasi.map(function(d){var clr=d.top_pct>=50?'br':d.top_pct>=40?'ba':'bgr';return '<tr><td style="font-weight:600">'+cabName(d.cabang)+'</td><td><span class="bdg '+clr+'">'+d.top_kecamatan+'</span></td><td class="nr" style="font-weight:700;color:'+(d.top_pct>=50?'#A32D2D':d.top_pct>=40?'#854F0B':'#6B5E45')+'">'+d.top_pct+'%</td><td class="nr hide-mobile">'+d.total.toLocaleString('id')+'</td><td class="nr hide-mobile">'+d.kecamatan_count+'</td></tr>';}).join('')
     +'</tbody></table>':'<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Tidak ada cabang dengan konsentrasi tinggi (≥30% di 1 kecamatan)</div>';
 }
 
@@ -1340,7 +1405,7 @@ function renderKec(){
   });
   h+='</div></div>';
 
-  document.getElementById('kecCabContent').innerHTML='<div style="background:#F9F7F2;padding:10px 14px;border-radius:8px;margin-bottom:.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px"><span><strong>'+d.cabang+'</strong> · '+d.total.toLocaleString('id')+' customer · <strong>'+d.kecamatan_count+'</strong> kecamatan unik</span><span style="color:#6B5E45">Top: <strong>'+d.top_kecamatan+'</strong> ('+d.top_pct+'%)</span></div>'+h;
+  document.getElementById('kecCabContent').innerHTML='<div style="background:#F9F7F2;padding:10px 14px;border-radius:8px;margin-bottom:.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px"><span><strong>'+cabName(d.cabang)+'</strong> · '+d.total.toLocaleString('id')+' customer · <strong>'+d.kecamatan_count+'</strong> kecamatan unik</span><span style="color:#6B5E45">Top: <strong>'+d.top_kecamatan+'</strong> ('+d.top_pct+'%)</span></div>'+h;
 }
 
 // ============================================================
