@@ -180,6 +180,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="card"><div class="ct">Customer 5 Tahun Terakhir</div><div style="position:relative;height:190px"><canvas id="c5y"></canvas></div></div>
   </div>
   <div class="card">
+    <div class="ct">Customer Mingguan — <span id="wkLbl">Bulan Berjalan</span></div>
+    <div class="cs">Total order per minggu ISO (Sen–Min) sepanjang bulan berjalan</div>
+    <div style="position:relative;height:200px"><canvas id="cWkBul"></canvas></div>
+  </div>
+  <div class="card">
     <div class="ct">Tren Bulanan — 2024 vs 2025 vs 2026</div>
     <div class="lgd"><span><span class="lsq" style="background:#B5D4F4"></span>2024</span><span><span class="lsq" style="background:#EF9F27"></span>2025</span><span><span class="lsq" style="background:#BA7517"></span>2026</span></div>
     <div style="position:relative;height:195px"><canvas id="c3y"></canvas></div>
@@ -732,6 +737,42 @@ function bUtama(){
 
   var c;
   c=ch('cB26');if(c)c._c=new Chart(c,{type:'bar',data:{labels:MNS,datasets:[{data:HM[2026].map(function(v){return v||null;}),backgroundColor:MNS.map(function(_,i){return i===m-1?'#BA7517':i<6?'#D4A04A':'#EDE3D4';})}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+
+  // Customer Mingguan - Bulan Berjalan (dari daily data)
+  var wkLbl = gmn()+' 2026';
+  document.getElementById('wkLbl').textContent = wkLbl;
+  var wkLabels=[], wkVals=[];
+  if (LIVE.daily && LIVE.daily.daily) {
+    // Group daily → ISO week within selected month
+    var byWeek = {};
+    LIVE.daily.daily.forEach(function(d){
+      if (!d.date.startsWith('2026')) return;
+      var dm = parseInt(d.date.substr(5,2));
+      if (dm !== m) return;
+      var dt = new Date(d.date + 'T00:00:00');
+      // ISO week
+      var tmp = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+      var dayNum = tmp.getUTCDay() || 7;
+      tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+      var yearStart = new Date(Date.UTC(tmp.getUTCFullYear(),0,1));
+      var wk = Math.ceil((((tmp - yearStart) / 86400000) + 1)/7);
+      var wkKey = 'W'+(wk<10?'0'+wk:wk);
+      byWeek[wkKey] = (byWeek[wkKey]||0)+d.count;
+    });
+    var sortedWks = Object.keys(byWeek).sort();
+    wkLabels = sortedWks;
+    wkVals = sortedWks.map(function(w){return byWeek[w];});
+  }
+  // Fallback: kalau tidak ada live data (bulan lampau), pakai WEEKS + WKC total (kalau ada)
+  if (wkLabels.length === 0 && WEEKS && WEEKS.length > 0 && WKC) {
+    // Approximate: filter minggu yang isinya di bulan ini
+    WEEKS.forEach(function(wk){
+      var wkNum = parseInt(wk.substr(1));
+      // Rough check: bulan 1 = wk 1-4/5, bulan 2 = 5-8/9, dst
+      // Skip for now — hanya render dari daily
+    });
+  }
+  c=ch('cWkBul');if(c)c._c=new Chart(c,{type:'bar',data:{labels:wkLabels,datasets:[{data:wkVals,backgroundColor:'#BA7517',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toLocaleString('id')+' customer';}}}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
   c=ch('c5y');if(c)c._c=new Chart(c,{type:'bar',data:{labels:['2021','2022','2023','2024','2025'],datasets:[{data:[27927,29991,24998,20850,19219],backgroundColor:['#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:false,min:17000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
   c=ch('c3y');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:[{label:'2024',data:HM[2024],borderColor:'#B5D4F4',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]},{label:'2025',data:HM[2025],borderColor:'#EF9F27',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},{label:'2026',data:HM[2026].map(function(v){return v||null;}),borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:2.5,pointRadius:3,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
 
@@ -1139,6 +1180,13 @@ function bKritis(){
   var h='<div style="display:grid;grid-template-columns:90px repeat('+lastWks.length+',1fr);gap:1px;background:#E8E4DA;border-radius:10px;overflow:hidden;font-size:10px;min-width:540px">';
   h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:700;color:#6B5E45">Cabang</div>';
   lastWks.forEach(function(wk){h+='<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">'+wk+'</div>';});
+  // NASIONAL row - total semua cabang per minggu (di paling atas, style beda)
+  h+='<div style="background:#3B2A13;padding:4px 8px;font-weight:800;color:#F9F7F2">🇮🇩 NASIONAL</div>';
+  lastWks.forEach(function(wk){
+    var total = 0;
+    allCabs.forEach(function(c){total += (WKC[c] && WKC[c][wk]) || 0;});
+    h+='<div style="background:#3B2A13;color:#F9F7F2;padding:4px;text-align:center;font-weight:800">'+total.toLocaleString('id')+'</div>';
+  });
   allCabs.forEach(function(c){
     h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+cabName(c)+'</div>';
     lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+v+'</div>';});
