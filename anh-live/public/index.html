@@ -549,6 +549,17 @@ const HM={
   2025:[1961,1302,1500,1815,1330,2188,1584,1160,1918,1219,1861,1381],
   2026:[1635,1331,1466,1925,1848,1970,0,0,0,0,0,0]  // H1 2026 final (statis, spreadsheet lama sudah tutup), Jul-Des akan diupdate dari live
 };
+// Ekor historis 2020-2025 (total ekor kambing dipesan, bukan jumlah pesanan)
+const EKOR_HIST={
+  2020:[2537,2226,2268,1623,2935,2693,2706,2949,3891,3146,3088,3941],
+  2021:[2585,2512,3149,2058,2754,3608,2919,2617,3640,3519,3349,4157],
+  2022:[3248,2544,3261,1702,3494,4684,5533,2599,3912,2846,2452,2678],
+  2023:[2538,2112,2166,1619,3362,3328,2998,2477,2478,2584,2137,2629],
+  2024:[2116,1943,1542,2000,2460,2552,2429,2031,2189,2218,2001,2380],
+  2025:[1961,1471,1131,2227,2003,2194,1870,1787,1793,1699,1729,1522]
+};
+// Ekor 2026: H1 statis dari KB26_NUM, H2 diupdate dari live
+const EKOR_2026=[1833,1384,1482,2197,1943,2262,0,0,0,0,0,0];
 const SRC26={
   1:{Referensi:667,Instagram:406,'Repeat Order':321,Website:100,Banner:49,GMB:28,Facebook:26,Brosur:18,TikTok:13},
   2:{Referensi:491,Instagram:325,'Repeat Order':306,Website:86,Banner:30,Facebook:26,GMB:21,TikTok:19,Brosur:18},
@@ -726,9 +737,56 @@ function bUtama(){
     // Bulan sudah lewat: comparison biasa
     cust2026Card = '<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms '+(c25>0?'up':'dn')+'">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'% vs '+mn+' \'25</div></div>';
   }
+  // ── EKOR BULAN INI ──────────────────────────────────────────
+  // Update EKOR_2026 dari live kambing
+  var curMNow = new Date().getMonth()+1;
+  if (LIVE.kambing && LIVE.kambing.monthly_all) {
+    for (var mLive=7; mLive<=12; mLive++) {
+      var kambData = LIVE.kambing.monthly_all[mLive];
+      if (kambData) {
+        EKOR_2026[mLive-1] = Object.values(kambData).reduce(function(a,b){return a+b;},0);
+      }
+    }
+  }
+
+  // Ekor bulan terpilih
+  var ekor26 = EKOR_2026[m-1] || 0;
+  var ekor25 = EKOR_HIST[2025] ? EKOR_HIST[2025][m-1] || 0 : 0;
+  var ekorPrev = EKOR_2026[m-2] || 0; // bulan sebelumnya 2026
+  var ekorChg25 = ekor25>0 ? pt(ekor25,ekor26) : null;
+  var ekorCard;
+  if (isBulanBerjalan) {
+    // Untuk bulan berjalan, hitung ekor dari live kambing this_month
+    var ekorLive = 0;
+    if (LIVE.kambing && LIVE.kambing.this_month) {
+      ekorLive = Object.values(LIVE.kambing.this_month).reduce(function(a,b){return a+b;},0);
+    }
+    var ekorProgress = ekor25>0 ? Math.round(ekorLive/ekor25*100) : null;
+    ekorCard = '<div class="mc" style="border:1.5px solid #BA7517">'
+      +'<div class="ml" style="color:#BA7517">🐑 Ekor '+mn+' (per kemarin)</div>'
+      +'<div class="mv">'+ekorLive.toLocaleString('id')+'</div>'
+      +'<div class="ms neu">'+(ekorProgress?'📈 '+ekorProgress+'% progress vs '+mn+' \'25':'s.d. tgl '+dom)+'</div>'
+      +'</div>';
+  } else {
+    ekorCard = '<div class="mc" style="border:1.5px solid #BA7517">'
+      +'<div class="ml" style="color:#BA7517">🐑 Ekor '+mn+' 2026</div>'
+      +'<div class="mv">'+ekor26.toLocaleString('id')+'</div>'
+      +'<div class="ms '+(ekorChg25!==null?(ekorChg25>0?'up':'dn'):'neu')+'">'
+      +(ekorChg25!==null?(ekorChg25>0?'▲':'▼')+' '+Math.abs(ekorChg25)+'% vs '+mn+' \'25':'—')
+      +'</div></div>';
+  }
+
+  // Ekor 2025 pembanding
+  var ekor25Card = '<div class="mc">'
+    +'<div class="ml">🐑 Ekor '+mn+' 2025</div>'
+    +'<div class="mv">'+ekor25.toLocaleString('id')+'</div>'
+    +'<div class="ms neu">pembanding</div></div>';
+
   document.getElementById('mMet').innerHTML=liveExtra
     +cust2026Card
     +'<div class="mc"><div class="ml">Customer '+mn+' 2025</div><div class="mv">'+p25.toLocaleString('id')+'</div><div class="ms neu">pembanding</div></div>'
+    +ekorCard
+    +ekor25Card
     +'<div class="mc"><div class="ml">YTD 2025</div><div class="mv">'+ytd25.toLocaleString('id')+'</div><div class="ms neu">s.d. '+mn+'</div></div>'
     +(isBulanBerjalan
       ? '<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms neu">📈 '+Math.round(ytd26/ytd25*100)+'% vs YTD \'25</div></div>'
@@ -822,10 +880,25 @@ function bUtama(){
   document.getElementById('lgPP').innerHTML=pkK.map(function(k,i){var pct=pkTot>0?Math.round(pkV[i]/pkTot*100):0;return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+PK_C[i]+'"></span>'+k+' <strong>'+pkV[i].toLocaleString('id')+'</strong> ('+pct+'%)</span>';}).join('');
 
   var ytd25_=HM[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
-  document.getElementById('cmpBox').innerHTML='<table class="tbl"><thead><tr><th>Bulan</th><th class="nr">2025</th><th class="nr">2026</th><th class="nr">%</th></tr></thead><tbody>'
-    +Array.from({length:m},function(_,i){return'<tr'+(i===m-1?' style="font-weight:800;background:#F9F7F2"':'')+'><td>'+MNS[i]+'</td><td class="nr">'+HM[2025][i].toLocaleString('id')+'</td><td class="nr">'+HM[2026][i].toLocaleString('id')+'</td><td class="nr '+pc(HM[2025][i],HM[2026][i])+'">'+ps(HM[2025][i],HM[2026][i])+'</td></tr>';}).join('')
-    +'<tr style="font-weight:800;border-top:2px solid #E8E4DA;background:#F9F7F2"><td>YTD</td><td class="nr">'+ytd25_.toLocaleString('id')+'</td><td class="nr">'+ytd26.toLocaleString('id')+'</td><td class="nr '+pc(ytd25_,ytd26)+'">'+ps(ytd25_,ytd26)+'</td></tr>'
-    +'</tbody></table>';
+  var ytdEkor25=EKOR_HIST[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var ytdEkor26=EKOR_2026.slice(0,m).reduce(function(a,b){return a+b;},0);
+  document.getElementById('cmpBox').innerHTML='<table class="tbl"><thead><tr>'
+    +'<th>Bulan</th><th class="nr">Pesanan<br>2025</th><th class="nr">Pesanan<br>2026</th><th class="nr">%</th>'
+    +'<th class="nr" style="border-left:2px solid #E8E4DA;color:#BA7517">🐑Ekor<br>2025</th><th class="nr" style="color:#BA7517">🐑Ekor<br>2026</th><th class="nr">%</th>'
+    +'</tr></thead><tbody>'
+    +Array.from({length:m},function(_,i){
+      var p25=HM[2025][i],p26=HM[2026][i];
+      var e25=EKOR_HIST[2025][i]||0,e26=EKOR_2026[i]||0;
+      var isLast=i===m-1;
+      var st=isLast?' style="font-weight:800;background:#F9F7F2"':'';
+      return'<tr'+st+'><td>'+MNS[i]+'</td>'
+        +'<td class="nr">'+p25.toLocaleString('id')+'</td><td class="nr">'+p26.toLocaleString('id')+'</td><td class="nr '+pc(p25,p26)+'">'+ps(p25,p26)+'</td>'
+        +'<td class="nr" style="border-left:2px solid #E8E4DA">'+e25.toLocaleString('id')+'</td><td class="nr">'+e26.toLocaleString('id')+'</td><td class="nr '+pc(e25,e26)+'">'+ps(e25,e26)+'</td>'
+        +'</tr>';}).join('')
+    +'<tr style="font-weight:800;border-top:2px solid #E8E4DA;background:#F9F7F2"><td>YTD</td>'
+    +'<td class="nr">'+ytd25_.toLocaleString('id')+'</td><td class="nr">'+ytd26.toLocaleString('id')+'</td><td class="nr '+pc(ytd25_,ytd26)+'">'+ps(ytd25_,ytd26)+'</td>'
+    +'<td class="nr" style="border-left:2px solid #E8E4DA">'+ytdEkor25.toLocaleString('id')+'</td><td class="nr">'+ytdEkor26.toLocaleString('id')+'</td><td class="nr '+pc(ytdEkor25,ytdEkor26)+'">'+ps(ytdEkor25,ytdEkor26)+'</td>'
+    +'</tr></tbody></table>';
 
   var allW=WK20.concat(WK21,WK22,WK23,WK24,WK25);
   // Tambah WK26 dari live jika ada
