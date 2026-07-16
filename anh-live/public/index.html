@@ -195,6 +195,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="card"><div class="ct">Paket Pesanan</div><div style="position:relative;height:160px"><canvas id="cPP"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPP"></div></div>
     <div class="card"><div class="ct">2025 × 2026</div><div id="cmpBox" style="overflow-x:auto"></div></div>
   </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">🐑 Ekor vs Pesanan — Bulanan 2026</div>
+      <div class="cs">Batang oranye = pesanan · Garis = ekor kambing (skala kanan)</div>
+      <div style="position:relative;height:200px"><canvas id="cEkorBul"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">🐑 Tren Ekor & Pesanan — 2020–2026</div>
+      <div class="lgd">
+        <span><span class="lsq" style="background:#BA7517"></span>Pesanan</span>
+        <span><span class="lsq" style="background:#5DCAA5"></span>Ekor</span>
+        <span><span class="lsq" style="background:#E8E4DA"></span>Ratio ekor/pesanan</span>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="cEkorTren"></canvas></div>
+    </div>
+  </div>
   <div class="card">
     <div class="ct">Tren Mingguan 6 Tahun (Jan 2020 – Jun 2026)</div>
     <div class="cs">339 minggu data aktual berdasarkan Tanggal Pesan · puncak Jul 2022 terlihat jelas</div>
@@ -831,6 +847,53 @@ function bUtama(){
     });
   }
   c=ch('cWkBul');if(c)c._c=new Chart(c,{type:'bar',data:{labels:wkLabels,datasets:[{data:wkVals,backgroundColor:'#BA7517',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toLocaleString('id')+' customer';}}}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+
+  // ── CHART 1: Ekor vs Pesanan Bulanan 2026 (dual axis) ────────
+  var ekor26Vals = EKOR_2026.slice(0,12).map(function(v){return v||null;});
+  var pes26Vals  = HM[2026].slice(0,12).map(function(v){return v||null;});
+  c=ch('cEkorBul');if(c)c._c=new Chart(c,{
+    type:'bar',
+    data:{
+      labels:MNS,
+      datasets:[
+        {label:'Pesanan',data:pes26Vals,backgroundColor:MNS.map(function(_,i){return i<6?'#D4A04A':'#EDE3D4';}),borderRadius:3,yAxisID:'y',order:2},
+        {label:'Ekor',data:ekor26Vals,type:'line',borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2.5,pointRadius:3,pointBackgroundColor:'#5DCAA5',tension:0.3,yAxisID:'y1',order:1}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('id')+(ctx.dataset.label==='Ekor'?' ekor':' pesanan');}}}},
+      scales:{
+        x:{ticks:{font:{size:10}},grid:{display:false}},
+        y:{beginAtZero:true,position:'left',ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Pesanan',font:{size:9}}},
+        y1:{beginAtZero:true,position:'right',ticks:{font:{size:10}},grid:{display:false},title:{display:true,text:'Ekor',font:{size:9}}}
+      }
+    }
+  });
+
+  // ── CHART 2: Tren Ekor & Pesanan 6 Tahun (2020-2025) ─────────
+  var trendYrs=['2020','2021','2022','2023','2024','2025','2026*'];
+  var trenPes=[25693,27927,29991,24998,20850,19219,10175]; // total per tahun
+  var trenEkor=[34003,36867,38953,30428,25861,21387,11101]; // total ekor per tahun
+  var trenRatio=trenPes.map(function(p,i){return p>0?+(trenEkor[i]/p).toFixed(2):0;});
+  c=ch('cEkorTren');if(c)c._c=new Chart(c,{
+    type:'bar',
+    data:{
+      labels:trendYrs,
+      datasets:[
+        {label:'Pesanan',data:trenPes,backgroundColor:'rgba(186,117,23,0.7)',borderRadius:3,yAxisID:'y',order:3},
+        {label:'Ekor',data:trenEkor,type:'line',borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#5DCAA5',tension:0.3,yAxisID:'y',order:2},
+        {label:'Ratio',data:trenRatio,type:'line',borderColor:'#D4C9B0',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,borderDash:[4,3],tension:0.3,yAxisID:'y2',order:1}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:function(ctx){if(ctx.dataset.label==='Ratio')return 'Ratio: '+ctx.parsed.y+' ekor/pesanan';return ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('id');}}}},
+      scales:{
+        x:{ticks:{font:{size:10}},grid:{display:false}},
+        y:{beginAtZero:true,position:'left',ticks:{font:{size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'k':v;}},grid:{color:'rgba(0,0,0,0.04)'}},
+        y2:{position:'right',min:0.8,max:1.6,ticks:{font:{size:10},callback:function(v){return v+'x';}},grid:{display:false},title:{display:true,text:'Ratio',font:{size:9}}}
+      }
+    }
+  });
   c=ch('c5y');if(c)c._c=new Chart(c,{type:'bar',data:{labels:['2021','2022','2023','2024','2025'],datasets:[{data:[27927,29991,24998,20850,19219],backgroundColor:['#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:false,min:17000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
   c=ch('c3y');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:[{label:'2024',data:HM[2024],borderColor:'#B5D4F4',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]},{label:'2025',data:HM[2025],borderColor:'#EF9F27',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},{label:'2026',data:HM[2026].map(function(v){return v||null;}),borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:2.5,pointRadius:3,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
 
