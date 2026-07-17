@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Marketing Aqiqah Nurul Hayat</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#2C2C2A;font-size:14px}
+.app{max-width:1400px;margin:0 auto;background:#fff;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:#3B2A13;color:#fff;flex-wrap:wrap;gap:8px}
+.topbar h1{font-size:16px;font-weight:700}
+.topbar p{font-size:10px;opacity:.7;margin-top:1px}
+.live-badge{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;background:#6B5E45;color:#fff}
+.live-badge.on{background:#3B6D11}
+.live-badge.err{background:#A32D2D}
+.last-update{font-size:10px;color:rgba(255,255,255,.5);margin-left:6px}
+.fbar{display:flex;align-items:center;gap:10px;padding:.5rem 1.5rem;background:#F9F7F2;border-bottom:1px solid #E8E4DA;flex-wrap:wrap}
+.fbar-lbl{font-size:11px;font-weight:700;color:#6B5E45;text-transform:uppercase;letter-spacing:.04em}
+.fsel{font-size:12px;padding:6px 12px;border:1.5px solid #D4C9B0;border-radius:8px;background:#fff;color:#2C2C2A;cursor:pointer;font-weight:600;outline:none}
+.nav-wrap{background:#fff;border-bottom:1px solid #E8E4DA;padding:0 1.5rem;overflow-x:auto}
+.nav-g{display:flex;gap:0;white-space:nowrap}
+.nb{padding:10px 14px;font-size:12px;font-weight:500;border:none;border-bottom:3px solid transparent;background:transparent;color:#6B5E45;cursor:pointer}
+.nb:hover{color:#3B2A13;background:#F9F7F2}
+.nb.on{color:#3B2A13;border-bottom-color:#BA7517;font-weight:700}
+.sec{display:none;padding:1.25rem 1.5rem}
+.sec.on{display:block}
+.mr{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
+.mc{background:#F9F7F2;border-radius:12px;padding:.875rem 1rem;border:1px solid #E8E4DA}
+.mc.live-card{border-color:#3B6D11;background:#EAF3DE}
+.ml{font-size:10px;color:#6B5E45;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.mv{font-size:24px;font-weight:800;color:#2C2C2A;line-height:1}
+.ms{font-size:11px;margin-top:4px}
+.up{color:#3B6D11}.dn{color:#A32D2D}.neu{color:#6B5E45}
+.card{background:#fff;border:1px solid #E8E4DA;border-radius:14px;padding:1rem 1.25rem;margin-bottom:.875rem}
+.ct{font-size:13px;font-weight:700;color:#2C2C2A;margin-bottom:.625rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.cs{font-size:11px;color:#6B5E45;margin-bottom:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.kec-split{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem}
+@media(max-width:700px){.g2,.g3,.kec-split{grid-template-columns:1fr}}
+@media(max-width:600px){
+  html{padding-top:env(safe-area-inset-top,0)}
+  body{margin:0;overflow-x:hidden}
+  .topbar{flex-direction:column;align-items:flex-start;padding:14px 14px 10px;gap:6px}
+  .topbar > div:first-child{width:100%}
+  .topbar h1{font-size:15px;line-height:1.3;margin:0}
+  .topbar p{font-size:10px;line-height:1.4;margin:2px 0 0}
+  .topbar > div:last-child{align-self:flex-start;display:flex;align-items:center;gap:6px}
+  #liveStatus{padding:3px 8px;font-size:10px;border-radius:6px}
+  #lastUpdate{font-size:9px}
+  .fbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .fbar > span:first-child{font-size:10px}
+  .fsel{font-size:11px;padding:6px 10px}
+  .fbar > span:last-child{font-size:9px;width:100%;flex-basis:100%;margin-top:2px}
+  .nav-wrap{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav-wrap::-webkit-scrollbar{display:none}
+  .nb{padding:10px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}
+  .sec{padding:12px}
+  .mr{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+  .mc{padding:10px 12px}
+  .ml{font-size:9px;line-height:1.3;margin-bottom:3px}
+  .mv{font-size:18px;line-height:1.1}
+  .ms{font-size:9px;margin-top:3px}
+  .card{padding:12px;border-radius:10px;margin-bottom:10px}
+  .ct{font-size:12px;display:block;line-height:1.4}
+  .ct select{margin-top:8px;width:100%;font-size:11px;padding:6px 10px}
+  .cs{font-size:10px;margin-bottom:8px}
+  .g3[style*="repeat(4"]{grid-template-columns:1fr 1fr!important;gap:8px}
+  /* Table: keep original width, allow scroll horizontally */
+  .tbl{font-size:11px;white-space:nowrap}
+  .tbl th{font-size:10px;padding:6px 8px;white-space:nowrap}
+  .tbl td{padding:6px 8px;white-space:nowrap;vertical-align:middle}
+  .tbl .bdg{font-size:9px;padding:1px 5px}
+  /* Container yang punya overflow-x:auto → slideable */
+  .card > div[style*="overflow-x:auto"]{margin:0 -12px;padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Card container: hide overflow but child scrollable stays scrollable */
+  .card{overflow:hidden}
+  .card > div[style*="overflow-x:auto"]{overflow-x:auto!important}
+  .card .heat-wrap{overflow-x:auto!important}
+  .how-to{padding:10px 12px}
+  .how-to h4{font-size:11px;margin-bottom:6px}
+  .how-to p,.how-to li{font-size:10px;line-height:1.6}
+  .pip-table td{padding:7px 8px;font-size:11px}
+  /* Kecamatan tab - stack tabel dan distribusi visual */
+  .kec-split{grid-template-columns:1fr!important;gap:14px!important}
+  /* Heatmap scrollable */
+  .heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px;padding:0 12px}
+  /* Charts ukuran proporsional */
+  canvas{max-height:160px}
+  #cPK{max-height:130px}
+  [id^="lg"]{font-size:9px!important}
+  /* Top 10 kecamatan bar */
+  #topKecNas td:last-child > div{max-width:100px!important}
+  .hide-mobile{display:none}
+}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-weight:700;font-size:10px;color:#6B5E45;text-align:left;padding:6px 8px;border-bottom:1.5px solid #E8E4DA;background:#F9F7F2;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+.tbl td{padding:6px 8px;border-bottom:1px solid #F0EDE5;color:#2C2C2A}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#F9F7F2}
+.nr{text-align:right;font-variant-numeric:tabular-nums}
+.r-hi{background:#EAF3DE!important;font-weight:700}
+.r-lo{background:#FCEBEB!important}
+.bdg{display:inline-block;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
+.bg{background:#EAF3DE;color:#3B6D11}.br{background:#FCEBEB;color:#A32D2D}
+.ba{background:#FAEEDA;color:#854F0B}.bb{background:#E6F1FB;color:#185FA5}.bgr{background:#F1EFE8;color:#6B5E45}
+.spk{display:flex;align-items:flex-end;gap:1px;height:26px}
+.sb{width:5px;border-radius:1px 1px 0 0;flex-shrink:0;background:#D4C9B0}
+.sb.pk{background:#BA7517}.sb.lo{background:#F09595}
+.lgd{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#6B5E45;margin-bottom:8px}
+.lsq{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px}
+.how-to{background:#F9F7F2;border-radius:10px;padding:.875rem 1rem;margin-top:.875rem;border-left:4px solid #D4C9B0}
+.how-to h4{font-size:11px;font-weight:700;color:#6B5E45;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.how-to p,.how-to li{font-size:11px;color:#6B5E45;line-height:1.7}
+.how-to ul{padding-left:16px}
+.pip-table{width:100%;border-collapse:collapse}
+.pip-table tr{border-bottom:1px solid #E8E4DA}
+.pip-table tr:last-child{border-bottom:none}
+.pip-table td{padding:10px 16px;font-size:14px}
+.pip-table td:first-child{font-weight:700;color:#2C2C2A;width:160px}
+.pip-table td:last-child{color:#3B2A13}
+.pip-table tr.cur-month td{background:#EAF3DE;font-weight:700}
+.pip-table tr.next-month td{background:#E6F1FB}
+.pip-table .gap-warn{color:#A32D2D;font-weight:700}
+.pip-table .gap-ok{color:#3B6D11;font-weight:700}
+.heat-wrap{overflow-x:auto}
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:8px}
+.ri{background:#fff;border:1px solid #E8E4DA;border-radius:10px;padding:.75rem}
+.skel{background:linear-gradient(90deg,#F0EDE5 25%,#E8E4DA 50%,#F0EDE5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:24px;margin-bottom:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+::-webkit-scrollbar{height:4px;width:4px}::-webkit-scrollbar-track{background:#F0EDE5}::-webkit-scrollbar-thumb{background:#D4C9B0;border-radius:2px}
+@media print{.fbar,.nav-wrap{display:none}.sec{display:block!important}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="topbar">
+  <div><h1>Dashboard Marketing Aqiqah Nurul Hayat</h1><p>53 cabang aktif · Historis 2020–2025 + Live 2026 · Tanggal Pesan</p></div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span id="liveStatus" class="live-badge">⏳ Memuat...</span>
+    <span id="lastUpdate" class="last-update"></span>
+  </div>
+</div>
+
+<div class="fbar">
+  <span class="fbar-lbl">📅 Periode:</span>
+  <select class="fsel" id="selBulan" onchange="onFil()">
+    <option value="1">Januari 2026</option><option value="2">Februari 2026</option>
+    <option value="3">Maret 2026</option><option value="4">April 2026</option>
+    <option value="5">Mei 2026</option><option value="6">Juni 2026</option>
+    <option value="7">Juli 2026</option><option value="8">Agustus 2026</option>
+    <option value="9">September 2026</option><option value="10">Oktober 2026</option>
+    <option value="11">November 2026</option><option value="12">Desember 2026</option>
+  </select>
+  <span style="font-size:11px;color:#9B8E78">Filter berlaku untuk tab Utama & Sumber Pesanan</span>
+</div>
+
+<div class="nav-wrap"><div class="nav-g">
+  <button class="nb on" onclick="SS('utama',this)">📊 Utama</button>
+  <button class="nb" onclick="SS('pipeline',this)">🔄 Pipeline</button>
+  <button class="nb" onclick="SS('historis',this)">📅 Historis</button>
+  <button class="nb" onclick="SS('sumber',this)">📣 Sumber</button>
+  <button class="nb" onclick="SS('ranking',this)">🏆 Ranking</button>
+  <button class="nb" onclick="SS('kritis',this)">⚠️ Zona Kritis</button>
+  <button class="nb" onclick="SS('recovery',this)">📈 Recovery</button>
+  <button class="nb" onclick="SS('risk',this)">🛡️ Risk Monitor</button>
+  <button class="nb" onclick="SS('analisa',this)">🏢 Analisa Cabang</button>
+  <button class="nb" onclick="SS('kecamatan',this)">🗺️ Kecamatan</button>
+  <button class="nb" onclick="SS('forecast',this)">🔮 Forecast</button>
+</div></div>
+
+<!-- ===== UTAMA ===== -->
+<div class="sec on" id="s-utama">
+  <div class="mr" id="mMet"><div class="skel" style="grid-column:span 6"></div></div>
+  <div class="g2">
+    <div class="card"><div class="ct">Customer Bulanan 2026 — By Bulan Order</div><div style="position:relative;height:190px"><canvas id="cB26"></canvas></div></div>
+    <div class="card"><div class="ct">Customer 5 Tahun Terakhir</div><div style="position:relative;height:190px"><canvas id="c5y"></canvas></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Customer Mingguan — <span id="wkLbl">Bulan Berjalan</span></div>
+    <div class="cs">Total order per minggu ISO (Sen–Min) sepanjang bulan berjalan</div>
+    <div style="position:relative;height:200px"><canvas id="cWkBul"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ct">Tren Bulanan — 2024 vs 2025 vs 2026</div>
+    <div class="lgd"><span><span class="lsq" style="background:#B5D4F4"></span>2024</span><span><span class="lsq" style="background:#EF9F27"></span>2025</span><span><span class="lsq" style="background:#BA7517"></span>2026</span></div>
+    <div style="position:relative;height:195px"><canvas id="c3y"></canvas></div>
+  </div>
+  <div class="g3" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="ct">Sumber Pesanan</div><div style="position:relative;height:160px"><canvas id="cPS"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPS"></div></div>
+    <div class="card"><div class="ct">Tipe Kambing</div><div style="position:relative;height:160px"><canvas id="cPK"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPK"></div></div>
+    <div class="card"><div class="ct">Paket Pesanan</div><div style="position:relative;height:160px"><canvas id="cPP"></canvas></div><div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgPP"></div></div>
+    <div class="card"><div class="ct">2025 × 2026</div><div id="cmpBox" style="overflow-x:auto"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">🐑 Ekor vs Pesanan — Bulanan 2026</div>
+      <div class="cs">Batang oranye = pesanan · Garis = ekor kambing (skala kanan)</div>
+      <div style="position:relative;height:200px"><canvas id="cEkorBul"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">🐑 Tren Ekor & Pesanan — 2020–2026</div>
+      <div class="lgd">
+        <span><span class="lsq" style="background:#BA7517"></span>Pesanan</span>
+        <span><span class="lsq" style="background:#5DCAA5"></span>Ekor</span>
+        <span><span class="lsq" style="background:#E8E4DA"></span>Ratio ekor/pesanan</span>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="cEkorTren"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Tren Mingguan 6 Tahun (Jan 2020 – Jun 2026)</div>
+    <div class="cs">339 minggu data aktual berdasarkan Tanggal Pesan · puncak Jul 2022 terlihat jelas</div>
+    <div style="position:relative;height:195px"><canvas id="c6y"></canvas></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Tab Utama</h4>
+    <ul>
+      <li><strong>Filter Periode</strong> di atas berlaku untuk semua grafik dan metrik di tab ini — ganti bulan untuk melihat performa bulan berbeda.</li>
+      <li><strong>Card hijau (🟢 Live)</strong> = data hari ini dan bulan berjalan yang diambil langsung dari Google Sheets secara real-time.</li>
+      <li><strong>Customer Juni 2026 vs 2025</strong> = perbandingan langsung bulan yang sama tahun sebelumnya. Negatif bukan selalu buruk — cek konteks seperti hari besar atau musim.</li>
+      <li><strong>MoM vs Mei</strong> = perbandingan hari yang sama bulan ini vs bulan lalu (apple-to-apple), bukan bulan penuh.</li>
+      <li><strong>Tren 6 tahun</strong> = pola musiman terlihat jelas — Juni dan September selalu tinggi, Februari dan April selalu rendah.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== PIPELINE ===== -->
+<div class="sec" id="s-pipeline">
+  <div class="mr" id="pipMet"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Pipeline Customer Lintas Bulan — 2026</div>
+      <div class="cs">Customer yang sudah memesan untuk bulan pengiriman mendatang (Tgl Pesan ≠ Tgl Kirim)</div>
+      <table class="pip-table" id="tPipeline">
+        <tr><td colspan="3" style="text-align:center;padding:20px;color:#9B8E78">Memuat data pipeline...</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="ct">Tren Pipeline Bulanan</div>
+      <div class="cs">Jumlah customer lintas bulan per bulan pengiriman</div>
+      <div style="position:relative;height:280px"><canvas id="cPip"></canvas></div>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Pipeline</h4>
+    <ul>
+      <li><strong>Pipeline</strong> = customer yang sudah memesan (Tanggal Pesan) tetapi jadwal kirimnya di bulan berbeda (Tanggal Kirim lebih jauh).</li>
+      <li><strong>Contoh:</strong> Customer pesan di bulan Mei untuk dikirim bulan Juli = masuk pipeline Juli.</li>
+      <li><strong>Card biru (bulan depan)</strong> = pipeline bulan depan yang sudah masuk. Bandingkan dengan rata-rata historis — kalau kurang, tim perlu push closing lebih agresif bulan ini.</li>
+      <li><strong>Target pipeline</strong> = rata-rata pipeline bulan yang sama dari bulan-bulan sebelumnya di tahun ini.</li>
+      <li><strong>Insight utama:</strong> Kalau hari ini tanggal 26 Juni dan pipeline Juli baru 197, padahal rata-rata historis 450+, artinya ada gap ~250 customer HPL Juli yang belum closing — ini prioritas tim sekarang.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== HISTORIS ===== -->
+<div class="sec" id="s-historis">
+  <div class="card"><div class="ct">Tren Tahunan 2020–2026</div><div style="position:relative;height:200px"><canvas id="cHY"></canvas></div></div>
+  <div class="card">
+    <div class="ct">Pola Bulanan Semua Tahun</div>
+    <div class="lgd" id="lgdH"></div>
+    <div style="position:relative;height:230px"><canvas id="cHM"></canvas></div>
+  </div>
+  <div class="card"><div class="ct">Tabel Bulanan Historis</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Tahun</th><th class="nr">Jan</th><th class="nr">Feb</th><th class="nr">Mar</th><th class="nr">Apr</th><th class="nr">Mei</th><th class="nr">Jun</th><th class="nr">Jul</th><th class="nr">Agu</th><th class="nr">Sep</th><th class="nr">Okt</th><th class="nr">Nov</th><th class="nr">Des</th><th class="nr">Total</th><th class="nr">YoY</th></tr></thead><tbody id="tHist"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Historis</h4>
+    <ul>
+      <li><strong>2026 ★ (baris hijau)</strong> = data tahun berjalan, otomatis update setiap bulan baru selesai.</li>
+      <li><strong>YoY %</strong> = perubahan total tahunan dibanding tahun sebelumnya. Merah bukan berarti gagal jika ada faktor eksternal (pandemi 2020, dsb).</li>
+      <li><strong>Pola musiman</strong> = Juni dan September hampir selalu puncak — ini karena musim pernikahan dan tahun ajaran baru (bayi lahir ~9 bulan sebelumnya). Jadikan acuan planning promosi.</li>
+      <li><strong>2022 anomali</strong> = lonjakan Juli 2022 (4.303) adalah tertinggi sepanjang sejarah — kemungkinan efek penumpukan pasca-pandemi + momen Idul Adha bersamaan.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SUMBER ===== -->
+<div class="sec" id="s-sumber">
+  <div class="card" style="padding:10px 14px;background:#F9F7F2">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:12px;font-weight:600;color:#6B5E45">🏢 Filter Cabang:</span>
+      <select id="selCabangSumber" onchange="bSumber()" style="font-size:12px;padding:6px 12px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600;min-width:200px">
+        <option value="">— Semua Cabang (Nasional) —</option>
+      </select>
+      <span style="font-size:11px;color:#9B8E78" id="cabSumberInfo"></span>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">Sumber — <span id="srcBulLbl" class="bdg bb">bulan ini</span></div>
+      <div style="position:relative;height:200px"><canvas id="cSB"></canvas></div>
+      <div style="font-size:10px;margin-top:6px;display:flex;flex-direction:column;gap:3px" id="lgSB"></div>
+    </div>
+    <div class="card"><div class="ct">Tren Sumber 2020–2026 <button onclick="toggleTrenMode()" id="btnTrenMode" style="font-size:10px;padding:4px 8px;border:1px solid #D4C9B0;border-radius:5px;background:#fff;cursor:pointer;margin-left:8px">Tampilkan %</button></div>
+      <div class="lgd" id="lgST"></div>
+      <div style="position:relative;height:200px"><canvas id="cST"></canvas></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct" id="ctS26">Sumber 2026 per Bulan</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr id="thS26"></tr></thead><tbody id="tS26"></tbody></table></div>
+  </div>
+  <div class="card"><div class="ct">Sumber per Tahun — <span style="font-size:11px;color:#6B5E45;font-weight:400">% dari total customer</span>
+    <button onclick="toggleSrcMode()" id="btnSrcMode" style="font-size:11px;padding:4px 10px;border:1.5px solid #D4C9B0;border-radius:6px;background:#F9F7F2;cursor:pointer;color:#3B2A13;font-weight:600">Tampilkan angka</button></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Sumber</th><th class="nr">2020</th><th class="nr">2021</th><th class="nr">2022</th><th class="nr">2023</th><th class="nr">2024</th><th class="nr">2025</th><th class="nr">2026*</th></tr></thead><tbody id="tSY"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Sumber Pesanan</h4>
+    <ul>
+      <li><strong>Referensi (40%+)</strong> = customer datang dari rekomendasi orang lain. Ini channel terkuat — artinya kepuasan customer yang sudah ada sangat menentukan pertumbuhan baru.</li>
+      <li><strong>Instagram naik konsisten</strong> = dari 10.7% (2020) ke 24%+ (2026). Investasi konten Instagram terbukti efektif.</li>
+      <li><strong>Website terus turun</strong> = dari 11.4% (2020) ke 6%+ (2026). Perlu audit SEO dan UX website.</li>
+      <li><strong>Repeat Order</strong> = customer yang pernah aqiqah dengan ANH dan pesan lagi (biasanya anak ke-2/ke-3). Ini proxy loyalitas pelanggan.</li>
+      <li><strong>Tampilkan %</strong> = menghilangkan bias penurunan volume. Meskipun angka absolut Instagram turun karena total customer turun, persentasenya justru naik — artinya Instagram makin efektif relatif terhadap channel lain.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== RANKING ===== -->
+<div class="sec" id="s-ranking">
+  <div class="card">
+    <div class="ct">Ranking Nasional — Mingguan (Tanggal Pesan 2026)
+      <select onchange="bRank(this.value)" style="font-size:11px;padding:5px 10px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600">
+        <option value="all">Semua cabang</option><option value="top10">Top 10</option>
+        <option value="bot10">Bottom 10</option><option value="naik">Tumbuh ≥2 mgg</option><option value="turun">Turun ≥3 mgg</option>
+      </select>
+    </div>
+    <div class="cs">Score: 40% Performa W terkini + 35% WoW Growth + 25% Stabilitas · <span id="rankDataNote" style="color:#BA7517">Memuat data live...</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W sebelumnya</th><th class="nr">W terkini</th><th class="nr">WoW %</th><th class="nr">Score</th><th>EWS</th><th>Tren 6W</th></tr></thead><tbody id="tRank"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Ranking Cabang</h4>
+    <ul>
+      <li><strong>Score (0–100)</strong> = nilai komposit dari 3 komponen: Performa minggu ini (40%), pertumbuhan WoW/minggu ke minggu (35%), dan konsistensi 26 minggu (25%). Score 70+ = cabang sehat.</li>
+      <li><strong>WoW %</strong> = perubahan minggu ini vs minggu lalu. Negatif satu minggu wajar — yang perlu diwaspadai adalah negatif 3+ minggu berturut-turut.</li>
+      <li><strong>EWS (Early Warning System)</strong>: 🟢 Aman = performa stabil · 🟡 Waspada = mulai menurun · 🟠 Perhatian = turun signifikan · 🔴 Kritis = darurat intervensi.</li>
+      <li><strong>Tren 6W</strong> = sparkline 6 minggu terakhir. Bar tinggi = minggu baik, bar merah = minggu kritis (≤2 customer).</li>
+      <li><strong>Filter</strong> gunakan "Turun ≥3 mgg" untuk langsung lihat cabang yang butuh perhatian segera.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== ZONA KRITIS ===== -->
+<div class="sec" id="s-kritis">
+  <div class="card">
+    <div class="ct">Zona Kritis Mingguan (Tanggal Pesan)</div>
+    <div class="cs">Kritis = ≤2 customer/minggu · Diurutkan frekuensi kritis terbanyak · <span id="kritisNote" style="color:#BA7517">Memuat...</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th class="nr">W-3</th><th class="nr">W-2</th><th class="nr">W-1</th><th class="nr">W terkini</th><th class="nr">Frek Kritis</th><th>Status</th></tr></thead><tbody id="tKritis"></tbody></table></div>
+  </div>
+  <div class="card">
+    <div class="ct">Heatmap Mingguan — 10 Minggu Terakhir · Semua Cabang</div>
+    <div class="heat-wrap"><div id="hmWrap"></div></div>
+    <div class="lgd" style="margin-top:8px">
+      <span><span style="display:inline-block;width:12px;height:12px;background:#E24B4A;border-radius:2px;vertical-align:middle;margin-right:3px"></span>0 (kritis)</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#F09595;border-radius:2px;vertical-align:middle;margin-right:3px"></span>1–2</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#FAEEDA;border-radius:2px;vertical-align:middle;margin-right:3px"></span>3–5</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#C0DD97;border-radius:2px;vertical-align:middle;margin-right:3px"></span>6–15</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#378ADD;border-radius:2px;vertical-align:middle;margin-right:3px"></span>16–30</span>
+      <span><span style="display:inline-block;width:12px;height:12px;background:#0C447C;border-radius:2px;vertical-align:middle;margin-right:3px"></span>30+</span>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Zona Kritis</h4>
+    <ul>
+      <li><strong>Kritis (≤2 customer/minggu)</strong> = cabang di level ini hampir tidak operasional. Butuh intervensi langsung dari area supervisor dalam 7 hari.</li>
+      <li><strong>Frekuensi kritis</strong> = berapa kali cabang masuk zona kritis dari total 26 minggu. Cabang dengan 15+ kali kritis = struktural bermasalah, bukan musiman.</li>
+      <li><strong>Heatmap</strong> = baca per baris (satu cabang) untuk lihat pola mingguan. Merah beruntun = tren turun, Biru tua beruntun = cabang top performer.</li>
+      <li><strong>Tindakan</strong>: Kritis 1–2 kali = wajar (hari raya, dll). Kritis 5+ kali = evaluasi strategi lokal. Kritis 10+ kali = pertimbangkan restrukturisasi cabang.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== RECOVERY ===== -->
+<div class="sec" id="s-recovery">
+  <div class="card"><div class="ct">Recovery Terbaik Minggu Ini (WoW naik)</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren 6W</th><th class="nr">Growth WoW</th><th>Status</th></tr></thead><tbody id="tRec"></tbody></table></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">Tumbuh Konsisten (≥2 minggu naik)</div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren</th><th class="nr">Streak</th></tr></thead><tbody id="tGrow"></tbody></table></div>
+    </div>
+    <div class="card"><div class="ct">Turun Konsisten (≥3 minggu turun)</div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Cabang</th><th>Tren</th><th class="nr">Streak</th></tr></thead><tbody id="tDecl"></tbody></table></div>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Recovery & Growth</h4>
+    <ul>
+      <li><strong>Recovery terbaik</strong> = cabang yang minggu ini naik signifikan dari minggu lalu. Perlu dianalisis: apakah ada aktivitas marketing spesifik yang bisa direplikasi ke cabang lain?</li>
+      <li><strong>Streak naik</strong> = cabang yang naik 2+ minggu berturut-turut. Ini sinyal positif yang perlu dijaga momentumnya.</li>
+      <li><strong>Streak turun</strong> = cabang yang turun 3+ minggu berturut-turut. Ini sinyal merah — semakin panjang streak, semakin butuh intervensi cepat.</li>
+      <li><strong>Prioritas tindakan</strong>: Hubungi cabang dengan streak turun terpanjang terlebih dahulu, minta laporan aktivitas harian, dan cek pipeline mereka.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== RISK MONITOR ===== -->
+<div class="sec" id="s-risk">
+  <div class="card">
+    <div class="ct">Risk Score Matrix — Mingguan</div>
+    <div class="cs">Formula: 40% Frekuensi Kritis + 30% Trend Turun + 20% Growth Negatif + 10% Tidak Stabil · Semakin tinggi = semakin berisiko</div>
+    <div class="risk-grid" id="riskWrap"></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Risk Monitor</h4>
+    <ul>
+      <li><strong>Risk Score 70–100 (merah)</strong> = cabang dalam kondisi darurat. Intervensi dalam 48 jam.</li>
+      <li><strong>Risk Score 50–69 (oranye)</strong> = cabang bermasalah serius. Jadwalkan review mingguan.</li>
+      <li><strong>Risk Score 30–49 (kuning)</strong> = perlu perhatian. Monitor lebih ketat.</li>
+      <li><strong>Risk Score 0–29 (biru)</strong> = kondisi normal/baik.</li>
+      <li><strong>Formula risk score</strong>: Memperhitungkan seberapa sering masuk zona kritis (40%), seberapa panjang tren turun saat ini (30%), apakah pertumbuhan tahunan negatif (20%), dan seberapa tidak stabil performanya (10%).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== ANALISA CABANG ===== -->
+<div class="sec" id="s-analisa">
+  <div style="background:#F9F7F2;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:#6B5E45;line-height:1.7;border:1px solid #E8E4DA">
+    <strong style="color:#3B2A13">Analisa Mendalam per Cabang:</strong> Setiap cabang punya karakter channel marketing yang berbeda. Tab ini menampilkan breakdown sumber pesanan per cabang untuk menemukan pola sukses yang bisa direplikasi.
+  </div>
+  <div class="card">
+    <div class="ct">Heatmap Sumber Pesanan per Cabang — 2026
+      <select onchange="bAnalisa(this.value)" id="selAnalisa" style="font-size:11px;padding:5px 10px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600">
+        <option value="pct">% per cabang</option>
+        <option value="num">Angka absolut</option>
+      </select>
+    </div>
+    <div class="cs">Persentase setiap sumber pesanan terhadap total customer cabang · Diurutkan total customer tertinggi</div>
+    <div class="heat-wrap"><div id="hmSumberCab"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Top Cabang per Channel — 2026</div>
+      <div class="cs">Cabang dengan persentase tertinggi untuk setiap channel marketing</div>
+      <div id="topPerChannel"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Cabang dengan Karakter Unik</div>
+      <div class="cs">Cabang yang sangat bergantung pada satu channel (≥50%)</div>
+      <div id="cabUnik"></div>
+    </div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Analisa Cabang</h4>
+    <ul>
+      <li><strong>Heatmap warna gelap</strong> = persentase tinggi, cabang sangat bergantung pada channel tersebut. Warna terang = channel minor.</li>
+      <li><strong>Cabang dengan Referensi tinggi (60%+)</strong> = bisnisnya kuat di word-of-mouth, kepuasan customer existing sangat menentukan. Fokus jaga kualitas layanan.</li>
+      <li><strong>Cabang dengan Instagram tinggi (30%+)</strong> = social media native. Replikasikan strategi konten ke cabang lain yang Instagramnya rendah.</li>
+      <li><strong>Cabang dengan Repeat Order tinggi</strong> = customer loyal kuat. Indikator product-market-fit yang baik di area tersebut.</li>
+      <li><strong>Cabang dengan Lainnya/blank tinggi</strong> = pencatatan sumber tidak rapi, perlu training CS untuk dokumentasi sumber leads.</li>
+      <li><strong>Aksi strategis</strong>: Identifikasi cabang "juara" di setiap channel, lalu transfer playbook-nya ke cabang lain.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== KECAMATAN ===== -->
+<div class="sec" id="s-kecamatan">
+  <div style="background:#F9F7F2;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:#6B5E45;line-height:1.7;border:1px solid #E8E4DA">
+    <strong style="color:#3B2A13">Heatmap Kecamatan per Cabang — 2026:</strong> Data dari kolom KECAMATAN di spreadsheet. Membantu tim ekspansi mengidentifikasi area dengan permintaan tinggi dan area yang masih bisa digarap.
+  </div>
+  <div class="mr" id="kecMet"></div>
+  <div class="card">
+    <div class="ct">Pilih Cabang
+      <select id="selKecCab" onchange="renderKec()" style="font-size:12px;padding:5px 12px;border:1.5px solid #D4C9B0;border-radius:7px;background:#fff;color:#2C2C2A;font-weight:600">
+        <option value="">— Pilih cabang —</option>
+      </select>
+    </div>
+    <div id="kecCabContent"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Top 10 Kecamatan Terbesar Nasional</div>
+    <div class="cs">Kecamatan dengan permintaan tertinggi lintas cabang</div>
+    <div id="topKecNas"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Konsentrasi Pasar per Cabang</div>
+    <div class="cs">Cabang yang sangat tergantung satu kecamatan dominan (≥30% dari total) — peluang ekspansi ke kecamatan lain</div>
+    <div id="konsentrasiCab"></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Heatmap Kecamatan</h4>
+    <ul>
+      <li><strong>Top kecamatan per cabang</strong> = area "panas" yang sudah aktif. Pastikan supply chain dan delivery di area ini optimal.</li>
+      <li><strong>Cabang dengan konsentrasi tinggi (≥30% di 1 kecamatan)</strong> = bisnis terlalu bergantung pada 1 area. Risiko tinggi kalau ada kompetitor masuk. Diversifikasi ke kecamatan lain.</li>
+      <li><strong>Cabang dengan banyak kecamatan unik (40+)</strong> = penetrasi pasar luas, sustainable growth. Contoh: Surabaya dengan 84 kecamatan.</li>
+      <li><strong>Cabang dengan kecamatan unik sedikit (≤10)</strong> = peluang besar untuk ekspansi marketing ke kecamatan tetangga yang belum tersentuh.</li>
+      <li><strong>Insight strategis</strong>: Bandingkan kecamatan dominan antar cabang yang sama provinsi — apakah ada pola demografi yang bisa dipelajari?</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== FORECAST ===== -->
+<div class="sec" id="s-forecast">
+  <div style="background:#F9F7F2;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:#6B5E45;line-height:1.7;border:1px solid #E8E4DA">
+    <strong style="color:#3B2A13">Model Forecasting:</strong> Dibangun dari 78 bulan data aktual (Jan 2020 – Jun 2026) menggunakan 3 model statistik.
+    Model terbaik berdasarkan RMSE: <strong>Prophet</strong> (360), Holt-Winters (381), SARIMA (579).
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem">
+    <span style="font-size:11px;font-weight:700;color:#6B5E45">Model:</span>
+    <button onclick="setFcModel('ensemble')" id="btn-ensemble" class="fcbtn active-fc">Ensemble (avg)</button>
+    <button onclick="setFcModel('hw')" id="btn-hw" class="fcbtn">Holt-Winters</button>
+    <button onclick="setFcModel('sarima')" id="btn-sarima" class="fcbtn">SARIMA</button>
+    <button onclick="setFcModel('prophet')" id="btn-prophet" class="fcbtn">Prophet</button>
+  </div>
+  <div class="mr" id="fcMetrik"></div>
+  <div class="card">
+    <div class="ct">
+      Time series aktual + forecast Jul 2026 – Des 2027
+      <div class="lgd" style="margin:0">
+        <span><span class="lsq" style="background:#185FA5"></span>Aktual</span>
+        <span><span class="lsq" style="background:#5DCAA5"></span>2026</span>
+        <span><span class="lsq" style="background:#BA7517"></span>Forecast</span>
+      </div>
+    </div>
+    <div class="cs" id="fcDesc">Ensemble = rata-rata 3 model.</div>
+    <div style="position:relative;height:270px"><canvas id="cFcMain"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">Perbandingan 3 model</div><div style="position:relative;height:210px"><canvas id="cFcModels"></canvas></div></div>
+    <div class="card"><div class="ct">Proyeksi tahunan per model</div>
+      <table class="tbl"><thead><tr><th>Model</th><th class="nr">RMSE</th><th class="nr">2026</th><th class="nr">2027</th><th class="nr">vs 2025</th></tr></thead><tbody id="tFcMod"></tbody></table>
+    </div>
+  </div>
+  <div class="card"><div class="ct">Tabel forecast detail — bulan per bulan</div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Bulan</th><th class="nr">HW</th><th class="nr">SARIMA</th><th class="nr">Prophet</th><th class="nr">Ensemble</th><th class="nr">CI Bawah</th><th class="nr">CI Atas</th></tr></thead><tbody id="tFcDetail"></tbody></table></div>
+  </div>
+  <div class="how-to">
+    <h4>📖 Cara Membaca Forecast & Prediksi</h4>
+    <ul>
+      <li><strong>Ensemble (rekomendasi)</strong> = rata-rata dari 3 model. Lebih stabil dan akurat dibanding satu model saja karena mengurangi bias masing-masing model.</li>
+      <li><strong>RMSE</strong> = Root Mean Square Error, ukuran akurasi model. Semakin kecil semakin akurat. Prophet (360) paling akurat dalam data ANH.</li>
+      <li><strong>Confidence Interval (CI)</strong> = rentang prediksi 95%. Artinya ada 95% kemungkinan angka aktual jatuh di antara CI Bawah dan CI Atas.</li>
+      <li><strong>Keterbatasan</strong>: Forecast mengasumsikan tren berlanjut tanpa intervensi. Jika ada program marketing besar atau event khusus, angka aktual bisa jauh di atas forecast.</li>
+      <li><strong>Penggunaan terbaik</strong>: Gunakan forecast sebagai baseline/target minimum. Jika aktual terus di bawah forecast, perlu evaluasi strategi.</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<style>
+.fcbtn{padding:5px 12px;font-size:11px;font-weight:600;border:1.5px solid #D4C9B0;border-radius:8px;background:#F9F7F2;color:#3B2A13;cursor:pointer}
+.fcbtn:hover{background:#EDE3D4}
+.active-fc{background:#3B2A13!important;color:#fff!important;border-color:#3B2A13!important}
+</style>
+
+<script>
+// ============================================================
+// KONFIGURASI
+// ============================================================
+const API = '/api/data';
+
+// ============================================================
+// STATIC DATA (historis 2020-2025 + template 2026)
+// ============================================================
+const HM={
+  2020:[1856,1603,1745,1312,2420,2070,2129,2188,2936,2326,2253,2855],
+  2021:[1958,1895,2284,1668,2032,2670,2333,1961,2813,2680,2486,3147],
+  2022:[2485,1915,2500,1395,2615,3456,4303,1997,3034,2258,1928,2105],
+  2023:[2486,1719,1850,1381,2019,3387,2343,1550,2476,2071,1803,1913],
+  2024:[1503,1588,1314,1632,1560,2596,2007,1738,1814,1851,1688,1559],
+  2025:[1961,1302,1500,1815,1330,2188,1584,1160,1918,1219,1861,1381],
+  2026:[1635,1331,1466,1925,1848,1970,0,0,0,0,0,0]  // H1 2026 final (statis, spreadsheet lama sudah tutup), Jul-Des akan diupdate dari live
+};
+// Ekor historis 2020-2025 (total ekor kambing dipesan, bukan jumlah pesanan)
+const EKOR_HIST={
+  2020:[2537,2226,2268,1623,2935,2693,2706,2949,3891,3146,3088,3941],
+  2021:[2585,2512,3149,2058,2754,3608,2919,2617,3640,3519,3349,4157],
+  2022:[3248,2544,3261,1702,3494,4684,5533,2599,3912,2846,2452,2678],
+  2023:[2538,2112,2166,1619,3362,3328,2998,2477,2478,2584,2137,2629],
+  2024:[2116,1943,1542,2000,2460,2552,2429,2031,2189,2218,2001,2380],
+  2025:[1961,1471,1131,2227,2003,2194,1870,1787,1793,1699,1729,1522]
+};
+// Ekor 2026: H1 statis dari KB26_NUM, H2 diupdate dari live
+const EKOR_2026=[1833,1384,1482,2197,1943,2262,0,0,0,0,0,0];
+const SRC26={
+  1:{Referensi:667,Instagram:406,'Repeat Order':321,Website:100,Banner:49,GMB:28,Facebook:26,Brosur:18,TikTok:13},
+  2:{Referensi:491,Instagram:325,'Repeat Order':306,Website:86,Banner:30,Facebook:26,GMB:21,TikTok:19,Brosur:18},
+  3:{Referensi:579,Instagram:358,'Repeat Order':297,Website:99,Banner:32,Facebook:28,Brosur:23,TikTok:22,GMB:20},
+  4:{Referensi:819,Instagram:475,'Repeat Order':339,Website:96,Banner:51,Brosur:36,Facebook:35,TikTok:32,GMB:25},
+  5:{Referensi:746,Instagram:408,'Repeat Order':397,Website:131,Banner:40,GMB:35,Facebook:33,Brosur:32,TikTok:19},
+  6:{Referensi:632,Instagram:401,'Repeat Order':301,Website:90,Facebook:44,Banner:38,GMB:37,Brosur:30,TikTok:26}
+};
+const SRC_YR={"Referensi":[10546,10867,13055,10310,7882,7746,4071],"Instagram":[2751,4899,5892,5494,5567,4878,2464],"Repeat Order":[4092,6200,5447,4667,4169,3835,2016],"Website":[2940,3408,3123,2428,1664,1027,625],"Banner":[289,699,550,436,554,370,245],"Facebook":[307,753,721,543,464,358,207],"GMB":[0,0,1,1,83,332,170],"Brosur":[1440,607,672,568,70,377,163],"TikTok":[0,0,0,0,17,96,142],"Lainnya":[3328,494,530,551,380,200,72]};
+const SC=['#185FA5','#E24B4A','#639922','#BA7517','#534AB7','#D85A30','#D4537E','#0F6E56','#888780','#8B7355'];
+// Display name mapper — nama singkat untuk cabang panjang (data spreadsheet tetap nama panjang)
+const CABANG_DISPLAY = {
+  'TANGERANG SELATAN': 'TANGSEL',
+  'TANGERANG PUSAT': 'TANGKOT'
+};
+function cabName(c) { return CABANG_DISPLAY[c] || c; }
+const KB26={1:{Puas:38.5,Super:23.2,Hemat:7.6,Istimewa:9.8,Tasyakuran:0.6,Lainnya:14.7,Platinum:5.5},2:{Puas:37.0,Super:21.3,Hemat:8.2,Istimewa:8.3,Tasyakuran:0.3,Lainnya:20.6,Platinum:4.4},3:{Puas:37.4,Super:20.2,Hemat:8.0,Istimewa:7.2,Tasyakuran:0.3,Lainnya:23.4,Platinum:3.5},4:{Puas:39.5,Super:22.4,Hemat:7.1,Istimewa:8.6,Tasyakuran:0.1,Lainnya:17.8,Platinum:4.6},5:{Puas:36.9,Super:20.7,Hemat:8.8,Istimewa:8.2,Tasyakuran:0.2,Lainnya:20.3,Platinum:5.0},6:{Puas:37.2,Super:23.2,Hemat:8.3,Istimewa:7.2,Tasyakuran:0.4,Lainnya:18.6,Platinum:5.1}};
+const KB_C=['#BA7517','#185FA5','#E24B4A','#639922','#888780','#D85A30','#534AB7'];
+const WK20=[405,485,389,407,367,399,370,369,353,415,436,369,314,274,226,331,278,539,531,590,404,685,505,468,428,488,570,535,470,457,287,357,509,557,633,1038,800,480,517,499,494,535,533,576,578,497,504,492,585,578,597,673,517];
+const WK21=[568,410,386,396,455,512,442,486,544,496,465,498,561,457,300,341,390,249,111,782,677,671,584,569,551,815,647,382,424,482,339,515,515,508,765,620,554,611,586,612,660,541,619,592,542,574,554,625,690,655,740,661,198];
+const WK22=[591,555,547,514,512,449,425,562,602,569,623,574,347,370,340,381,175,188,986,625,617,649,718,666,843,1193,1136,1180,945,625,287,545,541,492,844,793,568,520,591,575,559,483,415,477,426,404,492,475,523,506,496,472];
+const WK23=[819,513,423,432,450,430,438,395,501,523,499,278,297,339,329,128,488,354,550,584,452,768,783,668,652,811,639,578,390,453,236,351,434,451,556,603,543,446,539,495,479,432,465,437,418,391,410,470,438,415,463,562];
+const WK24=[462,203,354,323,377,358,359,394,428,325,268,258,300,300,121,560,495,278,411,362,464,523,651,528,467,628,578,472,396,370,482,420,350,347,440,442,425,397,358,476,430,412,380,427,422,401,359,417,440,395,345,272];
+const WK25=[607,480,446,347,312,346,364,331,289,363,372,409,234,156,614,480,381,233,315,355,329,324,606,592,443,454,445,339,324,299,245,248,277,289,332,625,428,407,335,198,289,337,337,362,549,379,354,398,126,276,362,477];
+// ===== SNAPSHOT H1 2026 (statis, dari spreadsheet lama) =====
+const PAKET26={"1":{"Nikmat":891,"Praktis":60,"Luxury":112,"Hemat":88},"2":{"Nikmat":696,"Luxury":99,"Hemat":80,"Praktis":48},"3":{"Nikmat":717,"Praktis":47,"Luxury":114,"Hemat":76},"4":{"Nikmat":1055,"Hemat":86,"Praktis":76,"Luxury":110},"5":{"Hemat":105,"Nikmat":925,"Luxury":121,"Praktis":73},"6":{"Nikmat":1067,"Luxury":150,"Hemat":99,"Praktis":99}};
+const PIPELINE26={"3":229,"2":351,"5":547,"6":448,"4":553,"7":449};
+const SRC_CAB26={"SURABAYA":{"Website":74,"Referensi":1202,"Repeat Order":580,"Instagram":303,"Banner":36,"Facebook":11,"Lainnya":15,"Brosur":10,"GMB":10,"TikTok":18},"GRESIK":{"Referensi":118,"Website":31,"Repeat Order":59,"Instagram":66,"Lainnya":6,"Banner":2,"Facebook":2,"GMB":4,"Brosur":3,"TikTok":3},"TANGERANG SELATAN":{"Website":33,"Instagram":95,"Repeat Order":59,"Referensi":93,"GMB":5,"Banner":1,"TikTok":7,"Lainnya":1,"Brosur":6,"Facebook":1},"SEMARANG":{"Instagram":79,"Repeat Order":115,"Referensi":377,"Website":11,"Brosur":3,"GMB":5,"Facebook":3,"Lainnya":2,"TikTok":1},"PASURUAN":{"Referensi":116,"Instagram":69,"Repeat Order":34,"Facebook":1,"Brosur":1,"GMB":3,"TikTok":8,"Website":4,"Banner":1,"Lainnya":1},"JAKARTA TIMUR":{"Instagram":90,"Website":25,"Referensi":53,"Repeat Order":29,"Brosur":2,"TikTok":2,"Lainnya":1},"SIDOARJO":{"Referensi":211,"TikTok":11,"Banner":17,"Instagram":110,"Repeat Order":93,"Brosur":21,"Website":24,"Facebook":10,"GMB":20,"Lainnya":6},"TULUNGAGUNG":{"GMB":4,"Repeat Order":5,"Instagram":33,"Referensi":7,"Brosur":1,"TikTok":2,"Facebook":1},"BANDUNG":{"Referensi":54,"Website":15,"Instagram":51,"Repeat Order":25,"Banner":2,"GMB":4,"Lainnya":1},"BEKASI":{"Instagram":75,"Referensi":212,"Repeat Order":79,"Website":28,"Facebook":2,"GMB":7,"Banner":2,"TikTok":2,"Brosur":2},"MALANG":{"Referensi":127,"Website":62,"Instagram":163,"Facebook":22,"Repeat Order":117,"Banner":20,"GMB":4,"Brosur":5,"Lainnya":4},"BALIKPAPAN":{"Referensi":150,"Instagram":189,"Repeat Order":58,"TikTok":6,"Website":10,"Facebook":4,"Lainnya":1,"Banner":3,"Brosur":5,"GMB":2},"MOJOKERTO":{"Instagram":25,"Facebook":4,"Referensi":14,"TikTok":2,"Brosur":5,"Banner":4,"Website":1,"Repeat Order":5,"Lainnya":1},"TUBAN":{"Referensi":136,"Repeat Order":59,"Brosur":22,"Banner":8,"Instagram":4,"Facebook":2,"Lainnya":2},"BOGOR":{"Repeat Order":71,"Referensi":42,"Instagram":45,"Lainnya":4,"Website":16,"TikTok":5,"Brosur":1},"SOLO":{"Referensi":23,"Repeat Order":23,"Instagram":22,"Website":6,"Banner":1,"Brosur":1,"Facebook":2},"BANJARMASIN":{"Instagram":16,"Referensi":8,"Banner":2,"Brosur":1,"Repeat Order":6,"Website":1,"GMB":1,"Facebook":1},"YOGYAKARTA":{"Referensi":62,"Repeat Order":46,"Instagram":42,"Website":7,"Facebook":2,"Brosur":3},"MADIUN":{"Banner":59,"Instagram":38,"Brosur":26,"Referensi":152,"Repeat Order":59,"Facebook":6,"Lainnya":1,"Website":4,"GMB":1},"PURWOKERTO":{"Website":3,"Instagram":33,"Referensi":14,"Facebook":2,"Repeat Order":14,"GMB":3,"TikTok":1},"PROBOLINGGO":{"Instagram":23,"Referensi":46,"Banner":9,"TikTok":6,"Facebook":5,"GMB":2,"Repeat Order":1,"Brosur":1,"Website":1},"DEPOK":{"Repeat Order":43,"Instagram":10,"Website":171,"Referensi":14,"GMB":1,"Banner":1,"Brosur":1},"JEMBER":{"Referensi":15,"Brosur":1,"Repeat Order":3,"Instagram":19,"Banner":9,"Website":6,"Lainnya":2,"TikTok":3},"CIMAHI":{"Repeat Order":20,"Referensi":28,"Instagram":28,"TikTok":3,"Lainnya":2,"GMB":8,"Website":3,"Banner":1,"Brosur":1},"UNGARAN":{"Repeat Order":27,"Instagram":26,"Referensi":26,"Facebook":1,"Website":3,"GMB":1,"Banner":1,"Brosur":1},"TASIKMALAYA":{"Referensi":65,"TikTok":10,"Instagram":90,"GMB":10,"Repeat Order":10,"Facebook":6,"Banner":1,"Website":1},"SAMARINDA":{"Repeat Order":9,"Referensi":21,"Banner":14,"Instagram":30,"Brosur":1,"Website":2,"Facebook":1,"GMB":2},"KARAWANG":{"Instagram":51,"Referensi":69,"GMB":6,"Repeat Order":29,"TikTok":2,"Facebook":20,"Website":5,"Banner":1},"BOJONEGORO":{"Repeat Order":54,"Instagram":19,"Banner":4,"GMB":3,"Referensi":43,"Brosur":19,"Facebook":8,"TikTok":9,"Website":1,"Lainnya":1},"JEPARA":{"Instagram":26,"Website":3,"Repeat Order":11,"Referensi":13,"Lainnya":2,"Facebook":3,"GMB":3,"TikTok":1},"CIKARANG":{"Repeat Order":50,"Instagram":68,"Referensi":88,"Facebook":10,"GMB":7,"Lainnya":1,"Website":1,"TikTok":5,"Brosur":1,"Banner":3},"CILEGON":{"Instagram":38,"Referensi":13,"GMB":3,"Repeat Order":26,"TikTok":3,"Brosur":3,"Website":5,"Facebook":1},"MAGELANG":{"Instagram":25,"Referensi":21,"Repeat Order":9,"GMB":6,"Brosur":1,"TikTok":2,"Facebook":1,"Banner":1},"KEDIRI":{"Referensi":62,"Instagram":40,"GMB":2,"Repeat Order":33,"Website":13,"Lainnya":2,"TikTok":2},"CIREBON":{"Referensi":17,"Repeat Order":15,"Instagram":13,"Lainnya":3,"Website":11,"Brosur":1,"GMB":1},"SRAGEN":{"Referensi":22,"Instagram":14,"Repeat Order":4,"Facebook":2,"Brosur":1},"SUKABUMI":{"Facebook":3,"Referensi":4,"Instagram":22,"TikTok":4,"GMB":2,"Banner":3,"Repeat Order":2,"Lainnya":1,"Website":1},"INDRAMAYU":{"Referensi":41,"Instagram":12,"Facebook":22,"TikTok":2,"Website":5,"Repeat Order":4,"GMB":4},"TANGERANG PUSAT":{"Referensi":39,"Instagram":31,"Repeat Order":27,"Banner":3,"Brosur":1,"GMB":2,"Lainnya":4,"Facebook":1,"Website":2},"SUBANG":{"Instagram":35,"Repeat Order":7,"Referensi":35,"Facebook":6,"GMB":3,"Website":1,"TikTok":5},"GARUT":{"Referensi":14,"GMB":6,"Instagram":41,"Repeat Order":6,"Lainnya":1,"Facebook":1},"SALATIGA":{"Referensi":3,"Repeat Order":8,"Instagram":61,"Banner":1,"Brosur":1},"PURWAKARTA":{"Referensi":13,"GMB":2,"Instagram":25,"TikTok":3,"Website":11,"Facebook":4,"Repeat Order":3,"Banner":1,"Lainnya":2},"BANYUWANGI":{"Referensi":55,"Banner":3,"Repeat Order":29,"Instagram":16,"Website":6,"Lainnya":1,"Facebook":1,"Brosur":2,"TikTok":1,"GMB":1},"LAMONGAN":{"Instagram":27,"Banner":14,"Referensi":20,"Repeat Order":11,"Brosur":6,"Website":5,"Facebook":13,"GMB":2,"TikTok":2},"SUMEDANG":{"Referensi":13,"Facebook":2,"GMB":4,"Instagram":22,"TikTok":2,"Repeat Order":4,"Website":4,"Lainnya":1},"KENDAL":{"Referensi":41,"Banner":4,"Repeat Order":10,"Facebook":4,"Instagram":1},"SERANG":{"Website":4,"Instagram":13,"Referensi":7,"Banner":2,"Facebook":1,"Repeat Order":3,"GMB":3,"TikTok":4},"JOMBANG":{"Instagram":20,"Referensi":13,"Repeat Order":10,"Facebook":7,"Website":2,"Banner":6,"GMB":4,"Lainnya":1,"Brosur":2,"TikTok":2},"CIANJUR":{"Instagram":15,"TikTok":1,"Repeat Order":5,"Referensi":16,"Website":2,"Banner":1,"GMB":3,"Brosur":1},"BLITAR":{"GMB":4,"Referensi":13,"Instagram":18,"Repeat Order":4,"Banner":1,"Lainnya":1,"Facebook":2},"KUDUS":{"Instagram":33,"Banner":3,"Referensi":9,"TikTok":2,"Website":1,"Facebook":6,"GMB":2,"Repeat Order":2,"Lainnya":1},"BANDUNG SELATAN":{"Referensi":1,"Instagram":4,"Repeat Order":1}};
+const KB26_NUM={"1":{"E":46,"JE":29,"B":573,"JB":372,"A":252,"JA":255,"S":96,"JS":100,"P":52,"JP":58},"2":{"E":56,"JE":22,"B":440,"JB":304,"A":188,"JA":178,"S":66,"JS":63,"P":31,"JP":36},"3":{"E":65,"JE":38,"B":485,"JB":318,"A":174,"JA":211,"S":55,"JS":72,"P":27,"JP":37},"4":{"E":105,"JE":66,"B":736,"JB":407,"A":272,"JA":301,"S":131,"JS":73,"P":47,"JP":59},"5":{"E":82,"JE":54,"B":632,"JB":372,"A":242,"JA":271,"S":102,"JS":76,"P":67,"JP":45},"6":{"E":128,"JE":85,"B":712,"JB":417,"A":304,"JA":308,"S":89,"JS":95,"P":65,"JP":59}};
+const KEC26={"SURABAYA":{"PABEAN CANTIAN":27,"GUNUNG ANYAR":404,"DUKUH PAKIS":28,"SUKOMANUNGGAL":54,"JAMBANGAN":19,"TENGGILIS MEJOYO":43,"BUBUTAN":42,"BALONGPANGGANG":1,"AROSBAYA":13,"SUKODONO":15,"LAKARSANTRI":23,"CANDI":10,"SEMAMPIR":45,"BANGKALAN":55,"RUNGKUT":126,"BURNEH":32,"GUBENG":54,"MULYOREJO":45,"MENGANTI":30,"DRIYOREJO":24,"TAMBAKSARI":84,"SAWAHAN":83,"SEDATI":35,"BUDURAN":15,"KENJERAN":60,"KARANGPILANG":30,"WIYUNG":42,"GEGER":25,"TAMAN":44,"WARU":81,"WONOKROMO":57,"GAYUNGAN":32,"KREMBANGAN":46,"WONOCOLO":47,"SUKOLILO":74,"SIDOARJO":20,"SIMOKERTO":20,"BENOWO":43,"TANDES":50,"SAMBIKEREP":24,"KLAMPIS":3,"GEDANGAN":21,"KOKOP":4,"GENTENG":19,"JABON":1,"PRAMBON":1,"PAKAL":32,"TARIK":1,"ASEMROWO":22,"KAMAL":21,"SEPULU":7,"TEGALSARI":24,"MANYAR":2,"BLEGA":7,"KWANYAR":5,"KRIAN":10,"BENJENG":1,"SUKOREJO":1,"DUREN SAWIT":1,"GONDANGWETAN":1,"GEDEG":1,"TULANGAN":1,"SOCAH":20,"SAMPANG":5,"MODUNG":1,"LABANG":4,"SOOKO":1,"BULAK":16,"CERME":1,"TANAH MERAH":6,"JOMBANG":2,"GALIS":1,"KEBOMAS":1,"KREMBUNG":2,"KETAPANG":1,"WRINGINANOM":1,"KEDUNGDUNG":1,"TANJUNG BUMI":1,"KRANGGAN":1,"PANCENG":1,"TRAGAH":1,"PORONG":1,"SUMOBITO":1,"MOJOSARI":1,"PURI":1},"GRESIK":{"DUKUN":3,"MANYAR":67,"KEBOMAS":84,"CERME":36,"MENGANTI":10,"PANCENG":2,"GRESIK":27,"DUDUKSAMPEYAN":13,"BALONGPANGGANG":4,"DRIYOREJO":7,"SIDAYU":5,"GLAGAH":1,"BUNGAH":12,"KREMBANGAN":3,"BENJENG":7,"BENOWO":3,"ASEMROWO":1,"KARANGBINANGUN":1,"UJUNGPANGKAH":1,"TIKUNG":1,"KEDAMEAN":2,"PAKAL":1,"GAYUNGAN":1,"BLULUK":2},"TANGERANG SELATAN":{"CIPUTAT":36,"CIPUTAT TIMUR":36,"SETU":10,"PAMULANG":55,"SERPONG UTARA":6,"KEBAYORAN LAMA":14,"SEPATAN TIMUR":1,"SAWANGAN":5,"GUNUNG SINDUR":8,"BOJONGSARI":7,"CIRACAS":2,"PESANGGRAHAN":6,"CILANDAK":5,"KEBAYORAN BARU":4,"PAGEDANGAN":4,"KRAMATJATI":2,"GAMBIR":3,"SERPONG":15,"PAL MERAH":1,"SUKMAJAYA":1,"TAJURHALANG":1,"PONDOK GEDE":2,"KEMBANGAN":2,"MATRAMAN":1,"MAMPANG PRAPATAN":3,"JAYANTI":1,"CINERE":6,"LARANGAN":2,"PONDOK AREN":20,"PULOGADUNG":1,"CISAUK":3,"TANGERANG":2,"CIOMAS":1,"CILEDUG":5,"BEJI":2,"LEGOK":3,"GROGOL PETAMBURAN":1,"CIBINONG":1,"CIPONDOH":1,"RAJEG":1,"PINANG":2,"CILODONG":1,"CIBODAS":1,"KELAPA DUA":2,"PANCORAN":3,"CURUG":1,"PASAR MINGGU":4,"MEGAMENDUNG":1,"KARANG TENGAH":1,"PERIUK":1,"LIMO":1,"BOJONG GEDE":1,"CAKUNG":1,"JOHAR BARU":1},"SEMARANG":{"GUNUNGPATI":30,"TUGU":6,"TEMBALANG":118,"PEDURUNGAN":74,"KENDAL":2,"BANYUMANIK":46,"SEMARANG SELATAN":14,"SEMARANG TIMUR":9,"GENUK":28,"CANDISARI":17,"NGALIYAN":44,"SEMARANG BARAT":28,"MRANGGEN":47,"GAJAH MUNGKUR":19,"GUNTUR":3,"MIJEN":14,"SEMARANG UTARA":18,"BOJA":4,"BERGAS":6,"SEMARANG TENGAH":14,"KALIWUNGU":3,"TEGOWANU":1,"BONANG":1,"GAYAM SARI":16,"CIBEUREUM":1,"DEMAK":5,"AMBARAWA":3,"KALIWUNGU SELATAN":3,"PATEAN":1,"KARANGTENGAH":3,"SAYUNG":1,"KARANGAWEN":2,"TANGGUNGHARJO":2,"UNGARAN BARAT":4,"BANYUBIRU":1,"UNGARAN TIMUR":3,"JATI":1,"BAWEN":2,"BANDUNGAN":1,"GUBUG":1},"PASURUAN":{"BUGUL KIDUL":12,"GRATI":6,"REJOSO":13,"KRATON":13,"SUKOREJO":13,"GEMPOL":7,"PRIGEN":4,"PURWOSARI":9,"PANDAAN":17,"PURWOREJO":32,"SINGOSARI":1,"REMBANG":10,"TOSARI":1,"BANGIL":13,"GADINGREJO":25,"POHJENTREK":5,"PANGGUNGREJO":9,"PUSPO":5,"BEJI":8,"KEJAYAN":9,"WONOREJO":5,"NGULING":5,"GONDANGWETAN":6,"KANIGARAN":1,"PASREPAN":4,"BANGKALAN":1,"PURWODADI":1,"WINONGAN":1,"TUTUR":1,"KADEMANGAN":1},"JAKARTA TIMUR":{"BOGOR SELATAN":1,"SAWANGAN":2,"DUREN SAWIT":9,"CILANDAK":3,"JAGAKARSA":7,"CILINCING":5,"PULOGADUNG":30,"CENGKARENG":4,"PESANGGRAHAN":5,"KEMBANGAN":2,"PENJARINGAN":2,"JATIASIH":2,"CIPAYUNG":4,"MATRAMAN":3,"MENTENG":2,"CIRACAS":4,"KRAMATJATI":13,"JATINEGARA":8,"CIBINONG":1,"PANCORAN":3,"KALIDERES":2,"KOJA":2,"TANJUNG PRIOK":7,"CAKUNG":9,"KEBAYORAN BARU":7,"KEBON JERUK":5,"CIPONDOH":1,"MUSTIKA JAYA":1,"MAKASAR":9,"JOHAR BARU":3,"MAMPANG PRAPATAN":2,"SENEN":2,"TAMBUN SELATAN":1,"PASAR REBO":3,"KELAPA GADING":3,"KEMAYORAN":7,"PADEMANGAN":2,"KEBAYORAN LAMA":3,"SERPONG":1,"GAMBIR":1,"PANCORAN MAS":1,"PASAR MINGGU":3,"BEKASI UTARA":1,"CINERE":1,"CEMPAKA PUTIH":1,"JATISAMPURNA":2,"SETIABUDI":1,"TAPOS":1,"CILEUNGSI":2,"TEBET":3,"SAWAH BESAR":1,"PAL MERAH":3,"TANAH ABANG":1},"SIDOARJO":{"SEDATI":22,"RUNGKUT":3,"SIDOARJO":79,"KRIAN":40,"BALONGBENDO":12,"TANGGULANGIN":13,"SUKODONO":38,"PANDAAN":2,"GEDANGAN":35,"TULANGAN":13,"TAMAN":36,"BUDURAN":29,"CANDI":48,"GEMPOL":9,"KREMBANGAN":1,"TANDES":1,"WONOAYU":8,"GUNUNG ANYAR":4,"PRAMBON":12,"WARU":70,"SEMAMPIR":1,"AROSBAYA":1,"DRIYOREJO":6,"WONOCOLO":3,"KREMBUNG":5,"PORONG":5,"SUKOMANUNGGAL":2,"SUKOREJO":2,"TARIK":6,"PABEAN CANTIAN":1,"GUBENG":1,"NGORO":1,"KENJERAN":1,"PUNGGING":1,"WONOKROMO":2,"TEGALSARI":1,"GENTENG":1,"PRIGEN":2,"SAMBIKEREP":1,"MENGANTI":1,"TAMBAKSARI":1,"BEJI":2,"MULYOREJO":1},"TULUNGAGUNG":{"CAMPURDARAT":1,"NGANTRU":2,"KEDUNGWARU":7,"BOYOLANGU":4,"TULUNGAGUNG":21,"DURENAN":1,"TRENGGALEK":1,"NGUNUT":5,"KAUMAN":2,"KARANG REJO":2,"KARANGAN":1,"SUTOJAYAN":1,"REJOTANGAN":3,"KALIDAWIR":2},"BANDUNG":{"BOJONGLOA KALER":2,"CILEUNYI":5,"CIBEUNYING KIDUL":5,"MANDALAJATI":8,"BANJARAN":5,"BOJONGSOANG":9,"TAMBUN UTARA":1,"BUAHBATU":15,"PARONGPONG":4,"BANDUNG WETAN":1,"SUMUR BANDUNG":1,"RANCASARI":7,"ANTAPANI":6,"SOLOKANJERUK":1,"CIMENYAN":8,"ARCAMANIK":9,"MARGAHAYU":1,"BALEENDAH":7,"RANCAEKEK":7,"CIBIRU":1,"GEDEBAGE":2,"CIMAHI UTARA":4,"COBLONG":3,"SOREANG":1,"CIMAHI SELATAN":2,"SUKASARI":1,"PANYILEUKAN":3,"PADALARANG":1,"BOJONGLOA KIDUL":4,"MARGAASIH":3,"UJUNG BERUNG":3,"CILENGKRANG":2,"BABAKAN CIPARAY":1,"CIPARAY":2,"KIARACONDONG":2,"ANDIR":2,"TAMBUN SELATAN":1,"CICALENGKA":1,"CINAMBO":1,"PAMEUNGPEUK":1,"PEBAYURAN":1,"JATINANGOR":1,"BANDUNG KIDUL":2,"SUKARATU":1,"NGAMPRAH":1,"JATIASIH":1,"LENGKONG":1,"CISARUA":1},"BEKASI":{"BABELAN":12,"JATISAMPURNA":15,"PONDOK MELATI":19,"DUREN SAWIT":4,"SETU":3,"PONDOK GEDE":97,"BEKASI SELATAN":14,"JATIASIH":56,"MEDAN SATRIA":10,"BEKASI UTARA":8,"MUSTIKA JAYA":14,"BENDA":1,"MAKASAR":8,"TAMBUN UTARA":6,"BEKASI BARAT":19,"SUKMAJAYA":1,"GUNUNG PUTRI":7,"TAMBUN SELATAN":23,"KRAMATJATI":1,"RAWA LUMBU":11,"CILEUNGSI":6,"CIBITUNG":12,"MAMPANG PRAPATAN":2,"BEKASI TIMUR":6,"CIKARANG BARAT":2,"MEGAMENDUNG":2,"TANAH ABANG":2,"TAPOS":1,"BANTAR GEBANG":7,"GAMBIR":1,"BUDURAN":1,"PANCORAN MAS":2,"KELAPA GADING":2,"KLAPANUNGGAL":2,"CIKARANG SELATAN":2,"CIKARANG TIMUR":2,"JONGGOL":1,"CIPAYUNG":4,"KEMAYORAN":1,"PULOGADUNG":2,"TARUMAJAYA":2,"SERANG BARU":2,"PASAR MINGGU":1,"CILODONG":1,"CIKARANG PUSAT":1,"CILINCING":2,"KEDUNG WARINGIN":1,"SETIABUDI":1,"CISAUK":1,"CENGKARENG":1,"TEBET":1,"JOHAR BARU":1,"PASAR REBO":1,"CILANDAK":1,"RENGASDENGKLOK":1,"CILEDUG":1,"MENTENG":1},"MALANG":{"BULULAWANG":15,"SUKUN":66,"LOWOKWARU":53,"KEDUNGKANDANG":65,"SUMBERMANJING WETAN":2,"BLIMBING":45,"PAKIS":25,"LAWANG":14,"KARANG PLOSO":19,"GONDANGLEGI":4,"KEPANJEN":19,"DAU":9,"TUREN":6,"PAKISAJI":25,"KLOJEN":19,"WAJAK":6,"TUMPANG":9,"SINGOSARI":34,"DAMPIT":3,"TIRTOYUDO":2,"TAJINAN":5,"JUNREJO":6,"JABUNG":5,"WAGIR":15,"WONOSARI":3,"BATU":15,"PUJON":4,"SUMBERPUCUNG":7,"BANTUR":1,"PONCOKUSUMO":8,"PAGELARAN":2,"KROMENGAN":3,"TUTUR":1,"BUMIAJI":1,"NGAJUM":3,"GARUM":1,"KALIPARE":1,"SELOREJO":1,"DONOMULYO":1,"NGANTANG":1},"BALIKPAPAN":{"BALIKPAPAN KOTA":48,"BALIKPAPAN BARAT":40,"BALIKPAPAN UTARA":115,"SEPAKU":7,"BALIKPAPAN SELATAN":113,"BALIKPAPAN TIMUR":39,"BALIKPAPAN TENGAH":58,"MUARA JAWA":1,"PENAJAM":4,"SAMBOJA":3},"MOJOKERTO":{"PURI":4,"GEDEG":4,"MOJOANYAR":7,"TRAWAS":1,"PACET":4,"MAGERSARI":6,"PRAJURIT KULON":4,"NGORO":5,"BANGSAL":6,"MOJOSARI":4,"JETIS":3,"SOOKO":2,"MOJOAGUNG":1,"TROWULAN":1,"KRANGGAN":1,"BALONGBENDO":1,"KESAMBEN":1,"SUKOLILO":1,"PUNGGING":3,"KEMBANGBAHU":1,"DAWAR BLANDONG":1},"TUBAN":{"SEMANDING":44,"PLUMPANG":14,"TUBAN":102,"BRONDONG":8,"PALANG":19,"JENU":10,"JATIROGO":1,"LAREN":1,"WIDANG":6,"GRABAGAN":4,"RENGEL":3,"MONTONG":4,"MERAKURAK":7,"TAMBAKBOYO":1,"KEREK":4,"REMBANG":2,"SARANG":1,"PARE":1,"PARENGAN":1},"BOGOR":{"GAMBIR":2,"BOGOR SELATAN":3,"BOGOR BARAT":11,"BOGOR TENGAH":5,"CIBINONG":18,"TANAH SAREAL":11,"BOGOR UTARA":47,"SUKARAJA":13,"CIOMAS":7,"LEUWILIANG":1,"BABAKAN MADANG":2,"DRAMAGA":2,"CIAMPEA":4,"KEMANG":3,"PARUNG PANJANG":2,"TENJOLAYA":1,"CIAWI":1,"GUNUNG PUTRI":5,"CITEUREUP":9,"CILEUNGSI":4,"CIPUTAT":1,"GUNUNG SINDUR":4,"BOJONG GEDE":10,"TAJURHALANG":7,"PAMIJAHAN":1,"MAKASAR":1,"TAMANSARI":1,"CIGOMBONG":1,"MEGAMENDUNG":1,"CARINGIN":3,"CIBUNGBULANG":1,"KLAPANUNGGAL":1,"RAWA LUMBU":1},"SOLO":{"CEPER":1,"KARANGANYAR":3,"TASIKMADU":3,"KARANGMALANG":1,"COLOMADU":6,"LAWEYAN":4,"KARTASURA":5,"KEBAK KRAMAT":3,"GONDANGREJO":6,"JATEN":5,"BANJARSARI":8,"JEBRES":9,"MOJOLABAN":3,"SAMBI":1,"SRAGEN":1,"WONOSARI":1,"SERENGAN":2,"GROGOL":5,"KLATEN UTARA":1,"BAKI":3,"NGEMPLAK":1,"MASARAN":1,"KEBONARUM":1,"PASAR KLIWON":1,"SUKOHARJO":1,"TANON":1,"GATAK":1},"BANJARMASIN":{"BANJARMASIN SELATAN":3,"BANJARBARU SELATAN":2,"KERTAK HANYAR":2,"LANDASAN ULIN":3,"LIANG ANGGANG":6,"BINUANG":2,"TAPIN UTARA":1,"BANJARMASIN UTARA":3,"BANJARMASIN TIMUR":3,"ALALAK":2,"BANJARMASIN BARAT":1,"SATUI":1,"GAMBUT":2,"BARAMBAI":1,"BANJARBARU UTARA":2,"SIMPANG EMPAT":1,"ANJIR PASAR":1},"YOGYAKARTA":{"PANGGANG":1,"KOTAGEDE":3,"MERGANGSAN":32,"PLAYEN":1,"BERBAH":6,"NGAGLIK":4,"GAMPING":4,"KALASAN":5,"PAKUALAMAN":2,"SEDAYU":1,"PANDAK":2,"DEPOK":11,"MANISRENGGO":2,"BAMBANGLIPURO":3,"SLEMAN":4,"BANGUNTAPAN":8,"BANTUL":3,"NGLUWAR":2,"MOYUDAN":2,"UMBULHARJO":10,"SEWON":6,"IMOGIRI":4,"MLATI":5,"MARPOYAN DAMAI":1,"KASIHAN":11,"GONDOMANAN":1,"KARANGMOJO":1,"JOGONALAN":1,"MERAUKE":1,"TEGALREJO":3,"NGAMPILAN":1,"PAJANGAN":1,"PRAMBANAN":1,"PIYUNGAN":2,"SENTOLO":1,"GALUR":1,"SEYEGAN":1,"GONDOKUSUMAN":2,"NGEMPLAK":2,"GODEAN":2,"CANDIMULYO":1,"MANTRIJERON":3,"NGLIPAR":1,"JETIS":2,"DANUREJAN":1},"MADIUN":{"KARTOHARJO":32,"MANGUHARJO":36,"MAGETAN":8,"TAKERAN":4,"TAMAN":52,"DOLOPO":8,"WUNGU":65,"SAWAHAN":7,"KEBON SARI":8,"KAWEDANAN":2,"PANEKAN":1,"BALEREJO":7,"GEGER":20,"PILANGKENCENG":5,"MAOSPATI":13,"GENENG":3,"NGAWI":4,"JIWAN":25,"LEMBEYAN":2,"BABADAN":1,"MADIUN":6,"MEJAYAN":6,"SUKOREJO":1,"SIMAN":1,"SLAHUNG":1,"SARADAN":4,"NGEBEL":1,"PARANG":1,"DAGANGAN":5,"BENDO":3,"SAWOO":3,"GEMARANG":1,"BARAT":1,"KENDAL":1,"PITU":1,"KARANGREJO":1,"KWADUNGAN":1,"SUKOMORO":1,"KARAS":1,"PLAOSAN":1,"BRINGIN":1,"NGUNTORONADI":1},"PURWOKERTO":{"KALIGONDANG":1,"SOKARAJA":4,"PURWOKERTO UTARA":6,"JERUKLEGI":1,"CILONGOK":1,"PURWOKERTO SELATAN":6,"PURWOKERTO TIMUR":5,"SUMBANG":2,"SAMPANG":1,"PURWOKERTO BARAT":6,"KERTANEGARA":1,"CILACAP TENGAH":2,"RAWALO":2,"KROYA":2,"KEBASEN":1,"PEKUNCEN":1,"BANYUMAS":1,"BATURRADEN":6,"KEMBARAN":8,"KARANGLEWAS":3,"PATIKRAJA":1,"TAMBAK":2,"MAJENANG":1,"KALIBAGOR":1,"SUMPIUH":1,"JATILAWANG":1,"SOMAGEDE":1,"KEBUMEN":1,"PAGUYANGAN":1},"PROBOLINGGO":{"MAYANGAN":14,"SUMBERASIH":3,"NGULING":2,"KANIGARAN":22,"PAJARAKAN":2,"KADEMANGAN":8,"KEDOPOK":7,"KRAKSAAN":9,"PAITON":2,"WONOASIH":3,"LECES":2,"TONGAS":1,"DRINGU":10,"LUMAJANG":1,"GENDING":3,"TIRIS":1,"MARON":1,"BANTARAN":1,"KREJENGAN":1,"BANYUANYAR":1},"DEPOK":{"BOJONG GEDE":7,"PANCORAN MAS":43,"CILODONG":19,"JATISAMPURNA":4,"CIPAYUNG":18,"TAPOS":10,"BEJI":15,"JAGAKARSA":6,"PASAR MINGGU":3,"CINERE":6,"CIMANGGIS":19,"SUKMAJAYA":37,"CIBINONG":6,"SAWANGAN":14,"PASAR REBO":7,"BOJONGSARI":5,"CAKUNG":1,"CIRACAS":3,"GUNUNG PUTRI":2,"KRAMATJATI":2,"LIMO":6,"PAL MERAH":1,"CILANDAK":1,"PARUNG":1,"CITEUREUP":1,"CIPONDOH":1,"PANCORAN":1,"KARANG TENGAH":1,"KEBAYORAN BARU":1},"JEMBER":{"SUMBERSARI":13,"BOGOR SELATAN":1,"KALIWATES":14,"BONDOWOSO":3,"BINAKAL":1,"KALISAT":2,"ARJASA":3,"SEMBORO":2,"TEMPUREJO":1,"MAESAN":1,"WULUHAN":1,"SUKOSARI":1,"JATIROTO":1,"AJUNG":1,"PATRANG":3,"BANGSALSARI":1,"SAWAHAN":1,"PAKUSARI":1,"BALUNG":1,"WRINGIN":1,"SUKORAMBI":1,"UMBULSARI":1,"SUKODONO":1,"AMBULU":1,"KLAKAH":1},"CIMAHI":{"CIMAHI UTARA":25,"CIMAHI TENGAH":11,"CIPATAT":1,"CIMAHI SELATAN":16,"BATUJAJAR":5,"BALEENDAH":1,"PARONGPONG":3,"ANDIR":1,"NGAMPRAH":7,"PADALARANG":9,"BANDUNG KULON":2,"BUAHBATU":1,"CICENDO":2,"CIHAMPELAS":3,"LEMBANG":1,"MARGAHAYU":1,"CIPONGKOR":1,"ASTANA ANYAR":1,"CISARUA":2,"CILILIN":1},"UNGARAN":{"BOJA":1,"UNGARAN TIMUR":26,"GAJAH MUNGKUR":2,"BANYUMANIK":8,"PRINGAPUS":2,"BERGAS":14,"BANDUNGAN":2,"GUNUNGPATI":6,"BANYUBIRU":2,"UNGARAN BARAT":14,"AMBARAWA":1,"BAWEN":2,"MIJEN":1,"TEMBALANG":1,"NGALIYAN":2,"PATI":1,"SEMARANG BARAT":1},"TASIKMALAYA":{"CIPEDES":17,"CIKONENG":11,"PANUMBANGAN":3,"SINDANGKASIH":5,"RAJAPOLAH":9,"SUKARATU":4,"CIHIDEUNG":9,"PURBARATU":4,"PADAKEMBANG":1,"INDIHIANG":8,"TAWANG":11,"SUKARESIK":2,"CIJEUNGJING":2,"CIAMIS":10,"KAWALU":6,"BUNGURSARI":10,"SALOPA":1,"TAMANSARI":6,"TARAJU":1,"CIHAURBEUTI":4,"CISAYONG":7,"CIGALONTANG":2,"PAGERAGEUNG":4,"SARIWANGI":2,"CIBEUREUM":10,"SUKARAJA":3,"PARUNGPONTENG":1,"CIPAKU":1,"SUKADANA":1,"MANONJAYA":1,"CIAWI":5,"MANGUNREJA":2,"SINGAPARNA":3,"JAMANIS":1,"BANJAR":1,"MANGKUBUMI":6,"SUKARAME":2,"KARANGNUNGGAL":1,"CINEAM":1,"MALANGBONG":3,"SUKAHENING":2,"DAYEUHLUHUR":1,"KAWALI":2,"PANJALU":1,"BANJARSARI":1,"RANCAH":1,"BAREGBEG":2,"CIKATOMAS":1,"MONTONG":1},"SAMARINDA":{"LOA JANAN ILIR":5,"SUNGAI KUNJANG":10,"SAMARINDA ULU":30,"TENGGARONG SEBERANG":1,"TENGGARONG":3,"LOA KULU":1,"SAMARINDA UTARA":7,"SAMARINDA KOTA":7,"SUNGAI PINANG":3,"SANGA SANGA":2,"LOA JANAN":2,"MUARA BADAK":1,"SAMARINDA ILIR":1,"SAMARINDA SEBERANG":3,"PALARAN":1,"SAMBUTAN":3},"KARAWANG":{"KARAWANG TIMUR":26,"TELUKJAMBE BARAT":5,"CIBUAYA":2,"TELUKJAMBE TIMUR":34,"TEGALWARU":2,"KLARI":14,"KOTA BARU":7,"TIRTAMULYA":1,"KARAWANG BARAT":21,"PANONGAN":1,"CIPUNAGARA":1,"PURWASARI":10,"CIKAMPEK":6,"MAJALAYA":20,"KEDUNG WARINGIN":3,"TEMPURAN":1,"CIMAHI SELATAN":1,"BUNGURSARI":2,"CILEUNGSI":1,"PATOKBEUSI":2,"CILAMAYA WETAN":3,"CILAMAYA KULON":2,"TELAGASARI":4,"CIKARANG BARAT":1,"KALIJATI":1,"RAWAMERTA":2,"CAKUNG":1,"PEBAYURAN":1,"BABAKANCIKAO":1,"BATUJAYA":1,"RENGASDENGKLOK":2,"BLANAKAN":1,"CAMPAKA":1,"CIAMPEL":1,"CILEBAR":1},"BOJONEGORO":{"BOJONEGORO":53,"TUNJUNGAN":1,"PARENGAN":6,"KEPOHBARU":2,"KAPAS":12,"NGASEM":4,"KEDUNGTUBAN":6,"PADANGAN":2,"BALEN":6,"MALO":1,"BAURENO":5,"DANDER":7,"KALITIDU":6,"KEDEWAN":1,"PURWOSARI":2,"TRUCUK":3,"KASIMAN":3,"CEPU":11,"TEMAYANG":2,"JEPON":1,"KANOR":4,"SEKAR":1,"NGRAHO":1,"KRADENAN":2,"SOKO":2,"SAMBONG":2,"REMBANG":1,"RENGEL":1,"JATIROGO":1,"RANDUBLATUNG":4,"SUMBERREJO":3,"BLORA":1,"SUKOSEWU":1,"BANGILAN":1,"SUGIHWARAS":1,"GUNEM":1},"JEPARA":{"JEPARA":13,"DONOREJO":1,"BANGSRI":2,"TAHUNAN":11,"PECANGAAN":8,"KEMBANG":6,"BATEALIT":8,"KEDUNG":1,"GEBOG":1,"MAYONG":4,"MLONGGO":2,"WELAHAN":1,"KALIWUNGU":1,"JATI":1,"MARGOYOSO":1,"KALINYAMATAN":1},"CIKARANG":{"CIKARANG BARAT":60,"KARANG BAHAGIA":15,"CIKARANG TIMUR":7,"CIBITUNG":62,"CIKARANG UTARA":29,"TAMBUN SELATAN":4,"SERANG BARU":14,"CIKARANG PUSAT":9,"CIKARANG SELATAN":15,"BANYUWANGI":1,"TAMBUN UTARA":2,"CIBARUSAH":2,"BEKASI TIMUR":2,"RAWA LUMBU":1,"SETU":4,"MUSTIKA JAYA":2,"SUKATANI":2,"BANTAR GEBANG":1,"KEDUNG WARINGIN":1,"SUKAKARYA":1},"CILEGON":{"KRAMATWATU":11,"CIBEBER":23,"TAKTAKAN":3,"CITANGKIL":10,"CILEGON":7,"JOMBANG":8,"WARINGINKURUNG":4,"PULOMERAK":2,"ANYAR":3,"GEROGOL":5,"MANCAK":1,"SERANG":3,"PURWAKARTA":4,"BALARAJA":1,"CIWANDAN":1,"CIBADAK":1,"KADUHEJO":1,"BOJONEGARA":3,"KIBIN":1},"MAGELANG":{"MAGELANG SELATAN":6,"MUNGKID":8,"PURWOREJO":1,"TEGALREJO":2,"NGABLAK":1,"BANDONGAN":2,"SECANG":6,"MAGELANG TENGAH":10,"MERTOYUDAN":12,"BOROBUDUR":1,"WINDUSARI":2,"NGADIREJO":1,"MAGELANG UTARA":3,"KAJORAN":1,"SALAMAN":2,"GAMPING":1,"DUKUN":3,"GRABAG":1,"TEMANGGUNG":1,"SRUMBUNG":1,"CANDIMULYO":1},"KEDIRI":{"PLOSOKLATEN":2,"KOTA":15,"MOJOROTO":32,"NGASEM":8,"NGADILUWIH":7,"NGANTRU":1,"SEMEN":3,"GAMPENGREJO":6,"PESANTREN":11,"SUKOMORO":1,"BANYAKAN":5,"GROGOL":8,"PRAMBON":1,"PARE":8,"WATES":4,"GONDANG":1,"PURWOASRI":3,"KERTOSONO":3,"NGORO":1,"TANJUNGANOM":3,"PAGU":4,"LOCERET":2,"KANDAT":4,"GURAH":4,"TAROKAN":3,"BADAS":1,"RINGINREJO":3,"NGANJUK":1,"KRAS":3,"NGRAHO":1,"JATIKALEN":1,"KEPUNG":1,"PUNCU":1,"PATIANROWO":1,"BERBEK":1},"CIREBON":{"SUMBER":4,"KESAMBI":6,"KARANGSEMBUNG":1,"PLUMBON":2,"PLERED":2,"ASTANAJAPURA":3,"KLANGENAN":2,"KARANGAMPEL":1,"HARJAMUKTI":10,"PASALEMAN":2,"KEDAWUNG":2,"INDRAMAYU":1,"SURANENGGALA":3,"TALUN":1,"KRAMAT":1,"WERU":3,"JAMBLANG":1,"GUNUNG JATI":3,"MUNDU":3,"MANDIRANCAN":1,"KEJAKSAN":2,"PANGURAGAN":1,"PALIMANAN":1,"PEKALIPAN":1,"PASAWAHAN":1,"KARANGWARENG":1,"GREGED":1,"BABAKAN":1},"SRAGEN":{"SRAGEN":8,"KERJO":2,"KARANGMALANG":8,"NGRAMBE":4,"TANON":1,"GEMOLONG":1,"NGAWI":3,"SUMBERLAWANG":1,"SIDOHARJO":4,"SAMBUNGMACAN":2,"JENAR":1,"SUKODONO":2,"MANTINGAN":1,"SAMBIREJO":1,"PITU":1,"WIDODAREN":1,"JOGOROGO":1,"KEDAWUNG":1},"SUKABUMI":{"CIKOLE":3,"KENJERAN":1,"NAGRAK":1,"CIBADAK":5,"GUNUNG GURUH":3,"SUKARAJA":5,"WARUDOYONG":1,"GUNUNG PUYUH":4,"CICANTAYAN":2,"CISAAT":5,"CIKEMBAR":1,"SUKABUMI":1,"BAROS":1,"PELABUHAN RATU":1,"PARUNG KUDA":1,"KALAPANUNGGAL":1,"KADUDAMPIT":1,"CARINGIN":1,"BOJONG GENTENG":1,"LEMBURSITU":1,"CIBEUREUM":1,"GEGERBITUNG":1},"INDRAMAYU":{"INDRAMAYU":32,"SUKRA":1,"LOSARANG":5,"JATIBARANG":5,"PATROL":7,"TUKDANA":2,"KANDANGHAUR":3,"SLIYEG":3,"KEDOKAN BUNDER":3,"BANGODUA":1,"KROYA":1,"SINDANG":5,"HAURGEULIS":3,"BALONGAN":4,"KARANGAMPEL":6,"PASEKAN":2,"JUNTINYUAT":2,"WIDASARI":1,"ARAHAN":1,"LOHBENER":2,"KERTASMAYA":1},"TANGERANG PUSAT":{"PARUNG PANJANG":2,"KEMBANGAN":2,"CIPONDOH":5,"LARANGAN":7,"KELAPA DUA":2,"PASAR KEMIS":3,"KARAWACI":3,"PANONGAN":1,"CENGKARENG":1,"BATUCEPER":3,"PONDOK AREN":4,"KARANG TENGAH":6,"CIKARANG BARAT":1,"SEPATAN":3,"PERIUK":3,"CILEDUG":8,"SEPATAN TIMUR":2,"PINANG":22,"NEGLASARI":2,"KALIDERES":1,"SOLEAR":1,"SERPONG UTARA":3,"CIGUDEG":1,"SUKAMULYA":1,"SINDANG JAYA":1,"CILANDAK":3,"CIBODAS":2,"TANGERANG":2,"CURUG":2,"KEBON JERUK":1,"BOJONGSARI":1,"PAGEDANGAN":1,"RAJEG":2,"CINERE":1,"CISAUK":2,"CIPUTAT":1,"BOJONG GEDE":1,"PAMULANG":1,"GUNUNG SINDUR":1,"JATIUWUNG":1},"SUBANG":{"SUBANG":27,"SAGALAHERANG":3,"KALIJATI":9,"HAURGEULIS":1,"CIPEUNDEUY":2,"PAGADEN BARAT":5,"CIBOGO":9,"CIKAUM":2,"BINONG":4,"PUSAKANAGARA":3,"JALANCAGAK":2,"CIPUNAGARA":2,"CIJAMBE":4,"PABUARAN":1,"PUSAKAJAYA":4,"CILAMAYA WETAN":1,"DAWUAN":3,"TAMBAKDAHAN":1,"PAGADEN":5,"BLANAKAN":1,"PURWADADI":1,"COMPRENG":1,"LEGONKULON":1},"GARUT":{"GARUT KOTA":8,"TAROGONG KIDUL":14,"CIBATU":1,"TAROGONG KALER":5,"SAMARANG":2,"KARANGPAWITAN":12,"BL. LIMBANGAN":2,"BAYONGBONG":4,"CILAWU":5,"SUKAWENING":1,"KADUNGORA":3,"BANYURESMI":3,"PANGATIKAN":1,"LEUWIGOONG":2,"CISURUPAN":1,"CIGEDUG":2,"KERSAMANAH":1,"CIBIUK":1,"LELES":1},"SALATIGA":{"BRINGIN":4,"PABELAN":4,"SIDOMUKTI":9,"TINGKIR":7,"AMBARAWA":6,"SIDOREJO":11,"SUSUKAN":1,"KARANGGEDE":2,"ARGOMULYO":5,"UNGARAN BARAT":1,"TENGARAN":8,"TUNTANG":4,"BAWEN":5,"BANYUBIRU":1,"AMPEL":1,"PRINGAPUS":1,"JAMBU":1,"BERGAS":1,"GETASAN":1,"SURUH":1},"PURWAKARTA":{"PURWAKARTA":22,"BUNGURSARI":5,"CAMPAKA":4,"JATISARI":1,"JATILUHUR":6,"PLERED":2,"BABAKANCIKAO":8,"PASAWAHAN":4,"PABUARAN":1,"CIKAMPEK":2,"PONDOKSALAM":1,"KOTA BARU":4,"PATOKBEUSI":1,"KIARAPEDES":1,"SERANGPANJANG":1,"CIPEUNDEUY":1},"BANYUWANGI":{"BANYUWANGI":42,"TEGALDLIMO":2,"GLAGAH":6,"ROGOJAMPI":6,"KALIPURO":18,"MUNCAR":3,"KABAT":9,"TEGALSARI":1,"PURWOHARJO":1,"LICIN":2,"GIRI":8,"GENTENG":1,"WONGSOREJO":3,"GLENMORE":1,"SILIRAGUNG":1,"GAMBIRAN":1,"SINGOJURUH":2,"BLIMBINGSARI":3,"SRONO":1,"SEMPU":1,"SONGGON":2,"RAJEG":1},"LAMONGAN":{"DEKET":6,"TURI":4,"SEKARAN":7,"KEDUNGPRING":3,"LAMONGAN":28,"KARANGBINANGUN":3,"GLAGAH":3,"SUKODADI":5,"TIKUNG":6,"PUCUK":5,"PACIRAN":1,"KALITENGAH":1,"PANCENG":1,"SARIREJO":2,"LAREN":4,"KARANGGENENG":3,"BABAT":6,"SUGIO":2,"DUDUKSAMPEYAN":1,"SAMBENG":1,"MANYAR":2,"MANTUP":1,"NGIMBANG":1,"BRONDONG":2,"KEMBANGBAHU":2},"SUMEDANG":{"CISITU":1,"DARMARAJA":4,"SUMEDANG UTARA":10,"SUMEDANG SELATAN":6,"TANJUNGKERTA":2,"CIMALAKA":7,"JATINANGOR":2,"PASEH":6,"PAMULIHAN":1,"RANCAKALONG":2,"CISARUA":4,"BUAHDUA":1,"RANCAEKEK":1,"TANJUNGSARI":2,"SUKASARI":1,"CIBUGEL":1,"SITURAJA":1},"KENDAL":{"KENDAL":14,"PEDURUNGAN":1,"BRANGSONG":4,"KALIWUNGU":3,"MIJEN":3,"PATEBON":8,"PEGANDON":4,"KALIWUNGU SELATAN":6,"KANGKUNG":4,"CEPIRING":6,"ROWOSARI":1,"WELERI":1,"GEMUH":2,"NGAMPEL":2,"NGALIYAN":1},"SERANG":{"TAKTAKAN":3,"CIPOCOK JAYA":6,"SERANG":12,"CIRUAS":3,"PONTANG":1,"PETIR":1,"KRAGILAN":1,"WALANTAKA":2,"BINUANG":1,"CIBEBER":1,"CINERE":1,"MAJA":1,"KRAMATWATU":1,"CIKANDE":1,"TUNJUNG TEJA":1,"CURUG":1},"JOMBANG":{"NGORO":3,"MOJOWARNO":3,"JOMBANG":24,"DIWEK":6,"BANDAR K. MULYO":2,"PLOSO":4,"BARENG":2,"PETERONGAN":6,"MOJOAGUNG":2,"TEMBELANG":4,"PERAK":1,"JOGOROTO":3,"BADAS":1,"KABUH":1,"GUDO":2,"SUMOBITO":1,"JAMBANGAN":1,"PRAMBON":1},"CIANJUR":{"CIBEBER":4,"KARANGTENGAH":11,"CILAKU":3,"BOJONGPICUNG":2,"GEKBRONG":1,"CIANJUR":12,"SAGALAHERANG":1,"PACET":4,"CAMPAKA":1,"HAURWANGI":1,"CUGENANG":2,"WARUNGKONDANG":1,"SUKALUYU":1},"BLITAR":{"WLINGI":5,"SANAN WETAN":9,"SRENGAT":2,"GARUM":2,"KEPANJEN KIDUL":8,"GANDUSARI":1,"SUKOREJO":3,"KANIGORO":4,"NGLEGOK":5,"SUTOJAYAN":2,"REJOTANGAN":1,"TALUN":1},"KUDUS":{"TAYU":1,"KUDUS":6,"JATI":10,"KARANGANYAR":2,"PATI":2,"KALIWUNGU":4,"JEKULO":5,"MAYONG":3,"JEPARA":1,"TLOGOWUNGU":1,"JUWANA":1,"WEDUNG":1,"CLUWAK":1,"DAWE":2,"WELAHAN":2,"UNDAAN":4,"TRANGKIL":1,"BATANGAN":1,"DEMAK":1,"GEBOG":2,"PENAWANGAN":1,"TAMBAKROMO":2,"GUNUNGWUNGKAL":1,"MEJOBO":1,"BAE":3},"BANDUNG SELATAN":{"MARGAHAYU":3,"BUAHBATU":1,"PADALARANG":1,"ANTAPANI":1}};
+
+const FC_DATES=['2026-08','2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08','2027-09','2027-10','2027-11','2027-12'];
+const FC_M={hw:{name:'Holt-Winters',rmse:372,color:'#185FA5',fc:[2060,1384,2110,1681,1624,1770,1596,1238,1428,1202,1588,2238,2002,1326,2053,1624,1567],lo:[1330,654,1380,952,894,1040,866,508,698,472,858,1508,1273,597,1323,894,837],hi:[2790,2114,2840,2411,2354,2500,2326,1968,2158,1932,2318,2968,2732,2056,2783,2354,2296]},sarima:{name:'SARIMA',rmse:507,color:'#E24B4A',fc:[1878,1348,2063,1535,1753,1635,1653,1327,1482,1539,1755,2147,1976,1413,2112,1645,1712],lo:[1022,469,1159,607,802,662,659,311,445,481,677,1049,716,116,778,276,309],hi:[2734,2227,2967,2463,2705,2609,2647,2343,2519,2597,2834,3246,3236,2709,3445,3014,3116]},prophet:{name:'Prophet',rmse:358,color:'#5DCAA5',fc:[2034,1034,1987,1552,1472,1623,1363,1015,1386,787,1223,2235,1995,627,1857,1418,1325],lo:[1552,577,1515,1093,1012,1199,886,567,930,327,753,1765,1533,170,1369,947,842],hi:[2506,1474,2414,2014,1927,2062,1829,1486,1871,1236,1691,2689,2465,1082,2296,1871,1771]}};
+const FC_ENS=FC_DATES.map((_,i)=>Math.round((FC_M.hw.fc[i]+FC_M.sarima.fc[i]+FC_M.prophet.fc[i])/3));
+const FC_LO=FC_DATES.map((_,i)=>Math.min(FC_M.hw.lo[i],FC_M.sarima.lo[i],FC_M.prophet.lo[i]));
+const FC_HI=FC_DATES.map((_,i)=>Math.max(FC_M.hw.hi[i],FC_M.sarima.hi[i],FC_M.prophet.hi[i]));
+const ACT_V=[1856,1603,1745,1312,2420,2070,2129,2188,2936,2326,2253,2855,1958,1895,2284,1668,2032,2670,2333,1961,2813,2680,2486,3147,2485,1915,2500,1395,2615,3456,4303,1997,3034,2258,1928,2105,2486,1719,1850,1381,2019,3387,2343,1550,2476,2071,1803,1913,1503,1588,1314,1632,1560,2596,2007,1738,1814,1851,1688,1559,1961,1302,1500,1815,1330,2188,1584,1160,1918,1219,1861,1381,1635,1331,1466,1925,1848,1970];
+const ACT_D=['2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12','2021-01','2021-02','2021-03','2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12','2022-01','2022-02','2022-03','2022-04','2022-05','2022-06','2022-07','2022-08','2022-09','2022-10','2022-11','2022-12','2023-01','2023-02','2023-03','2023-04','2023-05','2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'];
+const MNS=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const YRS=[2020,2021,2022,2023,2024,2025];
+const YC=['#C8DFFA','#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7'];
+const YR_TOT=[25693,27927,29991,24998,20850,19219];
+
+// ============================================================
+// LIVE DATA STATE
+// ============================================================
+var LIVE={loaded:false,summary:null,weekly:null,pipeline:null,repeat:null,sumber:null};
+var WKC={}; // weekly per cabang dari live
+var WEEKS=[]; // week labels
+
+// ============================================================
+// HELPERS
+// ============================================================
+function gm(){return parseInt(document.getElementById('selBulan').value);}
+function gmn(){return ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][gm()-1];}
+function pt(a,b){if(!a)return b>0?999:0;return Math.round((b-a)/a*100);}
+function ps(a,b){var p=pt(a,b);if(p===999)return'—';return(p>0?'+':'')+p+'%';}
+function pc(a,b){var p=pt(a,b);return p>5?'up':p<-5?'dn':'neu';}
+function hb(v){if(!v||v===0)return'background:#E24B4A;color:#fff;font-weight:700';if(v<=2)return'background:#F09595;color:#7a1a1a;font-weight:600';if(v<=5)return'background:#FAEEDA;color:#854F0B';if(v<=15)return'background:#C0DD97;color:#27500A';if(v<=30)return'background:#378ADD;color:#fff';return'background:#0C447C;color:#fff';}
+function ch(id){var c=document.getElementById(id);if(c&&c._c)c._c.destroy();return c;}
+function spk6(vals){var mx=Math.max.apply(null,vals.concat([1]));return '<div class="spk">'+vals.map(function(x,i){var h=Math.max(2,Math.round(x/mx*24));var cl=i===vals.length-1?'pk':x<=2?'lo':'';return'<div class="sb '+cl+'" style="height:'+h+'px"></div>';}).join('')+'</div>';}
+function setStatus(s,lbl){var el=document.getElementById('liveStatus');if(!el)return;var bg={ok:'#3B6D11',err:'#A32D2D',loading:'#EF9F27',demo:'#6B5E45'};el.style.background=bg[s]||bg.demo;el.textContent=lbl;}
+
+// ============================================================
+// FETCH LIVE
+// ============================================================
+async function fetchLive(){
+  setStatus('loading','⏳ Memuat...');
+  try {
+    var [sum,wk,pip,src,paket,srcCab,kec,daily,kambing] = await Promise.all([
+      fetchAPI('summary'), fetchAPI('weekly'), fetchAPI('pipeline'), fetchAPI('sumber'),
+      fetchAPI('paket'), fetchAPI('sumber_cabang'), fetchAPI('kecamatan'),
+      fetchDaily(200), fetchAPI('kambing')
+    ]);
+    LIVE={loaded:true,summary:sum,weekly:wk,pipeline:pip,sumber:src,paket:paket,sumber_cabang:srcCab,kecamatan:kec,daily:daily,kambing:kambing};
+    if(wk && wk.by_cabang){
+      WKC=wk.by_cabang;
+      WEEKS=wk.weeks||[];
+    }
+    updateHM2026(wk);
+    setStatus('ok','● Live');
+    document.getElementById('lastUpdate').textContent='Update: '+new Date().toLocaleTimeString('id-ID');
+    var act=document.querySelector('.nb.on');if(act)act.click();
+  } catch(e){
+    setStatus('err','✕ '+e.message);
+  }
+}
+
+function updateHM2026(wk){
+  // H1 2026 (Jan-Jun) sudah statis dari spreadsheet lama - TIDAK DIOVERRIDE
+  // Hanya update H2 (Jul-Des, index 6-11) dari live data spreadsheet baru
+  if(LIVE.daily && LIVE.daily.daily){
+    var monthly=[0,0,0,0,0,0,0,0,0,0,0,0];
+    LIVE.daily.daily.forEach(function(d){
+      var ym=d.date.substr(0,7);
+      if(ym.startsWith('2026')){
+        var mIdx=parseInt(d.date.substr(5,2))-1;
+        monthly[mIdx]+=d.count;
+      }
+    });
+    // Override HANYA bulan Jul-Des (index 6-11)
+    for(var i=6;i<12;i++){
+      if(monthly[i]>0) HM[2026][i]=monthly[i];
+    }
+  }
+  // Fallback: summary untuk bulan berjalan (hanya kalau H2)
+  if(LIVE.summary){
+    var m=new Date().getMonth(); // 0-based
+    if(m>=6) HM[2026][m]=LIVE.summary.this_month;
+  }
+}
+
+async function fetchAPI(type){
+  var url=API+'?type='+type;
+  var res=await fetch(url);
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  var json=await res.json();
+  if(!json.ok)throw new Error(json.error||'API error');
+  return json.data;
+}
+
+async function fetchDaily(days){
+  var url=API+'?type=daily&days='+days;
+  var res=await fetch(url);
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  var json=await res.json();
+  if(!json.ok)throw new Error(json.error||'API error');
+  return json.data;
+}
+
+setInterval(fetchLive,6*60*60*1000); // refresh tiap 6 jam (data spreadsheet update harian jam 00:00)
+
+// ============================================================
+// NAV
+// ============================================================
+function onFil(){var id=document.querySelector('.sec.on').id.replace('s-','');if(id==='utama')bUtama();else if(id==='sumber')bSumber();}
+
+function SS(id,btn){
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('s-'+id).classList.add('on');
+  btn.classList.add('on');
+  var f={utama:bUtama,pipeline:bPipeline,historis:bHistoris,sumber:bSumber,ranking:function(){bRank('all');},kritis:bKritis,recovery:bRec,risk:bRisk,analisa:function(){bAnalisa('pct');},kecamatan:bKecamatan,forecast:function(){bFc('ensemble');}};
+  if(f[id])f[id]();
+}
+
+// ============================================================
+// UTAMA
+// ============================================================
+function bUtama(){
+  var m=gm(),mn=gmn(),cur=HM[2026][m-1],p25=HM[2025][m-1],pm=m>1?HM[2026][m-2]:null;
+  var ytd26=HM[2026].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var ytd25=HM[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var c25=pt(p25,cur),cMoM=pm?pt(pm,cur):null;
+  var liveSumm=LIVE.summary;
+  var liveExtra='';
+  if(liveSumm&&liveSumm.this_month!==undefined){
+    var dom = liveSumm.day_of_month;
+    var lmsd = liveSumm.last_month_same_day || 0;
+    var diff = liveSumm.this_month - lmsd;
+    var pctChg = lmsd>0 ? Math.round(diff/lmsd*100) : 0;
+    var nowDate = new Date();
+    var monthBerjalan = nowDate.toLocaleString('id-ID',{month:'long'});
+    var monthLalu = new Date(nowDate.getFullYear(), nowDate.getMonth()-1, 1).toLocaleString('id-ID',{month:'long'});
+    liveExtra='<div class="mc live-card"><div class="ml" style="color:#3B6D11">🟢 '+monthBerjalan+' ini (per kemarin)</div><div class="mv">'+liveSumm.this_month.toLocaleString('id')+'</div><div class="ms neu">s.d. tgl '+dom+'</div></div>'
+    +'<div class="mc"><div class="ml">'+monthLalu+' 1–'+dom+' (pembanding)</div><div class="mv">'+lmsd.toLocaleString('id')+'</div><div class="ms '+(pctChg>=0?'up':'dn')+'">'+(pctChg>=0?'▲':'▼')+' '+Math.abs(pctChg)+'% ('+(diff>=0?'+':'')+diff+')</div></div>';
+  }
+  var isBulanBerjalan = m === (new Date().getMonth()+1);
+  var cust2026Card;
+  if (isBulanBerjalan && p25 > 0) {
+    // Progress vs full bulan tahun lalu
+    var progress = Math.round(cur / p25 * 100);
+    cust2026Card = '<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms neu">📈 '+progress+'% progress vs '+mn+' \'25</div></div>';
+  } else {
+    // Bulan sudah lewat: comparison biasa
+    cust2026Card = '<div class="mc"><div class="ml">Customer '+mn+' 2026</div><div class="mv">'+cur.toLocaleString('id')+'</div><div class="ms '+(c25>0?'up':'dn')+'">'+(c25>0?'▲':'▼')+' '+Math.abs(c25)+'% vs '+mn+' \'25</div></div>';
+  }
+  // ── EKOR BULAN INI ──────────────────────────────────────────
+  // Update EKOR_2026 dari live kambing
+  var curMNow = new Date().getMonth()+1;
+  if (LIVE.kambing && LIVE.kambing.monthly_all) {
+    for (var mLive=7; mLive<=12; mLive++) {
+      var kambData = LIVE.kambing.monthly_all[mLive];
+      if (kambData) {
+        EKOR_2026[mLive-1] = Object.values(kambData).reduce(function(a,b){return a+b;},0);
+      }
+    }
+  }
+
+  // Ekor bulan terpilih
+  var ekor26 = EKOR_2026[m-1] || 0;
+  var ekor25 = EKOR_HIST[2025] ? EKOR_HIST[2025][m-1] || 0 : 0;
+  var ekorPrev = EKOR_2026[m-2] || 0; // bulan sebelumnya 2026
+  var ekorChg25 = ekor25>0 ? pt(ekor25,ekor26) : null;
+  var ekorCard;
+  if (isBulanBerjalan) {
+    // Untuk bulan berjalan, hitung ekor dari live kambing this_month
+    var ekorLive = 0;
+    if (LIVE.kambing && LIVE.kambing.this_month) {
+      ekorLive = Object.values(LIVE.kambing.this_month).reduce(function(a,b){return a+b;},0);
+    }
+    var ekorProgress = ekor25>0 ? Math.round(ekorLive/ekor25*100) : null;
+    ekorCard = '<div class="mc" style="border:1.5px solid #BA7517">'
+      +'<div class="ml" style="color:#BA7517">🐑 Ekor '+mn+' (per kemarin)</div>'
+      +'<div class="mv">'+ekorLive.toLocaleString('id')+'</div>'
+      +'<div class="ms neu">'+(ekorProgress?'📈 '+ekorProgress+'% progress vs '+mn+' \'25':'s.d. tgl '+dom)+'</div>'
+      +'</div>';
+  } else {
+    ekorCard = '<div class="mc" style="border:1.5px solid #BA7517">'
+      +'<div class="ml" style="color:#BA7517">🐑 Ekor '+mn+' 2026</div>'
+      +'<div class="mv">'+ekor26.toLocaleString('id')+'</div>'
+      +'<div class="ms '+(ekorChg25!==null?(ekorChg25>0?'up':'dn'):'neu')+'">'
+      +(ekorChg25!==null?(ekorChg25>0?'▲':'▼')+' '+Math.abs(ekorChg25)+'% vs '+mn+' \'25':'—')
+      +'</div></div>';
+  }
+
+  // Ekor 2025 pembanding
+  var ekor25Card = '<div class="mc">'
+    +'<div class="ml">🐑 Ekor '+mn+' 2025</div>'
+    +'<div class="mv">'+ekor25.toLocaleString('id')+'</div>'
+    +'<div class="ms neu">pembanding</div></div>';
+
+  document.getElementById('mMet').innerHTML=liveExtra
+    +cust2026Card
+    +'<div class="mc"><div class="ml">Customer '+mn+' 2025</div><div class="mv">'+p25.toLocaleString('id')+'</div><div class="ms neu">pembanding</div></div>'
+    +ekorCard
+    +ekor25Card
+    +'<div class="mc"><div class="ml">YTD 2025</div><div class="mv">'+ytd25.toLocaleString('id')+'</div><div class="ms neu">s.d. '+mn+'</div></div>'
+    +(isBulanBerjalan
+      ? '<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms neu">📈 '+Math.round(ytd26/ytd25*100)+'% vs YTD \'25</div></div>'
+      : '<div class="mc"><div class="ml">YTD 2026</div><div class="mv">'+ytd26.toLocaleString('id')+'</div><div class="ms '+(ytd26>ytd25?'up':'dn')+'">'+(ytd26>ytd25?'▲':'▼')+' '+Math.abs(pt(ytd25,ytd26))+'%</div></div>')
+    +(pm!==null?'<div class="mc"><div class="ml">'+MNS[m-2]+' (full)</div><div class="mv">'+pm.toLocaleString('id')+'</div><div class="ms neu">bulan penuh</div></div>':'');
+
+  var c;
+  c=ch('cB26');if(c)c._c=new Chart(c,{type:'bar',data:{labels:MNS,datasets:[{data:HM[2026].map(function(v){return v||null;}),backgroundColor:MNS.map(function(_,i){return i===m-1?'#BA7517':i<6?'#D4A04A':'#EDE3D4';})}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+
+  // Customer Mingguan - Bulan Berjalan (dari daily data)
+  var wkLbl = gmn()+' 2026';
+  document.getElementById('wkLbl').textContent = wkLbl;
+  var wkLabels=[], wkVals=[];
+  if (LIVE.daily && LIVE.daily.daily) {
+    // Group daily → ISO week within selected month
+    var byWeek = {};
+    LIVE.daily.daily.forEach(function(d){
+      if (!d.date.startsWith('2026')) return;
+      var dm = parseInt(d.date.substr(5,2));
+      if (dm !== m) return;
+      var dt = new Date(d.date + 'T00:00:00');
+      // ISO week
+      var tmp = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+      var dayNum = tmp.getUTCDay() || 7;
+      tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+      var yearStart = new Date(Date.UTC(tmp.getUTCFullYear(),0,1));
+      var wk = Math.ceil((((tmp - yearStart) / 86400000) + 1)/7);
+      var wkKey = 'W'+(wk<10?'0'+wk:wk);
+      byWeek[wkKey] = (byWeek[wkKey]||0)+d.count;
+    });
+    var sortedWks = Object.keys(byWeek).sort();
+    wkLabels = sortedWks;
+    wkVals = sortedWks.map(function(w){return byWeek[w];});
+  }
+  // Fallback: kalau tidak ada live data (bulan lampau), pakai WEEKS + WKC total (kalau ada)
+  if (wkLabels.length === 0 && WEEKS && WEEKS.length > 0 && WKC) {
+    // Approximate: filter minggu yang isinya di bulan ini
+    WEEKS.forEach(function(wk){
+      var wkNum = parseInt(wk.substr(1));
+      // Rough check: bulan 1 = wk 1-4/5, bulan 2 = 5-8/9, dst
+      // Skip for now — hanya render dari daily
+    });
+  }
+  c=ch('cWkBul');if(c)c._c=new Chart(c,{type:'bar',data:{labels:wkLabels,datasets:[{data:wkVals,backgroundColor:'#BA7517',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toLocaleString('id')+' customer';}}}},scales:{x:{ticks:{font:{size:11}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+
+  // ── CHART 1: Ekor vs Pesanan Bulanan 2026 (dual axis) ────────
+  var ekor26Vals = EKOR_2026.slice(0,12).map(function(v){return v||null;});
+  var pes26Vals  = HM[2026].slice(0,12).map(function(v){return v||null;});
+  c=ch('cEkorBul');if(c)c._c=new Chart(c,{
+    type:'bar',
+    data:{
+      labels:MNS,
+      datasets:[
+        {label:'Pesanan',data:pes26Vals,backgroundColor:MNS.map(function(_,i){return i<6?'#D4A04A':'#EDE3D4';}),borderRadius:3,yAxisID:'y',order:2},
+        {label:'Ekor',data:ekor26Vals,type:'line',borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2.5,pointRadius:3,pointBackgroundColor:'#5DCAA5',tension:0.3,yAxisID:'y1',order:1}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('id')+(ctx.dataset.label==='Ekor'?' ekor':' pesanan');}}}},
+      scales:{
+        x:{ticks:{font:{size:10}},grid:{display:false}},
+        y:{beginAtZero:true,position:'left',ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Pesanan',font:{size:9}}},
+        y1:{beginAtZero:true,position:'right',ticks:{font:{size:10}},grid:{display:false},title:{display:true,text:'Ekor',font:{size:9}}}
+      }
+    }
+  });
+
+  // ── CHART 2: Tren Ekor & Pesanan 6 Tahun (2020-2025) ─────────
+  var trendYrs=['2020','2021','2022','2023','2024','2025','2026*'];
+  var trenPes=[25693,27927,29991,24998,20850,19219,10175]; // total per tahun
+  var trenEkor=[34003,36867,38953,30428,25861,21387,11101]; // total ekor per tahun
+  var trenRatio=trenPes.map(function(p,i){return p>0?+(trenEkor[i]/p).toFixed(2):0;});
+  c=ch('cEkorTren');if(c)c._c=new Chart(c,{
+    type:'bar',
+    data:{
+      labels:trendYrs,
+      datasets:[
+        {label:'Pesanan',data:trenPes,backgroundColor:'rgba(186,117,23,0.7)',borderRadius:3,yAxisID:'y',order:3},
+        {label:'Ekor',data:trenEkor,type:'line',borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#5DCAA5',tension:0.3,yAxisID:'y',order:2},
+        {label:'Ratio',data:trenRatio,type:'line',borderColor:'#D4C9B0',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,borderDash:[4,3],tension:0.3,yAxisID:'y2',order:1}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:function(ctx){if(ctx.dataset.label==='Ratio')return 'Ratio: '+ctx.parsed.y+' ekor/pesanan';return ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('id');}}}},
+      scales:{
+        x:{ticks:{font:{size:10}},grid:{display:false}},
+        y:{beginAtZero:true,position:'left',ticks:{font:{size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'k':v;}},grid:{color:'rgba(0,0,0,0.04)'}},
+        y2:{position:'right',min:0.8,max:1.6,ticks:{font:{size:10},callback:function(v){return v+'x';}},grid:{display:false},title:{display:true,text:'Ratio',font:{size:9}}}
+      }
+    }
+  });
+  c=ch('c5y');if(c)c._c=new Chart(c,{type:'bar',data:{labels:['2021','2022','2023','2024','2025'],datasets:[{data:[27927,29991,24998,20850,19219],backgroundColor:['#9EC8F0','#5DCAA5','#EF9F27','#E24B4A','#534AB7']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:false,min:17000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  c=ch('c3y');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:[{label:'2024',data:HM[2024],borderColor:'#B5D4F4',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]},{label:'2025',data:HM[2025],borderColor:'#EF9F27',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},{label:'2026',data:HM[2026].map(function(v){return v||null;}),borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:2.5,pointRadius:3,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+
+  // Sumber Pesanan: bulan 1-6 dari SRC26 hardcoded, bulan 7-12 dari live sumber
+  var sd;
+  if (m <= 6) {
+    sd = SRC26[m] || {};
+  } else {
+    // Live: bulan berjalan pakai LIVE.sumber, bulan lainnya kosong (belum ada data)
+    sd = {};
+    if (LIVE.sumber && m === new Date().getMonth()+1) {
+      LIVE.sumber.forEach(function(s){ if(s.this_month>0) sd[s.sumber] = s.this_month; });
+    }
+  }
+  var sk=Object.keys(sd),sv=Object.values(sd),st=sv.reduce(function(a,b){return a+b;},0);
+  c=ch('cPS');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgPS').innerHTML=st>0?sk.map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+SC[i]+'"></span>'+k+' <strong>'+Math.round(sv[i]/st*100)+'%</strong></span>';}).join(''):'<span style="color:#9B8E78;font-size:10px">Data belum tersedia untuk bulan ini</span>';
+
+  // Tipe Kambing: 10 kategori (E/JE/B/JB/A/JA/S/JS/P/JP) — angka ekor
+  // Nama lengkap: E=Ekonomis, B=Puas, A=Super, S=Istimewa, P=Platinum, J prefix=Jantan
+  var kCodes = ['E','JE','B','JB','A','JA','S','JS','P','JP'];
+  var kLabels = ['Ekonomis','Ekonomis (J)','Puas','Puas (J)','Super','Super (J)','Istimewa','Istimewa (J)','Platinum','Platinum (J)'];
+  var kColors = ['#A8B896','#5E7047','#DDB86A','#8A6E2E','#4E7AB3','#1F3F6A','#B44E4E','#6E1F1F','#7B5EA8','#3F2A6A'];
+  var kd, kTot;
+  if (m <= 6) {
+    kd = KB26_NUM[m] || {};
+  } else {
+    kd = LIVE.kambing && LIVE.kambing.monthly_all && LIVE.kambing.monthly_all[m] ? LIVE.kambing.monthly_all[m] : {};
+  }
+  var kV = kCodes.map(function(k){return kd[k]||0;});
+  kTot = kV.reduce(function(a,b){return a+b;},0);
+  c=ch('cPK');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:kLabels,datasets:[{data:kV,backgroundColor:kColors,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.parsed.toLocaleString('id')+' ekor';}}}},cutout:'55%'}});
+  document.getElementById('lgPK').innerHTML=kTot>0?kCodes.map(function(k,i){var pct=Math.round(kV[i]/kTot*100);return kV[i]>0?'<span style="display:flex;align-items:center;gap:3px;font-size:10px"><span class="lsq" style="background:'+kColors[i]+'"></span><strong>'+k+'</strong> '+kLabels[i]+' <strong>'+kV[i].toLocaleString('id')+'</strong> ('+pct+'%)</span>':'';}).filter(function(x){return x;}).join(''):'<span style="color:#9B8E78;font-size:10px">Data belum tersedia untuk bulan ini</span>';
+
+  // Paket pesanan: Jan-Jun dari PAKET26 hardcoded, Jul-Des dari live
+  var paketData;
+  if (m <= 6) {
+    paketData = PAKET26[m] || {Nikmat:0,Luxury:0,Hemat:0,Praktis:0};
+  } else {
+    paketData = LIVE.paket && LIVE.paket.monthly_all && LIVE.paket.monthly_all[m] ? LIVE.paket.monthly_all[m] : {Nikmat:0,Luxury:0,Hemat:0,Praktis:0};
+  }
+  var pkK=['Nikmat','Luxury','Hemat','Praktis'];
+  var pkV=pkK.map(function(k){return paketData[k]||0;});
+  var pkTot=pkV.reduce(function(a,b){return a+b;},0);
+  var PK_C=['#BA7517','#534AB7','#3B6D11','#185FA5'];
+  c=ch('cPP');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:pkK,datasets:[{data:pkV,backgroundColor:PK_C,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgPP').innerHTML=pkK.map(function(k,i){var pct=pkTot>0?Math.round(pkV[i]/pkTot*100):0;return'<span style="display:flex;align-items:center;gap:3px"><span class="lsq" style="background:'+PK_C[i]+'"></span>'+k+' <strong>'+pkV[i].toLocaleString('id')+'</strong> ('+pct+'%)</span>';}).join('');
+
+  var ytd25_=HM[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var ytdEkor25=EKOR_HIST[2025].slice(0,m).reduce(function(a,b){return a+b;},0);
+  var ytdEkor26=EKOR_2026.slice(0,m).reduce(function(a,b){return a+b;},0);
+  document.getElementById('cmpBox').innerHTML='<table class="tbl"><thead><tr>'
+    +'<th>Bulan</th><th class="nr">Pesanan<br>2025</th><th class="nr">Pesanan<br>2026</th><th class="nr">%</th>'
+    +'<th class="nr" style="border-left:2px solid #E8E4DA;color:#BA7517">🐑Ekor<br>2025</th><th class="nr" style="color:#BA7517">🐑Ekor<br>2026</th><th class="nr">%</th>'
+    +'</tr></thead><tbody>'
+    +Array.from({length:m},function(_,i){
+      var p25=HM[2025][i],p26=HM[2026][i];
+      var e25=EKOR_HIST[2025][i]||0,e26=EKOR_2026[i]||0;
+      var isLast=i===m-1;
+      var st=isLast?' style="font-weight:800;background:#F9F7F2"':'';
+      return'<tr'+st+'><td>'+MNS[i]+'</td>'
+        +'<td class="nr">'+p25.toLocaleString('id')+'</td><td class="nr">'+p26.toLocaleString('id')+'</td><td class="nr '+pc(p25,p26)+'">'+ps(p25,p26)+'</td>'
+        +'<td class="nr" style="border-left:2px solid #E8E4DA">'+e25.toLocaleString('id')+'</td><td class="nr">'+e26.toLocaleString('id')+'</td><td class="nr '+pc(e25,e26)+'">'+ps(e25,e26)+'</td>'
+        +'</tr>';}).join('')
+    +'<tr style="font-weight:800;border-top:2px solid #E8E4DA;background:#F9F7F2"><td>YTD</td>'
+    +'<td class="nr">'+ytd25_.toLocaleString('id')+'</td><td class="nr">'+ytd26.toLocaleString('id')+'</td><td class="nr '+pc(ytd25_,ytd26)+'">'+ps(ytd25_,ytd26)+'</td>'
+    +'<td class="nr" style="border-left:2px solid #E8E4DA">'+ytdEkor25.toLocaleString('id')+'</td><td class="nr">'+ytdEkor26.toLocaleString('id')+'</td><td class="nr '+pc(ytdEkor25,ytdEkor26)+'">'+ps(ytdEkor25,ytdEkor26)+'</td>'
+    +'</tr></tbody></table>';
+
+  var allW=WK20.concat(WK21,WK22,WK23,WK24,WK25);
+  // Tambah WK26 dari live jika ada
+  if(LIVE.weekly&&LIVE.weekly.totals){
+    var wt=LIVE.weekly.totals;
+    Object.keys(wt).sort().forEach(function(wk){allW.push(wt[wk]||0);});
+  }
+  c=ch('c6y');if(c)c._c=new Chart(c,{type:'line',data:{labels:Array.from({length:allW.length},function(_,i){return i+1;}),datasets:[{data:allW,borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.08)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10},maxTicksLimit:10},grid:{display:false}}}}});
+}
+
+// ============================================================
+// PIPELINE
+// ============================================================
+function bPipeline(){
+  var pip=LIVE.pipeline;
+  var MN=['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  var MNlong=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  var now=new Date(),curM=now.getMonth()+1;
+
+  // Selalu gabungkan PIPELINE26 (statis H1 Feb-Jun) dengan live H2
+  // PIPELINE26: {2:351, 3:229, 4:553, 5:547, 6:448, 7:449}
+  var mergedTable = [];
+  var seen = {};
+
+  // 1) Dari PIPELINE26 (statis - dari spreadsheet lama, sudah closed book)
+  for (var m=2; m<=12; m++) {
+    if (PIPELINE26[m] !== undefined && m < curM) {
+      // Bulan yang sudah lewat: pakai statis kalau ada
+      mergedTable.push({
+        bulan_kirim: m,
+        bulan_kirim_nama: MNlong[m],
+        total_lintas_bulan: PIPELINE26[m]
+      });
+      seen[m] = true;
+    }
+  }
+
+  // 2) Dari live pipeline (H2 - untuk bulan berjalan dan setelahnya)
+  if (pip && pip.table) {
+    pip.table.forEach(function(r){
+      if (!seen[r.bulan_kirim]) {
+        mergedTable.push(r);
+        seen[r.bulan_kirim] = true;
+      }
+    });
+  }
+
+  // Sort by bulan
+  mergedTable.sort(function(a,b){return a.bulan_kirim-b.bulan_kirim;});
+
+  // Hitung avg pipeline dari bulan-bulan yang sudah lewat (< curM)
+  var histRows = mergedTable.filter(function(r){return r.bulan_kirim < curM;});
+  var avgPip = histRows.length > 0
+    ? Math.round(histRows.reduce(function(s,r){return s+r.total_lintas_bulan;},0) / histRows.length)
+    : 426;
+
+  // Next month pipeline dari live atau merged
+  var nextMonthRow = mergedTable.filter(function(r){return r.bulan_kirim === curM+1;})[0];
+  var nextPip = nextMonthRow ? nextMonthRow.total_lintas_bulan : (pip && pip.next_pipeline || 0);
+  var gap = Math.max(0, avgPip - nextPip);
+
+  // Pipeline terbaik
+  var maxRow = mergedTable.reduce(function(m,r){return (!m || r.total_lintas_bulan>m.total_lintas_bulan)?r:m;}, null);
+
+  // Metric cards
+  document.getElementById('pipMet').innerHTML=
+    '<div class="mc"><div class="ml">Rata-rata Pipeline/Bulan</div><div class="mv">'+avgPip.toLocaleString('id')+'</div><div class="ms neu">Feb–'+MN[curM-1]+' 2026</div></div>'
+    +'<div class="mc '+(nextPip>=avgPip?'live-card':'')+'"><div class="ml">Pipeline '+(MNlong[curM+1]||'')+' (sudah masuk)</div><div class="mv '+(nextPip>=avgPip?'up':'dn')+'">'+nextPip.toLocaleString('id')+'</div><div class="ms '+(nextPip>=avgPip?'up':'dn')+'">'+(nextPip>=avgPip?'✅ On track':'⚠ Gap '+gap.toLocaleString('id')+' customer')+'</div></div>'
+    +'<div class="mc"><div class="ml">Gap vs Rata-rata</div><div class="mv '+(gap<=0?'up':'dn')+'">'+(gap<=0?'0':'+'+gap.toLocaleString('id'))+'</div><div class="ms neu">'+(gap>0?'customer yang perlu di-push':'sudah melampaui rata-rata')+'</div></div>'
+    +'<div class="mc"><div class="ml">Pipeline Terbaik 2026</div><div class="mv" style="font-size:18px">'+(maxRow?MNlong[maxRow.bulan_kirim]:'-')+'</div><div class="ms neu">'+(maxRow?maxRow.total_lintas_bulan.toLocaleString('id')+' customer lintas bulan':'')+'</div></div>';
+
+  // Tabel pipeline
+  var rows = mergedTable;
+  var maxVal = maxRow ? maxRow.total_lintas_bulan : 553;
+  var tHtml=rows.map(function(r){
+    var isCur=r.bulan_kirim===curM;
+    var isNext=r.bulan_kirim===curM+1;
+    var note='';
+    if(r.total_lintas_bulan===maxVal) note=' <em style="font-size:11px;color:#854F0B">(tertinggi)</em>';
+    return '<tr class="'+(isCur?'cur-month':isNext?'next-month':'')+'"><td>'+r.bulan_kirim_nama+'</td><td>'+r.total_lintas_bulan.toLocaleString('id')+' Customer'+note+'</td></tr>';
+  }).join('');
+  document.getElementById('tPipeline').innerHTML=tHtml||'<tr><td colspan="2" style="text-align:center;color:#9B8E78;padding:16px">Tidak ada data</td></tr>';
+
+  // Chart
+  var labels=rows.map(function(r){return r.bulan_kirim_nama.substr(0,3);});
+  var vals=rows.map(function(r){return r.total_lintas_bulan;});
+  var colors=rows.map(function(r){return r.bulan_kirim===curM?'#BA7517':r.bulan_kirim===curM+1?'#185FA5':'#D4C9B0';});
+  var c=ch('cPip');if(c)c._c=new Chart(c,{type:'bar',data:{labels:labels,datasets:[{data:vals,backgroundColor:colors}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toLocaleString('id')+' customer';}}}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}}); 
+}
+
+// ============================================================
+// HISTORIS
+// ============================================================
+function bHistoris(){
+  var yt26=HM[2026].reduce(function(a,b){return a+b;},0);
+  var c;
+  c=ch('cHY');if(c)c._c=new Chart(c,{type:'bar',data:{labels:YRS.map(String).concat(['2026*']),datasets:[{data:YRS.map(function(y){return HM[y].reduce(function(a,b){return a+b;},0);}).concat([yt26]),backgroundColor:YC.concat(['#BA7517'])}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{beginAtZero:false,min:9000,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  c=ch('cHM');if(c)c._c=new Chart(c,{type:'line',data:{labels:MNS,datasets:YRS.map(function(y,i){return{label:String(y),data:HM[y],borderColor:YC[i],backgroundColor:'transparent',borderWidth:i>=3?2:1.5,pointRadius:0,tension:0.3,borderDash:i<3?[4,3]:[]};}).concat([{label:'2026',data:HM[2026].map(function(v){return v||null;}),borderColor:'#BA7517',backgroundColor:'transparent',borderWidth:2.5,pointRadius:2,tension:0.3}])},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  document.getElementById('lgdH').innerHTML=YRS.map(function(y,i){return'<span><span class="lsq" style="background:'+YC[i]+'"></span>'+y+'</span>';}).join('')+'<span><span class="lsq" style="background:#BA7517"></span><strong>2026 ★</strong></span>';
+
+  var rows=[2026].concat(YRS.slice().reverse());
+  document.getElementById('tHist').innerHTML=rows.map(function(y){
+    var d=HM[y],tot=d.reduce(function(a,b){return a+b;},0);
+    var py=y>2020?HM[y-1]:null,pt2=py?py.reduce(function(a,b){return a+b;},0):null;
+    var chg=pt2?pt(pt2,tot):null,cc=chg&&chg>0?'up':chg&&chg<0?'dn':'neu';
+    return '<tr class="'+(y===2026?'r-hi':'')+'"><td style="font-weight:800">'+y+(y===2026?' ★':'')+'</td>'+d.map(function(v,i){return'<td class="nr"'+(y===2026&&i>=6?' style="color:#D4C9B0"':'')+'>'+( v||'—')+'</td>';}).join('')+'<td class="nr" style="font-weight:800">'+tot.toLocaleString('id')+'</td><td class="nr '+cc+'">'+( chg!==null?(chg>0?'+':'')+chg+'%':'—')+'</td></tr>';
+  }).join('');
+}
+
+// ============================================================
+// SUMBER
+// ============================================================
+function bSumber(){
+  var m=gm(),mn=gmn();
+  document.getElementById('srcBulLbl').textContent=mn+' 2026';
+
+  // Populate cabang selector jika belum
+  var selCab = document.getElementById('selCabangSumber');
+  if (selCab && selCab.options.length <= 1) {
+    // Collect all cabang from SRC_CAB26 + live sumber_cabang
+    var allCabsSet = {};
+    for (var cab in SRC_CAB26) allCabsSet[cab] = 1;
+    if (LIVE.sumber_cabang) LIVE.sumber_cabang.forEach(function(d){allCabsSet[d.cabang]=1;});
+    Object.keys(allCabsSet).sort().forEach(function(cab){
+      var opt = document.createElement('option');
+      opt.value = cab;
+      opt.textContent = cabName(cab);
+      selCab.appendChild(opt);
+    });
+  }
+  var filterCabang = selCab ? selCab.value : '';
+
+  // Info label
+  document.getElementById('cabSumberInfo').textContent = filterCabang
+    ? '(Data ' + cabName(filterCabang) + ' 2026)'
+    : '(Data seluruh 53 cabang)';
+
+  // Data doughnut untuk bulan terpilih
+  var sd = {};
+  if (filterCabang) {
+    // Filter per cabang — pakai SRC_CAB26 (agregat H1 total per cabang) — belum bisa per-bulan
+    // Untuk mode filter cabang, tampilkan agregat semua bulan cabang tsb (H1+H2)
+    var srcH1 = SRC_CAB26[filterCabang] || {};
+    Object.keys(srcH1).forEach(function(s){sd[s] = (sd[s]||0)+srcH1[s];});
+    // Add H2 live
+    if (LIVE.sumber_cabang) {
+      var liveCab = LIVE.sumber_cabang.find(function(d){return d.cabang===filterCabang;});
+      if (liveCab) {
+        Object.keys(liveCab.sumber).forEach(function(s){sd[s] = (sd[s]||0)+liveCab.sumber[s];});
+      }
+    }
+    document.getElementById('srcBulLbl').textContent = 'Total 2026';
+  } else {
+    // Nasional — pakai filter bulan
+    var liveS=LIVE.sumber;
+    if(liveS&&m===new Date().getMonth()+1){
+      liveS.forEach(function(r){sd[r.sumber]=r.this_month;});
+    } else {
+      sd=SRC26[m]||{};
+    }
+  }
+  var sk=Object.keys(sd), sv=sk.map(function(k){return sd[k];}), st=sv.reduce(function(a,b){return a+b;},0);
+
+  var c;
+  c=ch('cSB');if(c)c._c=new Chart(c,{type:'doughnut',data:{labels:sk,datasets:[{data:sv,backgroundColor:SC,borderWidth:1,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'55%'}});
+  document.getElementById('lgSB').innerHTML=st>0?sk.map(function(k,i){return'<span style="display:flex;align-items:center;gap:3px;font-size:11px"><span class="lsq" style="background:'+SC[i]+'"></span>'+k+': <strong>'+sv[i].toLocaleString('id')+'</strong> ('+Math.round(sv[i]/st*100)+'%)</span>';}).join(''):'<span style="color:#9B8E78">Data belum tersedia</span>';
+
+  // Tren Sumber 2020-2026 - toggle angka/persentase
+  var isPct = window._trenMode === 'pct';
+  var srcK = Object.keys(SRC_YR);
+  var ytot = YR_TOT.concat([HM[2026].reduce(function(a,b){return a+b;},0)]);
+  var datasets = srcK.map(function(k,i){
+    var vals;
+    if (isPct) {
+      vals = SRC_YR[k].map(function(v, idx){var t=ytot[idx]||1;return +(v/t*100).toFixed(1);});
+    } else {
+      vals = SRC_YR[k];
+    }
+    return {label:k, data:vals, borderColor:SC[i], backgroundColor:'transparent', borderWidth:2, pointRadius:2, tension:0.3};
+  });
+  c=ch('cST');if(c)c._c=new Chart(c,{type:'line',data:{labels:YRS.map(String).concat(["'26*"]),datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+(isPct?'%':'');}}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10},callback:function(v){return v+(isPct?'%':'');}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  document.getElementById('lgST').innerHTML=srcK.map(function(k,i){return'<span><span class="lsq" style="background:'+SC[i]+'"></span>'+k+'</span>';}).join('');
+  document.getElementById('btnTrenMode').textContent = isPct ? 'Tampilkan angka' : 'Tampilkan %';
+
+  // Sumber per Bulan tabel - gabungan SRC26 (Jan-Jun statis) + live sumber (bulan berjalan)
+  var curMonth = new Date().getMonth()+1;
+  var monthsList = [1,2,3,4,5,6];
+  if (curMonth > 6) monthsList.push(curMonth);
+  var mnNames = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+  document.getElementById('ctS26').textContent = 'Sumber '+mnNames[monthsList[0]]+'–'+mnNames[monthsList[monthsList.length-1]]+' 2026 per Bulan (Nasional)';
+
+  // Build header
+  var thHtml = '<th>Sumber</th>';
+  monthsList.forEach(function(mo){thHtml += '<th class="nr">'+mnNames[mo]+(mo===curMonth&&curMonth>6?'*':'')+'</th>';});
+  thHtml += '<th class="nr">Total</th>';
+  document.getElementById('thS26').innerHTML = thHtml;
+
+  // Build data source: {sumber: {month: count}}
+  var monthlyData = {};
+  // From SRC26 (Jan-Jun)
+  for (var mo=1; mo<=6; mo++) {
+    var d = SRC26[mo] || {};
+    for (var sk in d) {
+      if (!monthlyData[sk]) monthlyData[sk] = {};
+      monthlyData[sk][mo] = d[sk];
+    }
+  }
+  // From LIVE.sumber (bulan berjalan)
+  if (LIVE.sumber && curMonth > 6) {
+    LIVE.sumber.forEach(function(r){
+      if (!monthlyData[r.sumber]) monthlyData[r.sumber] = {};
+      monthlyData[r.sumber][curMonth] = r.this_month;
+    });
+  }
+
+  // Sort by total desc
+  var allSK = Object.keys(monthlyData);
+  allSK.sort(function(a,b){
+    var ta = monthsList.reduce(function(s,mo){return s+(monthlyData[a][mo]||0);},0);
+    var tb = monthsList.reduce(function(s,mo){return s+(monthlyData[b][mo]||0);},0);
+    return tb - ta;
+  });
+
+  document.getElementById('tS26').innerHTML = allSK.map(function(k){
+    var vals = monthsList.map(function(mo){return monthlyData[k][mo]||0;});
+    var tot = vals.reduce(function(a,b){return a+b;},0);
+    return '<tr><td style="font-weight:600">'+k+'</td>'+vals.map(function(x){return '<td class="nr">'+(x||'—')+'</td>';}).join('')+'<td class="nr" style="font-weight:800">'+tot.toLocaleString('id')+'</td></tr>';
+  }).join('');
+
+  window._srcMode=window._srcMode||'pct';
+  renderSrcYrTable();
+}
+
+function renderSrcYrTable(){
+  var srcK=Object.keys(SRC_YR),isPct=window._srcMode==='pct';
+  // Add live H2 contribution to SRC_YR 2026 column
+  var srcYrCurrent = {};
+  srcK.forEach(function(k){srcYrCurrent[k] = SRC_YR[k].slice();});
+  if (LIVE.sumber_cabang && LIVE.sumber_cabang.length > 0) {
+    // Sum sumber_cabang totals as H2 addition
+    var h2Sumber = {};
+    LIVE.sumber_cabang.forEach(function(d){
+      for (var src in d.sumber) {
+        h2Sumber[src] = (h2Sumber[src] || 0) + d.sumber[src];
+      }
+    });
+    // But sumber_cabang already includes H1+H2 combined? Actually no - endpoint returns only 2026 live data
+    // For now, we add live H2 (Jul+) to SRC_YR[6] (which was H1 only)
+    // Better approach: use LIVE.sumber (this_month only) plus prior H1 stored months
+    // Simplification: keep SRC_YR[6] as H1 only, then add current month
+    if (LIVE.sumber) {
+      LIVE.sumber.forEach(function(r){
+        if (!srcYrCurrent[r.sumber]) srcYrCurrent[r.sumber] = SRC_YR['Referensi'].map(function(){return 0;});
+        // Add this_month to 2026 column (index 6)
+        srcYrCurrent[r.sumber][6] = (srcYrCurrent[r.sumber][6] || 0) + r.this_month;
+      });
+    }
+  }
+
+  // Compute YR_TOT dynamically including 2026 (from HM[2026] total)
+  var ytot = YR_TOT.concat([HM[2026].reduce(function(a,b){return a+b;},0)]);
+
+  document.getElementById('tSY').innerHTML=Object.keys(srcYrCurrent).map(function(k){
+    var vals=srcYrCurrent[k];
+    return'<tr><td style="font-weight:600">'+k+'</td>'+vals.map(function(v,i){
+      if(isPct){
+        var tot=ytot[i]||0;
+        if (tot === 0) return '<td class="nr">—</td>';
+        var p=(v/tot*100).toFixed(1);
+        var col=p>=30?'#3B6D11':p>=20?'#185FA5':p>=10?'#854F0B':'inherit';
+        return'<td class="nr" style="color:'+col+';font-weight:'+(p>=20?700:400)+'">'+p+'%</td>';
+      }
+      return'<td class="nr">'+v.toLocaleString('id')+'</td>';
+    }).join('')+'</tr>';
+  }).join('');
+  document.getElementById('btnSrcMode').textContent=isPct?'Tampilkan angka':'Tampilkan %';
+}
+
+function toggleSrcMode(){window._srcMode=window._srcMode==='pct'?'num':'pct';renderSrcYrTable();}
+function toggleTrenMode(){window._trenMode=window._trenMode==='pct'?'num':'pct';bSumber();}
+
+// ============================================================
+// BRANCH MONITOR (menggunakan data live WKC)
+// ============================================================
+function getCabs(){return Object.keys(WKC).length>0?Object.keys(WKC):[];}
+function getVals(c){if(!WKC[c])return WEEKS.length>0?WEEKS.map(function(){return 0;}):[0,0,0,0,0,0];return WEEKS.map(function(w){return WKC[c][w]||0;});}
+function getLast(c,n){var v=getVals(c);return v.slice(-n);}
+function getW(c,idx){var v=getVals(c);return v[v.length-1+idx]||0;}
+
+function wkSc(c){
+  var v=getVals(c),cabs=getCabs();
+  var mx=Math.max.apply(null,cabs.map(function(c2){return getW(c2,0)||0;}).concat([1]));
+  var last=getW(c,0),prev=getW(c,-1);
+  var cur=(last/mx)*100;
+  var wow=prev>0?((last-prev)/prev*100):0;
+  var g=Math.min(100,Math.max(0,wow+50));
+  var nz=v.filter(function(x){return x>0;});
+  var mn=nz.length?nz.reduce(function(a,b){return a+b;})/nz.length:0;
+  var cv=mn>0?Math.sqrt(nz.reduce(function(a,b){return a+(b-mn)*(b-mn);},0)/nz.length)/mn:1;
+  return Math.round(cur*0.4+g*0.35+Math.max(0,100-cv*100)*0.25);
+}
+
+function wkEw(c){
+  var l=getW(c,0),p=getW(c,-1),p2=getW(c,-2);
+  if(l<=1)return{l:'🔴 Kritis',c:'br'};
+  if(l<p*0.55&&p<p2*0.55)return{l:'🔴 Kritis',c:'br'};
+  if(l<=3||l<p*0.7)return{l:'🟠 Perhatian',c:'ba'};
+  if(l<p*0.9)return{l:'🟡 Waspada',c:'ba'};
+  return{l:'🟢 Aman',c:'bg'};
+}
+function wkDs(c){var v=getVals(c);var s=0;for(var i=v.length-1;i>0;i--){if(v[i]<v[i-1])s++;else break;}return s;}
+function wkUs(c){var v=getVals(c);var s=0;for(var i=v.length-1;i>0;i--){if(v[i]>v[i-1])s++;else break;}return s;}
+function wkRisk(c){
+  var v=getVals(c);
+  var cf=v.filter(function(x){return x<=1;}).length/Math.max(v.length,1)*100;
+  var ds=wkDs(c);
+  var gn=v[0]>0&&v[v.length-1]<v[0]?Math.min(100,(v[0]-v[v.length-1])/v[0]*100):0;
+  var un=0;for(var i=2;i<v.length;i++)if(v[i-2]>0&&v[i-1]<v[i-2]*0.8&&v[i]<v[i-1]*0.8)un=50;
+  return Math.round(cf*0.4+Math.min(100,ds/Math.max(v.length,1)*100)*0.3+gn*0.2+un*0.1);
+}
+
+function bRank(f){
+  var cabs=getCabs();
+  if(cabs.length===0){document.getElementById('tRank').innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:#9B8E78">Data mingguan belum dimuat. Tunggu sebentar...</td></tr>';document.getElementById('rankDataNote').textContent='Menunggu data live...';return;}
+  document.getElementById('rankDataNote').textContent='Data live '+WEEKS.length+' minggu · W'+WEEKS[0]+' s.d. W'+WEEKS[WEEKS.length-1];
+  var rows=cabs.slice().sort(function(a,b){return wkSc(b)-wkSc(a);});
+  if(f==='top10')rows=rows.slice(0,10);
+  else if(f==='bot10')rows=rows.slice(-10).reverse();
+  else if(f==='naik')rows=rows.filter(function(c){return wkUs(c)>=2;});
+  else if(f==='turun')rows=rows.filter(function(c){return wkDs(c)>=3;});
+  var gold=['style="color:#BA7517;font-weight:800"','style="color:#6B5E45;font-weight:800"','style="color:#8B4513;font-weight:800"'];
+  document.getElementById('tRank').innerHTML=rows.map(function(c,i){
+    var e=wkEw(c),s=wkSc(c),w26=getW(c,0),w25=getW(c,-1);
+    return'<tr><td '+( gold[i]||'')+'>'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td><td class="nr">'+w25+'</td><td class="nr" style="font-weight:700">'+w26+'</td><td class="nr '+pc(w25,w26)+'">'+ps(w25,w26)+'</td><td><div style="display:flex;align-items:center;gap:4px"><div style="width:50px;height:5px;background:#E8E4DA;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+s+'%;background:#BA7517;border-radius:2px"></div></div><span style="font-size:10px;font-weight:700">'+s+'</span></div></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td><td>'+spk6(getLast(c,6))+'</td></tr>';
+  }).join('');
+}
+
+function bKritis(){
+  var cabs=getCabs();
+  if(cabs.length===0){document.getElementById('tKritis').innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:#9B8E78">Memuat data...</td></tr>';return;}
+  document.getElementById('kritisNote').textContent='Data live '+WEEKS.length+' minggu';
+  var kritis=cabs.filter(function(c){return getLast(c,4).some(function(x){return x<=2;});}).sort(function(a,b){return getVals(b).filter(function(x){return x<=2;}).length-getVals(a).filter(function(x){return x<=2;}).length;});
+  document.getElementById('tKritis').innerHTML=kritis.map(function(c,i){
+    var l4=getLast(c,4),fq=getVals(c).filter(function(x){return x<=2;}).length,e=wkEw(c);
+    return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td>'+l4.map(function(x){return'<td class="nr" style="'+hb(x)+';font-weight:'+(x<=2?800:400)+'">'+x+'</td>';}).join('')+'<td class="nr"><span class="bdg '+(fq>=15?'br':fq>=8?'ba':'bgr')+'">'+fq+'x</span></td><td><span class="bdg '+e.c+'">'+e.l+'</span></td></tr>';
+  }).join('');
+
+  // Heatmap semua cabang, 10 weeks terakhir
+  var allCabs=cabs.slice();
+  var lastWks=WEEKS.slice(-10);
+  var h='<div style="display:grid;grid-template-columns:90px repeat('+lastWks.length+',1fr);gap:1px;background:#E8E4DA;border-radius:10px;overflow:hidden;font-size:10px;min-width:540px">';
+  h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:700;color:#6B5E45">Cabang</div>';
+  lastWks.forEach(function(wk){h+='<div style="background:#F9F7F2;padding:4px;text-align:center;font-weight:700;color:#6B5E45">'+wk+'</div>';});
+  // NASIONAL row - total semua cabang per minggu (di paling atas, style beda)
+  h+='<div style="background:#3B2A13;padding:4px 8px;font-weight:800;color:#F9F7F2">🇮🇩 NASIONAL</div>';
+  lastWks.forEach(function(wk){
+    var total = 0;
+    allCabs.forEach(function(c){total += (WKC[c] && WKC[c][wk]) || 0;});
+    h+='<div style="background:#3B2A13;color:#F9F7F2;padding:4px;text-align:center;font-weight:800">'+total.toLocaleString('id')+'</div>';
+  });
+  allCabs.forEach(function(c){
+    h+='<div style="background:#F9F7F2;padding:4px 8px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2C2C2A">'+cabName(c)+'</div>';
+    lastWks.forEach(function(wk){var v=(WKC[c]&&WKC[c][wk])||0;h+='<div style="'+hb(v)+';padding:4px;text-align:center">'+v+'</div>';});
+  });
+  h+='</div>';
+  document.getElementById('hmWrap').innerHTML=h;
+}
+
+function bRec(){
+  var cabs=getCabs();
+  var wowArr=cabs.map(function(c){var last=getW(c,0),prev=getW(c,-1);return{c:c,wow:prev>0?Math.round((last-prev)/prev*100):0,last:last,prev:prev};}).filter(function(d){return d.wow>0&&d.last>0;}).sort(function(a,b){return b.wow-a.wow;});
+  document.getElementById('tRec').innerHTML=wowArr.slice(0,12).map(function(d,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(d.c)+'</td><td>'+spk6(getLast(d.c,6))+'</td><td class="nr up" style="font-weight:700">+'+d.wow+'% ('+d.prev+'→'+d.last+')</td><td><span class="bdg bg">▲ Naik</span></td></tr>';}).join('');
+  document.getElementById('tGrow').innerHTML=cabs.filter(function(c){return wkUs(c)>=2;}).sort(function(a,b){return wkUs(b)-wkUs(a);}).slice(0,10).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg bg">'+wkUs(c)+' mgg</span></td></tr>';}).join('');
+  document.getElementById('tDecl').innerHTML=cabs.filter(function(c){return wkDs(c)>=3;}).sort(function(a,b){return wkDs(b)-wkDs(a);}).map(function(c,i){return'<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(c)+'</td><td>'+spk6(getLast(c,6))+'</td><td class="nr"><span class="bdg br">'+wkDs(c)+' mgg</span></td></tr>';}).join('');
+}
+
+function bRisk(){
+  var cabs=getCabs();
+  var ri=cabs.map(function(c){return{c:c,rs:wkRisk(c),e:wkEw(c)};}).filter(function(d){return d.rs>0;}).sort(function(a,b){return b.rs-a.rs;});
+  var cl=['#E24B4A','#D85A30','#BA7517','#185FA5'];
+  document.getElementById('riskWrap').innerHTML=ri.slice(0,24).map(function(d,i){
+    var clr=d.rs>=70?cl[0]:d.rs>=50?cl[1]:d.rs>=30?cl[2]:cl[3];
+    var fq=getVals(d.c).filter(function(x){return x<=1;}).length,dss=wkDs(d.c);
+    return'<div class="ri"><div style="font-size:12px;font-weight:700;color:#2C2C2A;margin-bottom:4px">'+(i+1)+'. '+cabName(d.c)+'</div><div style="height:5px;border-radius:2px;background:#E8E4DA;margin-bottom:4px;overflow:hidden"><div style="height:100%;border-radius:2px;width:'+d.rs+'%;background:'+clr+'"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:'+clr+'">Risk '+d.rs+'/100</span><span class="bdg '+d.e.c+'">'+d.e.l+'</span></div><div style="font-size:10px;color:#6B5E45;display:flex;flex-wrap:wrap;gap:3px">'+(fq>0?'<span class="bdg br">'+fq+'x kritis</span>':'')+(dss>=2?'<span class="bdg ba">↓'+dss+' mgg</span>':'')+'</div></div>';
+  }).join('');
+}
+
+// ============================================================
+// ANALISA CABANG (Heatmap sumber per cabang)
+// ============================================================
+function bAnalisa(mode){
+  mode=mode||'pct';
+  document.getElementById('selAnalisa').value=mode;
+
+  // Gabungkan SRC_CAB26 (statis H1) + LIVE.sumber_cabang (H2)
+  var merged = {};
+  for (var cab in SRC_CAB26) {
+    merged[cab] = {};
+    for (var src in SRC_CAB26[cab]) {
+      merged[cab][src] = SRC_CAB26[cab][src];
+    }
+  }
+  if (LIVE.sumber_cabang && LIVE.sumber_cabang.length > 0) {
+    LIVE.sumber_cabang.forEach(function(d){
+      if (!merged[d.cabang]) merged[d.cabang] = {};
+      for (var src in d.sumber) {
+        merged[d.cabang][src] = (merged[d.cabang][src] || 0) + d.sumber[src];
+      }
+    });
+  }
+
+  // Convert ke array
+  var data = [];
+  for (var cab in merged) {
+    var srcs = merged[cab];
+    var total = 0;
+    for (var s in srcs) total += srcs[s];
+    var topSrc = null, topPct = 0;
+    for (var s in srcs) {
+      var p = srcs[s]/total*100;
+      if (p > topPct) { topPct = p; topSrc = s; }
+    }
+    data.push({
+      cabang: cab, total: total, sumber: srcs,
+      top_sumber: topSrc, top_pct: Math.round(topPct)
+    });
+  }
+  data.sort(function(a,b){return b.total-a.total;});
+
+  if(!data||data.length===0){
+    document.getElementById('hmSumberCab').innerHTML='<div style="text-align:center;padding:30px;color:#9B8E78">Data belum dimuat. Tunggu sebentar...</div>';
+    return;
+  }
+
+  // Channel kolom
+  var channels=['Referensi','Repeat Order','Instagram','Website','Facebook','Banner','GMB','Brosur','TikTok','Lainnya'];
+
+  var h='<div class="heat-wrap"><table class="tbl" style="min-width:900px"><thead><tr><th>#</th><th>Cabang</th><th class="nr">Total</th>';
+  channels.forEach(function(ch){h+='<th class="nr" style="font-size:9px">'+ch.substr(0,8)+'</th>';});
+  h+='</tr></thead><tbody>';
+
+  data.forEach(function(d,i){
+    h+='<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+cabName(d.cabang)+'</td><td class="nr" style="font-weight:700">'+d.total.toLocaleString('id')+'</td>';
+    channels.forEach(function(ch){
+      var v=d.sumber[ch]||0;
+      var pct=d.total>0?v/d.total*100:0;
+      if(mode==='pct'){
+        var bg='';
+        if(pct>=50) bg='background:#0C447C;color:#fff;font-weight:700';
+        else if(pct>=30) bg='background:#378ADD;color:#fff;font-weight:700';
+        else if(pct>=15) bg='background:#85B7EB;color:#0C447C';
+        else if(pct>=5) bg='background:#D6E5F4;color:#0C447C';
+        else if(pct>0) bg='background:#F0EDE5;color:#6B5E45';
+        else bg='color:#D4C9B0';
+        h+='<td class="nr" style="'+bg+'">'+(pct>0?pct.toFixed(0)+'%':'—')+'</td>';
+      } else {
+        h+='<td class="nr">'+(v||'—')+'</td>';
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('hmSumberCab').innerHTML=h;
+
+  // Top per channel
+  var topPerCh={};
+  channels.forEach(function(ch){
+    var sorted=data.filter(function(d){return (d.sumber[ch]||0)>0;}).sort(function(a,b){
+      var pa=(a.sumber[ch]||0)/a.total;
+      var pb=(b.sumber[ch]||0)/b.total;
+      return pb-pa;
+    });
+    topPerCh[ch]=sorted.slice(0,3);
+  });
+
+  var topHtml='<table class="tbl"><thead><tr><th>Channel</th><th>Top 3 Cabang</th></tr></thead><tbody>';
+  channels.forEach(function(ch){
+    if(topPerCh[ch].length===0) return;
+    var topStr=topPerCh[ch].map(function(d){
+      var pct=Math.round((d.sumber[ch]||0)/d.total*100);
+      return cabName(d.cabang)+' <span class="bdg bb" style="font-size:9px">'+pct+'%</span>';
+    }).join('<br>');
+    topHtml+='<tr><td style="font-weight:600">'+ch+'</td><td style="font-size:11px;line-height:1.7">'+topStr+'</td></tr>';
+  });
+  topHtml+='</tbody></table>';
+  document.getElementById('topPerChannel').innerHTML=topHtml;
+
+  // Cabang dengan karakter unik (>=50% di satu channel)
+  var unique=data.filter(function(d){return d.top_pct>=50;}).sort(function(a,b){return b.top_pct-a.top_pct;});
+  var uniqHtml='<table class="tbl"><thead><tr><th>Cabang</th><th>Channel Dominan</th><th class="nr">%</th><th class="nr">Total</th></tr></thead><tbody>';
+  unique.forEach(function(d){
+    var clr=d.top_sumber==='Referensi'?'bb':d.top_sumber==='Instagram'?'br':d.top_sumber==='Repeat Order'?'bg':'ba';
+    uniqHtml+='<tr><td style="font-weight:600">'+cabName(d.cabang)+'</td><td><span class="bdg '+clr+'">'+d.top_sumber+'</span></td><td class="nr" style="font-weight:700">'+d.top_pct+'%</td><td class="nr">'+d.total.toLocaleString('id')+'</td></tr>';
+  });
+  uniqHtml+='</tbody></table>';
+  if(unique.length===0) uniqHtml='<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Belum ada cabang yang sangat tergantung satu channel (≥50%)</div>';
+  document.getElementById('cabUnik').innerHTML=uniqHtml;
+}
+
+// ============================================================
+// KECAMATAN
+// ============================================================
+function bKecamatan(){
+  // Gabungkan KEC26 (statis H1) + LIVE.kecamatan (H2)
+  var merged = {};
+  for (var cab in KEC26) {
+    merged[cab] = {};
+    for (var k in KEC26[cab]) {
+      merged[cab][k] = KEC26[cab][k];
+    }
+  }
+  if (LIVE.kecamatan && LIVE.kecamatan.length > 0) {
+    LIVE.kecamatan.forEach(function(d){
+      if (!merged[d.cabang]) merged[d.cabang] = {};
+      d.kecamatan.forEach(function(k){
+        merged[d.cabang][k.nama] = (merged[d.cabang][k.nama] || 0) + k.count;
+      });
+    });
+  }
+
+  var data = [];
+  for (var cab in merged) {
+    var kecs = merged[cab];
+    var total = 0, kecList = [];
+    for (var k in kecs) {
+      total += kecs[k];
+      kecList.push({nama: k, count: kecs[k]});
+    }
+    kecList.sort(function(a,b){return b.count-a.count;});
+    data.push({
+      cabang: cab, total: total,
+      kecamatan_count: kecList.length,
+      kecamatan: kecList,
+      top_kecamatan: kecList[0] ? kecList[0].nama : null,
+      top_pct: kecList[0] ? Math.round(kecList[0].count/total*100) : 0
+    });
+  }
+  data.sort(function(a,b){return b.total-a.total;});
+
+  // Update LIVE.kecamatan supaya renderKec juga pakai merged
+  window._mergedKec = data;
+
+  if(!data||data.length===0){
+    document.getElementById('kecCabContent').innerHTML='<div style="text-align:center;padding:30px;color:#9B8E78">Data belum dimuat...</div>';
+    document.getElementById('topKecNas').innerHTML='';
+    document.getElementById('konsentrasiCab').innerHTML='';
+    return;
+  }
+
+  // Metric cards
+  var totalCustomer=data.reduce(function(s,d){return s+d.total;},0);
+  var totalKecamatanUnik={};
+  data.forEach(function(d){d.kecamatan.forEach(function(k){totalKecamatanUnik[k.nama]=(totalKecamatanUnik[k.nama]||0)+k.count;});});
+  var totalKecUniq=Object.keys(totalKecamatanUnik).length;
+  var cabBanyak=data.slice().sort(function(a,b){return b.kecamatan_count-a.kecamatan_count;})[0];
+  var cabSedikit=data.slice().filter(function(d){return d.total>=20;}).sort(function(a,b){return a.kecamatan_count-b.kecamatan_count;})[0];
+
+  document.getElementById('kecMet').innerHTML=
+    '<div class="mc"><div class="ml">Total customer 2026</div><div class="mv">'+totalCustomer.toLocaleString('id')+'</div><div class="ms neu">dari kecamatan</div></div>'
+    +'<div class="mc"><div class="ml">Kecamatan unik nasional</div><div class="mv">'+totalKecUniq.toLocaleString('id')+'</div><div class="ms neu">area aktif</div></div>'
+    +'<div class="mc"><div class="ml">Penetrasi terluas</div><div class="mv" style="font-size:14px">'+(cabBanyak?cabBanyak.cabang:'-')+'</div><div class="ms neu">'+(cabBanyak?cabBanyak.kecamatan_count+' kecamatan':'')+'</div></div>'
+    +'<div class="mc"><div class="ml">Penetrasi tersempit</div><div class="mv" style="font-size:14px">'+(cabSedikit?cabSedikit.cabang:'-')+'</div><div class="ms dn">'+(cabSedikit?cabSedikit.kecamatan_count+' kecamatan':'')+'</div></div>';
+
+  // Populate cabang selector
+  var sel=document.getElementById('selKecCab');
+  if(sel.options.length<=1){
+    data.forEach(function(d){
+      var opt=document.createElement('option');
+      opt.value=d.cabang;opt.textContent=cabName(d.cabang)+' ('+d.total+' customer, '+d.kecamatan_count+' kecamatan)';
+      sel.appendChild(opt);
+    });
+    // Auto select cabang terbesar
+    sel.value=data[0].cabang;
+  }
+  renderKec();
+
+  // Top kecamatan nasional
+  var topNas=Object.keys(totalKecamatanUnik).map(function(k){return {nama:k,count:totalKecamatanUnik[k]};}).sort(function(a,b){return b.count-a.count;}).slice(0,15);
+  var maxNas=topNas[0].count;
+  document.getElementById('topKecNas').innerHTML='<table class="tbl"><thead><tr><th>#</th><th>Kecamatan</th><th class="nr">Total</th><th style="width:35%">Distribusi</th></tr></thead><tbody>'
+    +topNas.map(function(k,i){var pct=Math.round(k.count/maxNas*100);return '<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+k.nama+'</td><td class="nr" style="font-weight:700">'+k.count+'</td><td><div style="width:100%;max-width:140px;height:6px;background:#E8E4DA;border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:#BA7517;border-radius:3px"></div></div></td></tr>';}).join('')
+    +'</tbody></table>';
+
+  // Konsentrasi cabang
+  var konsentrasi=data.filter(function(d){return d.top_pct>=30 && d.total>=20;}).sort(function(a,b){return b.top_pct-a.top_pct;});
+  document.getElementById('konsentrasiCab').innerHTML=konsentrasi.length>0?'<table class="tbl"><thead><tr><th>Cabang</th><th>Kecamatan dominan</th><th class="nr">% dari total</th><th class="nr hide-mobile">Total cabang</th><th class="nr hide-mobile"># kecamatan</th></tr></thead><tbody>'
+    +konsentrasi.map(function(d){var clr=d.top_pct>=50?'br':d.top_pct>=40?'ba':'bgr';return '<tr><td style="font-weight:600">'+cabName(d.cabang)+'</td><td><span class="bdg '+clr+'">'+d.top_kecamatan+'</span></td><td class="nr" style="font-weight:700;color:'+(d.top_pct>=50?'#A32D2D':d.top_pct>=40?'#854F0B':'#6B5E45')+'">'+d.top_pct+'%</td><td class="nr hide-mobile">'+d.total.toLocaleString('id')+'</td><td class="nr hide-mobile">'+d.kecamatan_count+'</td></tr>';}).join('')
+    +'</tbody></table>':'<div style="text-align:center;padding:20px;color:#9B8E78;font-size:11px">Tidak ada cabang dengan konsentrasi tinggi (≥30% di 1 kecamatan)</div>';
+}
+
+function renderKec(){
+  var cab=document.getElementById('selKecCab').value;
+  if(!cab || !window._mergedKec){document.getElementById('kecCabContent').innerHTML='<div style="text-align:center;padding:20px;color:#9B8E78;font-size:12px">Pilih cabang untuk melihat distribusi kecamatan</div>';return;}
+  var d=window._mergedKec.find(function(x){return x.cabang===cab;});
+  if(!d){document.getElementById('kecCabContent').innerHTML='<div style="text-align:center;padding:20px;color:#9B8E78">Data tidak ditemukan</div>';return;}
+
+  var max=d.kecamatan[0].count;
+  // Top 20 kecamatan, sisanya digabung
+  var top=d.kecamatan.slice(0,20);
+  var sisa=d.kecamatan.slice(20);
+  var sisaTotal=sisa.reduce(function(s,k){return s+k.count;},0);
+
+  var h='<div class="kec-split">';
+  // Tabel
+  h+='<div><table class="tbl"><thead><tr><th>#</th><th>Kecamatan</th><th class="nr">Customer</th><th class="nr">%</th></tr></thead><tbody>';
+  top.forEach(function(k,i){
+    var pct=(k.count/d.total*100).toFixed(1);
+    h+='<tr><td style="color:#6B5E45">'+(i+1)+'</td><td style="font-weight:600">'+k.nama+'</td><td class="nr" style="font-weight:700">'+k.count+'</td><td class="nr">'+pct+'%</td></tr>';
+  });
+  if(sisa.length>0){
+    var pct=(sisaTotal/d.total*100).toFixed(1);
+    h+='<tr style="background:#F9F7F2"><td colspan="2" style="font-style:italic;color:#6B5E45">+ '+sisa.length+' kecamatan lain</td><td class="nr">'+sisaTotal+'</td><td class="nr">'+pct+'%</td></tr>';
+  }
+  h+='<tr style="background:#F9F7F2;font-weight:700;border-top:2px solid #E8E4DA"><td colspan="2">TOTAL</td><td class="nr">'+d.total+'</td><td class="nr">100%</td></tr>';
+  h+='</tbody></table></div>';
+
+  // Heatmap bars
+  h+='<div><div style="font-size:11px;color:#6B5E45;margin-bottom:8px;font-weight:600">Distribusi visual top 20 kecamatan</div>';
+  top.forEach(function(k,i){
+    var pct=k.count/max*100;
+    var pctTotal=(k.count/d.total*100).toFixed(1);
+    var bg=k.count/d.total>=0.3?'#A32D2D':k.count/d.total>=0.15?'#BA7517':k.count/d.total>=0.05?'#378ADD':'#5DCAA5';
+    h+='<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="font-weight:600;color:#2C2C2A">'+k.nama+'</span><span style="color:#6B5E45">'+k.count+' ('+pctTotal+'%)</span></div><div style="height:8px;background:#F0EDE5;border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+bg+';border-radius:3px"></div></div></div>';
+  });
+  h+='</div></div>';
+
+  document.getElementById('kecCabContent').innerHTML='<div style="background:#F9F7F2;padding:10px 14px;border-radius:8px;margin-bottom:.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px"><span><strong>'+cabName(d.cabang)+'</strong> · '+d.total.toLocaleString('id')+' customer · <strong>'+d.kecamatan_count+'</strong> kecamatan unik</span><span style="color:#6B5E45">Top: <strong>'+d.top_kecamatan+'</strong> ('+d.top_pct+'%)</span></div>'+h;
+}
+
+// ============================================================
+// FORECAST
+// ============================================================
+var _fcM='ensemble';
+function setFcModel(m){_fcM=m;document.querySelectorAll('.fcbtn').forEach(function(b){b.classList.remove('active-fc');});document.getElementById('btn-'+m).classList.add('active-fc');bFc(m);}
+
+function bFc(model){
+  var fc=model==='ensemble'?FC_ENS:FC_M[model].fc;
+  var lo=model==='ensemble'?FC_LO:FC_M[model].lo;
+  var hi=model==='ensemble'?FC_HI:FC_M[model].hi;
+  var rmse=model==='ensemble'?412:FC_M[model].rmse;
+  // H1 2026 aktual (Jan-Jun) = 10.175
+  var act26=HM[2026].slice(0,6).reduce(function(a,b){return a+b;},0);
+  // FC start Aug 2026, jadi index 0-4 = Aug-Des 2026 (5 bulan), index 5-16 = Jan-Des 2027
+  var fc26h2=fc.slice(0,5).reduce(function(a,b){return a+b;},0);
+  var fc27=fc.slice(5).reduce(function(a,b){return a+b;},0);
+  // Juli 2026 = aktual dari HM[2026][6] (kalau sudah ada) atau estimasi
+  var jul26=HM[2026][6]||0;
+  var total26=act26+jul26+fc26h2;
+  var chg26=pt(19219,total26),chg27=pt(total26,fc27);
+  var descMap={ensemble:'Ensemble = rata-rata 3 model. CI = spread min/max antar model. Refit dengan data Jan-Jun 2026 aktual.',hw:'Holt-Winters ETS: eksponensial smoothing dengan tren + seasonal. RMSE='+FC_M.hw.rmse+'.',sarima:'SARIMA(1,1,1)(1,1,1,12): autoregressive seasonal. RMSE='+FC_M.sarima.rmse+'.',prophet:'Prophet (Meta): changepoint detection + seasonality. RMSE='+FC_M.prophet.rmse+' (terbaik).'};
+  document.getElementById('fcDesc').textContent=descMap[model];
+  document.getElementById('fcMetrik').innerHTML='<div class="mc"><div class="ml">Model</div><div class="mv" style="font-size:14px">'+(model==='ensemble'?'Ensemble':FC_M[model].name)+'</div><div class="ms neu">RMSE ≈ '+rmse+'</div></div>'+'<div class="mc"><div class="ml">Proyeksi 2026</div><div class="mv">'+total26.toLocaleString('id')+'</div><div class="ms '+(chg26>0?'up':'dn')+'">'+(chg26>0?'▲':'▼')+' '+Math.abs(chg26)+'% vs 2025</div></div>'+'<div class="mc"><div class="ml">Proyeksi 2027</div><div class="mv">'+fc27.toLocaleString('id')+'</div><div class="ms '+(chg27>0?'up':'dn')+'">'+(chg27>0?'▲':'▼')+' '+Math.abs(chg27)+'% vs 2026</div></div>'+'<div class="mc"><div class="ml">Peak forecast</div><div class="mv">'+Math.max.apply(null,fc).toLocaleString('id')+'</div><div class="ms neu">'+FC_DATES[fc.indexOf(Math.max.apply(null,fc))]+'</div></div>';
+
+  var n=ACT_V.length,nullN=FC_DATES.length;
+  var act0_72=[].concat(ACT_V.slice(0,72),Array(6+nullN).fill(null));
+  var act72=[].concat(Array(72).fill(null),ACT_V.slice(72),Array(nullN).fill(null));
+  var fcFull=[].concat(Array(n).fill(null),fc);
+  var hiFull=[].concat(Array(n).fill(null),hi);
+  var loFull=[].concat(Array(n).fill(null),lo);
+  var fcColor=model==='ensemble'?'#BA7517':FC_M[model].color;
+  var allLabels=ACT_D.concat(FC_DATES);
+
+  var c;
+  c=ch('cFcMain');if(c)c._c=new Chart(c,{type:'line',data:{labels:allLabels,datasets:[{label:'Aktual',data:act0_72,borderColor:'#185FA5',backgroundColor:'rgba(55,138,221,0.06)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.2,order:5},{label:'2026',data:act72,borderColor:'#5DCAA5',backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:'#5DCAA5',tension:0.2,order:4},{label:'CI Upper',data:hiFull,borderColor:'transparent',backgroundColor:'rgba(186,117,23,0.12)',borderWidth:0,pointRadius:0,fill:'+1',tension:0.3,order:3},{label:'CI Lower',data:loFull,borderColor:'transparent',backgroundColor:'rgba(186,117,23,0.12)',borderWidth:0,pointRadius:0,fill:false,tension:0.3,order:2},{label:'Forecast',data:fcFull,borderColor:fcColor,backgroundColor:'transparent',borderWidth:2.5,borderDash:[5,4],pointRadius:2,pointBackgroundColor:fcColor,tension:0.3,order:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},scales:{y:{min:600,ticks:{font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'k':v;}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxTicksLimit:20,maxRotation:30},grid:{display:false}}}}});
+  c=ch('cFcModels');if(c)c._c=new Chart(c,{type:'line',data:{labels:FC_DATES,datasets:['hw','sarima','prophet'].map(function(k){return{label:FC_M[k].name,data:FC_M[k].fc,borderColor:FC_M[k].color,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:0.3};}).concat([{label:'Ensemble',data:FC_ENS,borderColor:'#BA7517',backgroundColor:'transparent',borderWidth:3,pointRadius:3,tension:0.3}])},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'k':v;}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9},maxRotation:30},grid:{display:false}}}}});
+
+  document.getElementById('tFcMod').innerHTML=[{n:'Holt-Winters',r:FC_M.hw.rmse,k:'hw'},{n:'SARIMA',r:FC_M.sarima.rmse,k:'sarima'},{n:'Prophet ⭐',r:FC_M.prophet.rmse,k:'prophet'},{n:'Ensemble',r:412,k:'ensemble'}].map(function(m2){
+    var mfc=m2.k==='ensemble'?FC_ENS:FC_M[m2.k].fc;
+    var t26=act26+jul26+mfc.slice(0,5).reduce(function(a,b){return a+b;},0);
+    var t27=mfc.slice(5).reduce(function(a,b){return a+b;},0);
+    var chg=pt(19219,t26);
+    return'<tr'+(m2.k===model?' style="font-weight:800;background:#F9F7F2"':'')+'><td>'+m2.n+'</td><td class="nr">'+m2.r+'</td><td class="nr">'+t26.toLocaleString('id')+'</td><td class="nr">'+t27.toLocaleString('id')+'</td><td class="nr '+(chg>0?'up':'dn')+'">'+(chg>0?'+':'')+chg+'%</td></tr>';
+  }).join('');
+
+  document.getElementById('tFcDetail').innerHTML=FC_DATES.map(function(d,i){
+    var hw=FC_M.hw.fc[i],sar=FC_M.sarima.fc[i],pro=FC_M.prophet.fc[i],ens=FC_ENS[i];
+    var is27=d.startsWith('2027');
+    return'<tr'+(is27?' style="background:#F9F7F2"':'')+'><td style="font-weight:'+(is27?700:500)+'">'+d+'</td><td class="nr">'+hw.toLocaleString('id')+'</td><td class="nr">'+sar.toLocaleString('id')+'</td><td class="nr">'+pro.toLocaleString('id')+'</td><td class="nr" style="font-weight:700">'+ens.toLocaleString('id')+'</td><td class="nr" style="color:#6B5E45">'+FC_LO[i].toLocaleString('id')+'</td><td class="nr" style="color:#6B5E45">'+FC_HI[i].toLocaleString('id')+'</td></tr>';
+  }).join('');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', function() {
+  // Set default filter ke bulan berjalan
+  var curM = new Date().getMonth()+1;
+  var sel = document.getElementById('selBulan');
+  for(var i=0;i<sel.options.length;i++){
+    if(parseInt(sel.options[i].value)===curM){sel.selectedIndex=i;break;}
+  }
+  setTimeout(function(){
+    bUtama();
+    fetchLive();
+  },100);
+});
+</script>
+</body>
+</html>
