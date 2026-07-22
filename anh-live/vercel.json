@@ -1,7 +1,9 @@
 {
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/data", "destination": "/api/data" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "rewrites": [{"source": "/api/(.*)", "destination": "/api/$1"}],
+  "headers": [
+    {
+      "source": "/(.*).html",
+      "headers": [{"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"}]
+    }
   ]
 }
